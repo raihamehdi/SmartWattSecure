@@ -6,6 +6,7 @@ class Admin(models.Model):
     admin_id = models.AutoField(primary_key=True)
     admin_name = models.CharField(max_length=30)
     password=models.CharField(max_length=20)
+    email = models.EmailField(unique=True)
     
     def set_password(self, raw_password):
         self.password = make_password(raw_password)
