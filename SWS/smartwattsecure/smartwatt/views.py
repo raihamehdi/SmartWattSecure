@@ -2,6 +2,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.hashers import make_password, check_password
 from .models import Admin,User
+from django.db.models import Q
 
 def registeradmin(request):
     if request.method == 'POST':
@@ -9,11 +10,9 @@ def registeradmin(request):
         password = request.POST.get('password')
         email = request.POST.get('email')
 
-        # Check if an admin with the provided email already exists
         if Admin.objects.filter(email=email).exists():
             return render(request, 'registeradmin.html', {'error': 'Admin with this email already exists.'})
         else:
-            # Create a new Admin instance and set the password
             admin = Admin(admin_name=admin_name, email=email)
             admin.password = make_password(password)
             admin.save()
@@ -22,34 +21,45 @@ def registeradmin(request):
     else:
         return render(request, 'registeradmin.html')
     
+    
+def signup(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        email = request.POST.get('email')
+        
+        if Admin.objects.filter(Q(email=email) | Q(admin_name=username)).exists() or User.objects.filter(Q(email=email) | Q(username=username)).exists():
+            return render(request, 'login_signup.html', {'error': 'Email or username already exists.'})
+        else:
+            user = User(username=username, email=email)
+            user.password = make_password(password)
+            user.save()
+
+            return render(request, 'home.html') 
+    else:
+        return render(request, 'login_signup.html')
 
 
 def login(request):
-    # if request.method == 'POST':
-    #     email = request.POST.get('email')
-    #     password = request.POST.get('password')
+    if request.method == 'GET':
+        email = request.GET.get('email')
+        password = request.GET.get('password')
 
-    #     try:
-    #         # Check if the login credentials belong to a user
-    #         user = User.objects.get(email=email)
-    #         if check_password(password, user.password):
-    #             # Authentication successful for user, redirect to home page
-    #             return redirect('home')  # Adjust 'home' to your home page URL name
-    #     except User.DoesNotExist:
-    #         pass  # User with the provided email doesn't exist, continue checking for admin
+        # Check if the email exists in the User model
+        user = User.objects.filter(email=email).first()
+        if user is not None and check_password(password, user.password):
+            # Redirect to home page if user is verified
+            return render(request, 'home.html')
 
-    #     try:
-    #         # Check if the login credentials belong to an admin
-    #         admin = Admin.objects.get(email=email)
-    #         if check_password(password, admin.password):
-    #             # Authentication successful for admin, redirect to admin dashboard
-    #             return redirect('admindash')  # Adjust 'admindash' to your admin dashboard URL name
-    #     except Admin.DoesNotExist:
-    #         pass  # Admin with the provided email doesn't exist
+        # Check if the email exists in the Admin model
+        admin = Admin.objects.filter(email=email).first()
+        if admin is not None and check_password(password, admin.password):
+            # Redirect to admin dashboard if admin is verified
+            return render(request, 'admindash.html')
 
-    #     # If no user or admin with the provided credentials is found, show login page again with error
-    #     error_message = 'Invalid email or password.'
-    #     return render(request, 'login_signup.html', {'error': error_message})
-    # else:
+        # If neither User nor Admin is found or credentials are invalid, show error message
+        error_message = 'Invalid email or password.'
+        return render(request, 'login_signup.html', {'error': error_message})
+
+    else:
         return render(request, 'login_signup.html')
-

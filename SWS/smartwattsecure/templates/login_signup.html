@@ -14,22 +14,29 @@
     
     <div class="container" id="container">
         <div class="form-container sign-up-container">
-            <form action="POST">
+            {% if error %}
+            <p style="color: red;">{{ error }}</p>
+            {% endif %}
+            <form action="{% url 'signup' %}" method="POST">
+                {% csrf_token %}
                 <h1>Create Account</h1>
-                <input type="text" placeholder="Name" />
-                <input type="email" placeholder="Email" />
-                <input type="password" placeholder="Password" />
+                <input type="text" name="username" placeholder="username" />
+                <input type="password" name="password" placeholder="password" />
+                <input type="email" name="email" placeholder="email" />
+                
                 <button class="ammar">Sign Up</button>
-                <button class="google"><img src="{% static 'smartwatt/google.png' %}" alt="Google Icon"><br>Sign Up with Google</button> <!-- Added class "google" -->
+                <button class="google"><img src="{% static 'smartwatt/google.png' %}" alt="Google Icon"><br>Sign Up with Google</button>
             </form>
         </div>
         <div class="form-container sign-in-container">
-            <form action="POST"  action="{% url 'login' %}"> 
+            <form method="GET"  action="{% url 'login' %}"> 
                 {% csrf_token %}
-            
+                {% if error %}
+                <p style="color: red;">{{ error }}</p>
+                {% endif %}
                 <h1>Sign in</h1>
-                <input type="email" placeholder="Email" />
-                <input type="password" placeholder="Password" />
+                <input type="email" name="email" placeholder="email" />
+                <input type="password" name="password" placeholder="password" />
                 <a href="#">Forgot your password?</a>
                 <button>Sign In</button>
             </form>
