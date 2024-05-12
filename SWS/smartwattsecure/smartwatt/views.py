@@ -45,19 +45,14 @@ def login(request):
         email = request.GET.get('email')
         password = request.GET.get('password')
 
-        # Check if the email exists in the User model
         user = User.objects.filter(email=email).first()
         if user is not None and check_password(password, user.password):
-            # Redirect to home page if user is verified
             return render(request, 'home.html')
 
-        # Check if the email exists in the Admin model
         admin = Admin.objects.filter(email=email).first()
         if admin is not None and check_password(password, admin.password):
-            # Redirect to admin dashboard if admin is verified
             return render(request, 'admindash.html')
 
-        # If neither User nor Admin is found or credentials are invalid, show error message
         error_message = 'Invalid email or password.'
         return render(request, 'login_signup.html', {'error': error_message})
 
