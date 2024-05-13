@@ -88,6 +88,7 @@ def send_otp(request):
         return render(request, 'enterotp.html', {'email': email, 'otp': otp})
     else:
         return render(request, 'forgetpass.html')
+
 # def verifyotp(request):
 #     if request.method == 'POST':
 #         email = request.POST.get('email')
