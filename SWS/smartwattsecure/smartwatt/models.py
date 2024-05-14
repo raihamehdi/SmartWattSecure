@@ -31,7 +31,7 @@ class EnergyConsumption(models.Model):
     consumption_id = models.AutoField(primary_key=True)
     active_power = models.FloatField()
     time = models.FloatField() 
-    consumption_id = models.OneToOneField(User, on_delete=models.CASCADE, null=False) 
+    user_id = models.OneToOneField(User, on_delete=models.CASCADE, null=False) 
     @property
     def consumption_data(self):
         return self.active_power * self.time

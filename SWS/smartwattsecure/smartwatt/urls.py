@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path
-from .views import registeradmin,signup, login, send_otp
+from .views import registeradmin,signup, login, send_otp,home
 
 
 urlpatterns = [
@@ -9,6 +9,7 @@ urlpatterns = [
     path('signup', signup, name='signup'),
     path('send_otp', send_otp, name='send_otp'),
     # path('verifyotp', verifyotp, name='verifyotp'),
+    path('home', home, name='home')
     
     
 ]

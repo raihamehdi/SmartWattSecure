@@ -83,7 +83,7 @@ def send_otp(request):
         plain_message = strip_tags(html_message)
         from_email = settings.EMAIL_HOST_USER  # Update with your email address or use a custom sender
         to_email = email
-        send_mail(subject, plain_message, from_email, [to_email], html_message=html_message, fail_silently=False)
+        send_mail(subject, plain_message, from_email, [to_email], html_message=html_message)
 
         return render(request, 'enterotp.html', {'email': email, 'otp': otp})
     else:
@@ -103,3 +103,5 @@ def send_otp(request):
 #             return render(request, 'enterotp.html', {'email': email, 'error': 'Invalid OTP. Please try again.'})
 #     else:
 #         return redirect('forgetpass')
+def home(request):
+    return render(request, 'resetpass.html')
