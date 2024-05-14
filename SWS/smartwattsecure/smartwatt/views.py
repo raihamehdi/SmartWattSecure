@@ -98,3 +98,7 @@ def verifyotp(request):
             return render(request, 'enterotp.html', {'error_message': 'Invalid OTP. Please try again.'})
 
     return render(request, 'forgetpass.html')
+
+
+def index(request):
+    return render(request, 'index.html')
