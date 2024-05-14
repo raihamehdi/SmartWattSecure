@@ -1,0 +1,73 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Navbar styles */
+.navbar {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #f8f9fa; 
+}
+
+.navbar .logo {
+    height: 60px; /* Adjust height as needed */
+    width: 60px;
+}
+
+.nav-links {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-grow: 1;
+    justify-content: flex-end;
+}
+
+.nav-links li {
+    margin-right: 20px;
+}
+
+.nav-links li a {
+    text-decoration: none;
+    color: black;
+    font-weight: bold;
+    padding: 8px 15px;
+    transition: all 0.3s ease;
+}
+
+.nav-links li a:hover {
+    background-color: rgb(92, 92, 213);
+    color: white;
+    transform: scale(1.05);
+}
+
+/* User details section */
+.user-details {
+    display: flex;
+    align-items: center;
+}
+
+.user-details p {
+    margin-right: 10px;
+    font-weight: bold;
+    color: black;
+}
+
+.user-avatar {
+    width: 30px; /* Adjust size as needed */
+    height: 30px; /* Adjust size as needed */
+    border-radius: 50%;
+}
+
+/* Separator line */
+.separator {
+    border: none;
+    border-top: 2px solid rgb(180, 180, 236); /* Change color as needed */
+    margin: 0;
+}
+/* Navbar code ends here */
+

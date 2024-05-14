@@ -1,12 +1,34 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Greeting</title>
+    <title>Home Page</title>
+    <link rel="stylesheet" href="{% static 'home.css' %}">
 </head>
 <body>
-    <h1>Hi user!</h1>
-    <p>Welcome to your dashboard!</p>
+    <div class="navbar">
+        <img src="Logo.png" alt="Logo" class="logo">
+        <ul class="nav-links">
+            <li><a href="#">Home</a></li>
+            <li><a href="#">Insights</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Support</a></li>
+            <li><a href="#">Login</a></li>
+            <li><a href="#">Signup</a></li>
+        </ul>
+        <div class="user-details">
+            <img src="{% static 'smartwatt/Logo.png' %}" alt="User Avatar" class="user-avatar">
+            <p>User Name</p> <!-- Replace with actual user's name -->
+        </div>
+    </div>
+
+    <hr class="separator">
+
+    <!-- Content goes here -->
+   
+
+
 </body>
 </html>
