@@ -40,9 +40,9 @@ def signup(request):
             user.password = make_password(password)
             user.save()
 
-            return render(request, 'home.html') 
+            return render(request, 'login.html') 
     else:
-        return render(request, 'login_signup.html')
+        return render(request, 'signup.html')
 
 
 def login(request):
@@ -59,49 +59,42 @@ def login(request):
             return render(request, 'admindash.html')
 
         error_message = 'Invalid email or password.'
-        return render(request, 'login_signup.html', {'error': error_message})
+        return render(request, 'signin.html', {'error': error_message})
 
     else:
-        return render(request, 'login_signup.html')
+        return render(request, 'signin.html')
 
-otp_storage = {}
-
-def generate_otp():
-    return str(random.randint(1000, 9999))  # Generate a 4-digit OTP
-
-def send_otp(request):
+def sendotp(request):
     if request.method == 'POST':
-        email = request.POST.get('email')
+        email=request.POST.get("email")
+        print("email:",email)
+        user = User.objects.filter(email=email).first()
+        if user:
+            reset_code = ''.join(random.choices('0123456789', k=4))
+            send_mail(
+                'Password Reset Code',
+                f'Your password reset code is: {reset_code}',
+                settings.EMAIL_HOST_USER,
+                [email],
+                fail_silently=False,
+            )
+            request.session['reset_code'] = reset_code
+            request.session['reset_email'] = email
+            return render(request,'enterotp.html')
+        else:
+            error_message = 'Invalid email.'
+            return render(request, 'forgetpass.html', {'error': error_message})
+    return render(request, 'forgetpass.html')
 
-        # Generate OTP
-        otp = generate_otp()
-        otp_storage[email] = otp  # Store the OTP temporarily (you might want to use a more secure storage)
+def verifyotp(request):
+    if request.method == 'POST':
+        entered_otp = request.POST.get('otp')
+        saved_otp = request.session.get('reset_code')
+        email = request.session.get('reset_email')
 
-        # Send OTP via email
-        subject = 'Your OTP for Account Verification'
-        html_message = render_to_string('emailtemp.html', {'otp': otp})
-        plain_message = strip_tags(html_message)
-        from_email = settings.EMAIL_HOST_USER  # Update with your email address or use a custom sender
-        to_email = email
-        send_mail(subject, plain_message, from_email, [to_email], html_message=html_message)
+        if entered_otp == saved_otp:
+            return render(request, 'resetpass.html', {'email': email})
+        else:
+            return render(request, 'enterotp.html', {'error_message': 'Invalid OTP. Please try again.'})
 
-        return render(request, 'enterotp.html', {'email': email, 'otp': otp})
-    else:
-        return render(request, 'forgetpass.html')
-
-# def verifyotp(request):
-#     if request.method == 'POST':
-#         email = request.POST.get('email')
-#         entered_otp = request.POST.get('otp')
-
-#         if email in otp_storage and otp_storage[email] == entered_otp:
-#             del otp_storage[email]  # Remove the OTP after successful verification
-
-#             # Redirect to the password reset page or implement your logic here
-#             return render(request, 'resetpass.html', {'email': email})
-#         else:
-#             return render(request, 'enterotp.html', {'email': email, 'error': 'Invalid OTP. Please try again.'})
-#     else:
-#         return redirect('forgetpass')
-def home(request):
-    return render(request, 'resetpass.html')
+    return render(request, 'forgetpass.html')

@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SignUp Screen</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      background-color: #f0f0f0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .container {
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      padding: 40px;
+      position: relative; /* Make the container position relative */
+      display: flex;
+      align-items: center;
+      width: 100vw; /* Cover full viewport width */
+      max-width: 100%; /* Adjust as needed */
+      height: 88vh; /* Cover full viewport height */
+      max-height: 100%; /* Adjust as needed */
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      cursor: pointer;
+      font-size: 24px; /* Adjust font size */
+      width: 40px; /* Adjust width */
+      height: 40px; /* Adjust height */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 50%; /* Make it circular */
+      background-color: #ffffff; /* Light gray background */
+      transition: background-color 0.3s; /* Add transition effect */
+    }
+
+    .close-btn:hover {
+      background-color: #ccc; /* Darker gray background on hover */
+    }
+    
+    .image-holder {
+      flex: 6;
+      text-align: center;
+    }
+    
+    .image-holder img {
+      max-width: 100%;
+      height: auto;
+      width: 80%; /* Increase image width */
+    }
+    
+    .signup-form {
+      flex: 4;
+      text-align: left;
+      padding-left: 20px; /* Add left padding for space */
+    }
+    
+    .create-account {
+      color: #004AAD; /* Blue color */
+      font-size: 28px; /* Increase font size */
+      font-weight: bold; /* Make the text bold */
+      margin-bottom: 20px; /* Add bottom margin */
+    }
+
+    .sign-up {
+      color: #000000; /* Blue color */
+      font-size: 20px; /* Increase font size */
+      font-weight: bold; /* Make the text bold */
+      margin-bottom: 20px; /* Add bottom margin */
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 5px;
+      text-align: left;
+    }
+    
+    input[type="text"],
+    input[type="email"],
+    input[type="password"] {
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      width: calc(100% - 16px); /* Adjusted width */
+      margin-bottom: 10px;
+    }
+    
+    button {
+      padding: 10px 20px;
+      background-color: transparent; /* No fill */
+      color: #000; /* Button text color */
+      border: 2px solid #333; /* Border only */
+      border-radius: 10px; /* Rounded edges */
+      cursor: pointer;
+      display: block;
+      margin: 0 auto 20px; /* Center button horizontally and add bottom margin */
+    }
+    
+    button:hover {
+      background-color: #004AAD; /* Change background color on hover */
+      color: #fff; /* Change text color on hover */
+    }
+
+    .google-btn:hover {
+      background-color: #004AAD;
+      color: #fff;
+    }
+    
+    a {
+      color: #004AAD; /* Blue color */
+      text-decoration: none; /* Remove underline */
+      cursor: pointer;
+    }
+    
+    .forgot-password {
+      text-align: right;
+      font-size: 16px; /* Adjusted font size */
+      margin-bottom: 10px; /* Added bottom margin */
+    }
+    
+    p {
+      margin-top: 10px;
+      text-align: center; /* Center align text below button */
+    }
+
+    .google-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid #333;
+      border-radius: 10px;
+      padding: 5px 10px;
+      cursor: pointer;
+      background-color: #ffffff;
+      margin-bottom: 20px;
+      margin-top: 20px;
+    }
+
+    .google-btn img {
+      width: 24px;
+      height: 24px;
+      margin-right: 5px;
+    }
+
+    .or-divider {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .or-divider::before,
+    .or-divider::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background-color: #333;
+    }
+
+    .or-word {
+      margin: 0 10px;
+      color: #333;
+      font-weight: bold;
+    }
+
+    .already-have-account {
+      text-align: center;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="close-btn" onclick="closeScreen()">×</div> <!-- Close button -->
+    <div class="image-holder">
+      <img src="static/smartwatt/sign up.webp" alt="Woman using laptop">
+    </div>
+    <div class="signup-form">
+      <div class="create-account">
+        <span style="font-weight: bold;">Create an Account</span>
+      </div>
+      <br>
+      <div class="sign-up">
+        <span>Sign Up</span>
+      </div><br>
+      <form action="#">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" placeholder="Enter your username">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" placeholder="Enter your email">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" placeholder="Enter your password">
+        <div style="text-align: center;"> <!-- Container for center alignment -->
+          <br>
+          <button type="submit">Sign Up</button>
+          <div class="or-divider">
+            <hr>
+            <span class="or-word">or</span>
+            <hr>
+          </div>
+          <div class="google-btn" onclick="signUpWithGoogle()">
+            <img src="static/smartwatt/google.png" alt="Google Logo">
+            Sign up with Google
+          </div>
+          <p>Already have an account? <a href="#">Sign In</a></p>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    function closeScreen() {
+      window.close(); // Close the window
+    }
+
+    function signUpWithGoogle() {
+      // Add your sign up with Google functionality here
+      console.log("Sign up with Google clicked!");
+    }
+  </script>
+</body>
+</html>

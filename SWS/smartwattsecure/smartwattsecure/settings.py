@@ -123,11 +123,17 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'  # Update with your SMTP server hostname
-EMAIL_PORT = 587  # Update with your SMTP server port
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'concreteheaven1@gmail.com'  # Update with your SMTP username
-EMAIL_HOST_PASSWORD = 'bsmt jxeg vdzv corb'  # Update with your SMTP password
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = 'smtp.gmail.com'  
+# EMAIL_PORT = 587  
+# EMAIL_USE_TLS = True
+# EMAIL_HOST_USER = ''  
+# EMAIL_HOST_PASSWORD = 'opcy lhuc apdd qmfc'  
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'  # SMTP server address
+EMAIL_PORT = 587  # SMTP server port (587 for TLS, 465 for SSL)
+EMAIL_USE_TLS = True  # Set it to True if your SMTP server requires TLS
+EMAIL_HOST_USER = 'concreteheaven1@gmail.com'  # Your email address
+EMAIL_HOST_PASSWORD = 'eboy cdba btvq zivw'  # Your email password
 
