@@ -40,7 +40,7 @@
 }
 
 .nav-links li a:hover {
-    background-color: rgb(92, 92, 213);
+    background-color: #3787d7;
     color: white;
     transform: scale(1.05);
 }
@@ -71,3 +71,114 @@
 }
 /* Navbar code ends here */
 
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.skill-container {
+    display: flex;
+  
+    
+}
+
+
+
+.skill-container .skill {
+    position: relative;
+    margin-left:200px;
+    margin-top: 10px;
+}
+
+.skill-container .skill .outer {
+    height: 320px;
+    width: 320px;
+    border-radius: 50%;
+    padding: 20px;
+    box-shadow: 6px 6px 10px -1px rgba(0, 0, 0, 0.15),
+                -6px -6px 10px -1px rgba(255, 255,255, 0.7);
+}
+
+.skill-container .skill .outer .inner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 280px;
+    width: 280px;
+    border-radius: 50%;
+    box-shadow: inset 3px 3px 5px -1px rgba(0, 0, 0, 0.2),
+                inset -3px -3px 5px -1px rgba(255, 255, 255, 0.7),
+                      -0.5px -0.5px 0px rgba(255, 255, 255, 1),
+                       0.5px 0.5px 0px rgba(0, 0, 0, 0.15),
+                       0px 8px 6px -6px rgba(0, 0, 0, 0.05);
+}
+
+.skill-container .skill .outer .inner .number {
+    font-weight: bold;
+    color:#3787d7;
+    font-size: 50px;
+}
+
+
+.skill-container .skill:nth-child(1) .outer .inner .number {
+    color: #3787d7;
+}
+
+.skill-container .skill:nth-child(2) .outer .inner .number {
+    color: #3787d7;
+}
+
+
+circle {
+    fill: none;
+    stroke-width: 20px;
+    stroke-dasharray: 938;
+    stroke-dashoffset: 938;
+    transition: 2s linear;
+}
+
+svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.skill-container .skill:nth-child(1) circle {
+    stroke: #4fa0ff;
+}
+
+.skill-container .skill:nth-child(2) circle {
+    stroke: #4fa0ff;
+}
+
+
+
+label.activepower {
+    font-weight: bold;
+    color:#3787d7;
+    font-size: 35px;
+    margin-inline-start: 255px;
+    
+
+}
+
+label.todaysconsumption {
+    font-weight: bold;
+    color:#3787d7;
+    font-size: 35px;
+    margin-inline-start: 260px;
+
+
+}
+h1
+{
+margin-left: 40px;
+margin-top:15px ;
+}
+p
+{
+font-size:medium;
+margin-left: 15px;
+
+}
