@@ -192,7 +192,8 @@
       <div class="sign-up">
         <span>Sign Up</span>
       </div><br>
-      <form action="#">
+      <form action="{% url 'signup' %}" method='POST' >
+        {% csrf_token %}
         <label for="username">Username</label>
         <input type="text" id="username" name="username" placeholder="Enter your username">
         <label for="email">Email</label>
@@ -211,7 +212,7 @@
             <img src="static/smartwatt/google.png" alt="Google Logo">
             Sign up with Google
           </div> -->
-          <p>Already have an account? <a href="/login">Sign In</a></p>
+          <p>Already have an account? <a href="/signin">Sign In</a></p>
         </div>
       </form>
     </div>

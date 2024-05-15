@@ -163,11 +163,11 @@
       <div class="sign-in">
         <span>Sign In</span>
       </div>
-      <form method="GET"  action="{% url 'login' %}"> 
+      <form method="GET"  action="{% url 'signin' %}" > 
         {% csrf_token %}
-        {% if error %}
+        {% comment %} {% if error %}
         <p style="color: red;">{{ error }}</p>
-        {% endif %}
+        {% endif %} {% endcomment %}
         <label for="username">Username or Email</label>
         <input type="text" id="username" name="email" placeholder="Enter your username or email">
         <label for="password" class="password-field">Password

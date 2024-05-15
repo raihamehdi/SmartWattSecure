@@ -1,11 +1,11 @@
 from django.contrib import admin
 from django.urls import path
-from .views import registeradmin, signup, login, sendotp, verifyotp, index, home,energyc, resetpass
+from .views import registeradmin, signup, signin, sendotp, verifyotp, index, home,energyc, resetpass
 
 
 urlpatterns = [
     path('registeradmin', registeradmin, name='registeradmin'),
-    path('login', login, name='login'),
+    path('signin', signin, name='signin'),
     path('signup', signup, name='signup'),
     path('sendotp', sendotp, name='sendotp'),
     path('verifyotp', verifyotp, name='verifyotp'),

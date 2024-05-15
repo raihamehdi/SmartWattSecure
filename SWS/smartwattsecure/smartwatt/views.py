@@ -9,7 +9,6 @@ from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.conf import settings
 from .models import EnergyConsumption
-from django.contrib.auth.decorators import login_required
 
 
 
@@ -20,15 +19,17 @@ def registeradmin(request):
         email = request.POST.get('email')
 
         if Admin.objects.filter(email=email).exists():
-            return render(request, 'registeradmin.html', {'error': 'Admin with this email already exists.'})
+            # Admin already exists, redirect to error page
+            return render(request, 'error.html', {'error_message': 'Admin with this email already exists!'})
         else:
             admin = Admin(admin_name=admin_name, email=email)
             admin.password = make_password(password)
             admin.save()
 
-            return redirect('admindash')
+            return render(request, 'admindash.html')
     else:
         return render(request, 'registeradmin.html')
+
     
     
 def signup(request):
@@ -36,37 +37,56 @@ def signup(request):
         username = request.POST.get('username')
         password = request.POST.get('password')
         email = request.POST.get('email')
-        
-        if Admin.objects.filter(Q(email=email) | Q(admin_name=username)).exists() or User.objects.filter(Q(email=email) | Q(username=username)).exists():
-            return render(request, 'login_signup.html', {'error': 'Email or username already exists.'})
+
+        # Check for existing admin with same email or username
+        existing_admin = Admin.objects.filter(Q(email=email) | Q(admin_name=username)).exists()
+
+        # Check for existing user with same email or username
+        existing_user = User.objects.filter(Q(email=email) | Q(username=username)).exists()
+
+        if existing_admin:
+            # Admin with duplicate email or username found
+            error_message = "An admin with this email or username already exists!"
+        elif existing_user:
+            # User with duplicate email or username found
+            error_message = "A user with this email or username already exists!"
         else:
+            # No duplicates found, proceed with user creation
             user = User(username=username, email=email)
             user.password = make_password(password)
             user.save()
+            return render(request, 'signin.html')
 
-            return render(request, 'login.html') 
+        # If duplicate found, render signup with error message
+        return render(request, 'error.html', {'error_message': error_message})
+
     else:
         return render(request, 'signup.html')
 
-
-def login(request):
-    if request.method == 'GET':
+def signin(request):
+    if request.method == 'GET':  # Change to 'POST' for form submission
         email = request.GET.get('email')
         password = request.GET.get('password')
 
         user = User.objects.filter(email=email).first()
+        admin = Admin.objects.filter(email=email).first()
+
+        # Check for valid user credentials
         if user is not None and check_password(password, user.password):
             return render(request, 'home.html')
 
-        admin = Admin.objects.filter(email=email).first()
-        if admin is not None and check_password(password, admin.password):
+        # Check for valid admin credentials
+        elif admin is not None and check_password(password, admin.password):
             return render(request, 'admindash.html')
 
-        error_message = 'Invalid email or password.'
-        return render(request, 'signin.html', {'error': error_message})
+        # Handle incorrect credentials
+        else:
+            error_message = "Invalid email or password."
+            return render(request, 'error.html', {'error_message': error_message})
 
     else:
         return render(request, 'signin.html')
+
 
 def sendotp(request):
     if request.method == 'POST':
@@ -84,12 +104,12 @@ def sendotp(request):
             )
             request.session['reset_code'] = reset_code
             request.session['reset_email'] = email
-            request.session['reset_user_id'] = user.user_id  # Store user_id in session
             return render(request, 'enterotp.html')
         else:
-            error_message = 'Invalid email.'
-            return render(request, 'forgetpass.html', {'error': error_message})
+            error_message = "Email not found. Please enter a registered email address."
+            return render(request, 'error.html', {'error_message': error_message})
     return render(request, 'forgetpass.html')
+
 
 def verifyotp(request):
     if request.method == 'POST':
@@ -99,21 +119,30 @@ def verifyotp(request):
         user_id = request.session.get('reset_user_id')  # Get user_id from session
 
         if entered_otp == saved_otp and user_id:
-            user = User.objects.get(pk=user_id)
-            return render(request, 'resetpass.html', {'email': email, 'user_id': user_id})
+            
+            request.session['reset_code'] = saved_otp
+            request.session['reset_email'] = email
+            return render(request, 'resetpass.html')
         else:
-            return render(request, 'enterotp.html', {'error_message': 'Invalid OTP. Please try again.'})
+            error_message = "You have entered incorrect OTP."
+            return render(request, 'error.html', {'error_message': error_message})
 
     return render(request, 'forgetpass.html')
 
-@login_required
 def resetpass(request):
     if request.method == 'POST':
         new_password = request.POST.get('new_password')
-        user = request.user
-        user.password = make_password(new_password)
-        user.save()
-        return render(request, 'signin.html')
+        confirmpassword = request.POST.get('confirmpassword')
+        if(new_password == confirmpassword):
+            email= request.session.get('reset_email')
+            user = User.objects.filter(email=email).first()
+            if user:
+                user.password = make_password(new_password)
+                user.save()
+                
+                del request.session['reset_code']
+                del request.session['reset_email']
+                return render(request, 'signin.html')   
 
     else:
         return render(request, 'resetpass.html')
@@ -130,9 +159,7 @@ def energyc(request):
         active_power = request.POST.get('active_power')
         time = request.POST.get('time')
         user_id = request.POST.get('user_id')
-         # Fetch the user object based on the provided user_id
         user = User.objects.get(user_id=user_id)
-        # Create a new EnergyConsumption object and save it to the database
         consumption = EnergyConsumption.objects.create(
             active_power=active_power,
             time=time,
@@ -143,7 +170,6 @@ def energyc(request):
         return render(request,"consumptiondata.html" )
     
     else:
-        # Retrieve all existing EnergyConsumption objects
         consumptions = EnergyConsumption.objects.all()
         return render(request, 'consumptiondata.html', {'consumptions': consumptions})
     
