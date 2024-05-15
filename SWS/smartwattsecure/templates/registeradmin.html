@@ -53,9 +53,6 @@
 <body>
     <div class="container">
         <h1>Register Admin</h1>
-        {% if error %}
-        <p style="color: red;">{{ error }}</p>
-        {% endif %}
         <form method="post" action="{% url 'registeradmin' %}">
             {% csrf_token %}
             <label for="admin_name">Admin Name:</label>

@@ -163,7 +163,7 @@
       <div class="sign-in">
         <span>Sign In</span>
       </div>
-      <form method="GET"  action="{% url 'login' %}" > 
+      <form method="GET"  action="{% url 'signin' %}" > 
         {% csrf_token %}
         {% comment %} {% if error %}
         <p style="color: red;">{{ error }}</p>

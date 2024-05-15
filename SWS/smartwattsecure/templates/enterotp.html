@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Forget Password</title>
-    <link href="{% static 'static/Forgetpassword2.css' %}" rel="stylesheet">
+    <link href="{% static 'Forgetpassword2.css' %}" rel="stylesheet">
 </head>
 <body>
     <button class="backbutton" onclick="window.history.back()">
@@ -24,9 +24,6 @@
             <h2>Enter 4 Digits Code</h2>
             <form method="POST" action="{% url 'verifyotp' %}">
                 {% csrf_token %}
-                {% if error %}
-                <p style="color: red;">{{ error }}</p>
-                {% endif %}
                 <label for="otp">Enter OTP:</label>
                 <input type="text" id="otp" name="otp" required>
                 <button type="submit">Verify OTP</button>
