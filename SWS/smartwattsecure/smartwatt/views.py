@@ -8,6 +8,10 @@ from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.conf import settings
+from .models import EnergyConsumption
+from django.contrib.auth.decorators import login_required
+
+
 
 def registeradmin(request):
     if request.method == 'POST':
@@ -66,8 +70,8 @@ def login(request):
 
 def sendotp(request):
     if request.method == 'POST':
-        email=request.POST.get("email")
-        print("email:",email)
+        email = request.POST.get("email")
+        print("email:", email)
         user = User.objects.filter(email=email).first()
         if user:
             reset_code = ''.join(random.choices('0123456789', k=4))
@@ -80,7 +84,8 @@ def sendotp(request):
             )
             request.session['reset_code'] = reset_code
             request.session['reset_email'] = email
-            return render(request,'enterotp.html')
+            request.session['reset_user_id'] = user.user_id  # Store user_id in session
+            return render(request, 'enterotp.html')
         else:
             error_message = 'Invalid email.'
             return render(request, 'forgetpass.html', {'error': error_message})
@@ -91,14 +96,55 @@ def verifyotp(request):
         entered_otp = request.POST.get('otp')
         saved_otp = request.session.get('reset_code')
         email = request.session.get('reset_email')
+        user_id = request.session.get('reset_user_id')  # Get user_id from session
 
-        if entered_otp == saved_otp:
-            return render(request, 'resetpass.html', {'email': email})
+        if entered_otp == saved_otp and user_id:
+            user = User.objects.get(pk=user_id)
+            return render(request, 'resetpass.html', {'email': email, 'user_id': user_id})
         else:
             return render(request, 'enterotp.html', {'error_message': 'Invalid OTP. Please try again.'})
 
     return render(request, 'forgetpass.html')
 
+@login_required
+def resetpass(request):
+    if request.method == 'POST':
+        new_password = request.POST.get('new_password')
+        user = request.user
+        user.password = make_password(new_password)
+        user.save()
+        return render(request, 'signin.html')
+
+    else:
+        return render(request, 'resetpass.html')
+
 
 def index(request):
     return render(request, 'index.html')
+
+def home(request):
+    return render(request, 'home.html')
+
+def energyc(request):
+    if request.method == 'POST':
+        active_power = request.POST.get('active_power')
+        time = request.POST.get('time')
+        user_id = request.POST.get('user_id')
+         # Fetch the user object based on the provided user_id
+        user = User.objects.get(user_id=user_id)
+        # Create a new EnergyConsumption object and save it to the database
+        consumption = EnergyConsumption.objects.create(
+            active_power=active_power,
+            time=time,
+            user_id=user
+        )
+        consumption.save()
+        
+        return render(request,"consumptiondata.html" )
+    
+    else:
+        # Retrieve all existing EnergyConsumption objects
+        consumptions = EnergyConsumption.objects.all()
+        return render(request, 'consumptiondata.html', {'consumptions': consumptions})
+    
+

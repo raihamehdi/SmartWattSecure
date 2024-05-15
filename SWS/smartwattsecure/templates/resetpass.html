@@ -20,7 +20,8 @@
         <div class="right-half">
             <h1>Reset Password</h1>
             <p class="reset-text">Set the new password of your account so <br> you can login and access all the features.</p><br><br>
-            <form class="custom-form">
+            <form class="custom-form" form action="{% url 'resetpass' %}" method="POST">
+                {% csrf_token %}
                 <input type="password" name="password" placeholder="Password"><br><br>
                 <input type="password" name="confirmpassword" placeholder="Confirm Password"><br><br>
                 <button type="submit" id="123">Submit</button>

@@ -36,7 +36,7 @@ class EnergyConsumption(models.Model):
     def consumption_data(self):
         return self.active_power * self.time
     def __str__(self):
-        return f'{self.consumption_id}, {self.active_power}, {self.consumption_data}, {self.username}'
+        return f'{self.consumption_id}, {self.active_power}, {self.consumption_data}, {self.user_id}'
     
 #    def average_active_power(self):
 #         time_range = EnergyConsumption.objects.filter(timestamp__lte=self.timestamp).aggregate(avg_active_power=Avg('active_power'))

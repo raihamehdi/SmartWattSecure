@@ -1,4 +1,4 @@
-{% comment %} {% load static %}
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,39 +22,23 @@
         </div>
         <div class="content">
             <h2>Enter 4 Digits Code</h2>
-
+            <form method="POST" action="{% url 'verifyotp' %}">
+                {% csrf_token %}
+                {% if error %}
+                <p style="color: red;">{{ error }}</p>
+                {% endif %}
+                <label for="otp">Enter OTP:</label>
+                <input type="text" id="otp" name="otp" required>
+                <button type="submit">Verify OTP</button>
+            </form>
             <label class="otplabel" for="otp">Enter the 4 digits code that you receive on your email.</label><br><br>
-           <div class="otp-container">
-                <input type="text" maxlength="1" name="box1" class="otp-input" id="otp-box-1">
-                <input type="text" maxlength="1" name="box2" class="otp-input" id="otp-box-2">
-                <input type="text" maxlength="1" name="box3" class="otp-input" id="otp-box-3">
-                <input type="text" maxlength="1" name="box4" class="otp-input" id="otp-box-4">
-              </div><br><br>
+           
              <button type="submit">Send</button>
             
             
         </div>
     </div>
 </body>
-</html> {% endcomment %}
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enter OTP</title>
-</head>
-<body>
-    <h1>Enter OTP</h1>
-    <form method="POST" action="{% url 'verifyotp' %}">
-        {% csrf_token %}
-        {% if error %}
-        <p style="color: red;">{{ error }}</p>
-        {% endif %}
-        <label for="otp">Enter OTP:</label>
-        <input type="text" id="otp" name="otp" required>
-        <button type="submit">Verify OTP</button>
-    </form>
-</body>
 </html>
+
+
