@@ -37,13 +37,13 @@ def signup(request):
         email = request.POST.get('email')
         
         if Admin.objects.filter(Q(email=email) | Q(admin_name=username)).exists() or User.objects.filter(Q(email=email) | Q(username=username)).exists():
-            return render(request, 'login_signup.html', {'error': 'Email or username already exists.'})
+            return render(request, 'signup.html', {'error': 'Email or username already exists.'})
         else:
             user = User(username=username, email=email)
             user.password = make_password(password)
             user.save()
 
-            return render(request, 'login.html') 
+            return render(request, 'signin.html') 
     else:
         return render(request, 'signup.html')
 
@@ -83,12 +83,12 @@ def sendotp(request):
             )
             request.session['reset_code'] = reset_code
             request.session['reset_email'] = email
-            request.session['reset_user_id'] = user.user_id  # Store user_id in session
             return render(request, 'enterotp.html')
         else:
             error_message = 'Invalid email.'
             return render(request, 'forgetpass.html', {'error': error_message})
     return render(request, 'forgetpass.html')
+
 
 def verifyotp(request):
     if request.method == 'POST':
@@ -110,14 +110,19 @@ def verifyotp(request):
 def resetpass(request):
     if request.method == 'POST':
         new_password = request.POST.get('new_password')
-        email= request.session.get('reset_email')
-        user = User.objects.filter(email=email).first()
-        if user:
-            user.password = make_password(new_password)
-            user.save()
-            return render(request, 'signin.html')
-            del request.session['reset_code']
-            del request.session['reset_email']
+        confirmpassword = request.POST.get('confirmpassword')
+        if(new_password == confirmpassword):
+            email= request.session.get('reset_email')
+            user = User.objects.filter(email=email).first()
+            if user:
+                user.password = make_password(new_password)
+                user.save()
+                
+                del request.session['reset_code']
+                del request.session['reset_email']
+                return render(request, 'signin.html')
+        else:
+            print('password doesnt match')    
 
     else:
         return render(request, 'resetpass.html')
