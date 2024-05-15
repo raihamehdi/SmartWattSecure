@@ -9,7 +9,6 @@ from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.conf import settings
 from .models import EnergyConsumption
-from django.contrib.auth.decorators import login_required
 
 
 
@@ -99,21 +98,26 @@ def verifyotp(request):
         user_id = request.session.get('reset_user_id')  # Get user_id from session
 
         if entered_otp == saved_otp and user_id:
-            user = User.objects.get(pk=user_id)
-            return render(request, 'resetpass.html', {'email': email, 'user_id': user_id})
+            
+            request.session['reset_code'] = saved_otp
+            request.session['reset_email'] = email
+            return render(request, 'resetpass.html')
         else:
             return render(request, 'enterotp.html', {'error_message': 'Invalid OTP. Please try again.'})
 
     return render(request, 'forgetpass.html')
 
-@login_required
 def resetpass(request):
     if request.method == 'POST':
         new_password = request.POST.get('new_password')
-        user = request.user
-        user.password = make_password(new_password)
-        user.save()
-        return render(request, 'signin.html')
+        email= request.session.get('reset_email')
+        user = User.objects.filter(email=email).first()
+        if user:
+            user.password = make_password(new_password)
+            user.save()
+            return render(request, 'signin.html')
+            del request.session['reset_code']
+            del request.session['reset_email']
 
     else:
         return render(request, 'resetpass.html')
