@@ -19,15 +19,17 @@ def registeradmin(request):
         email = request.POST.get('email')
 
         if Admin.objects.filter(email=email).exists():
-            return render(request, 'registeradmin.html')
+            # Admin already exists, redirect to error page
+            return render(request, 'error.html', {'error_message': 'Admin with this email already exists!'})
         else:
             admin = Admin(admin_name=admin_name, email=email)
             admin.password = make_password(password)
             admin.save()
 
-            return redirect('admindash')
+            return render(request, 'admindash.html')
     else:
         return render(request, 'registeradmin.html')
+
     
     
 def signup(request):
@@ -35,36 +37,56 @@ def signup(request):
         username = request.POST.get('username')
         password = request.POST.get('password')
         email = request.POST.get('email')
-        
-        if Admin.objects.filter(Q(email=email) | Q(admin_name=username)).exists() or User.objects.filter(Q(email=email) | Q(username=username)).exists():
-            return render(request, 'signup.html')
+
+        # Check for existing admin with same email or username
+        existing_admin = Admin.objects.filter(Q(email=email) | Q(admin_name=username)).exists()
+
+        # Check for existing user with same email or username
+        existing_user = User.objects.filter(Q(email=email) | Q(username=username)).exists()
+
+        if existing_admin:
+            # Admin with duplicate email or username found
+            error_message = "An admin with this email or username already exists!"
+        elif existing_user:
+            # User with duplicate email or username found
+            error_message = "A user with this email or username already exists!"
         else:
+            # No duplicates found, proceed with user creation
             user = User(username=username, email=email)
             user.password = make_password(password)
             user.save()
+            return render(request, 'signin.html')
 
-            return render(request, 'signin.html') 
+        # If duplicate found, render signup with error message
+        return render(request, 'error.html', {'error_message': error_message})
+
     else:
         return render(request, 'signup.html')
 
-
 def signin(request):
-    if request.method == 'GET':
+    if request.method == 'GET':  # Change to 'POST' for form submission
         email = request.GET.get('email')
         password = request.GET.get('password')
 
         user = User.objects.filter(email=email).first()
+        admin = Admin.objects.filter(email=email).first()
+
+        # Check for valid user credentials
         if user is not None and check_password(password, user.password):
             return render(request, 'home.html')
 
-        admin = Admin.objects.filter(email=email).first()
-        if admin is not None and check_password(password, admin.password):
+        # Check for valid admin credentials
+        elif admin is not None and check_password(password, admin.password):
             return render(request, 'admindash.html')
 
-        return render(request, 'signin.html')
+        # Handle incorrect credentials
+        else:
+            error_message = "Invalid email or password."
+            return render(request, 'error.html', {'error_message': error_message})
 
     else:
         return render(request, 'signin.html')
+
 
 def sendotp(request):
     if request.method == 'POST':
@@ -84,7 +106,8 @@ def sendotp(request):
             request.session['reset_email'] = email
             return render(request, 'enterotp.html')
         else:
-            return render(request, 'forgetpass.html')
+            error_message = "Email not found. Please enter a registered email address."
+            return render(request, 'error.html', {'error_message': error_message})
     return render(request, 'forgetpass.html')
 
 
@@ -101,7 +124,8 @@ def verifyotp(request):
             request.session['reset_email'] = email
             return render(request, 'resetpass.html')
         else:
-            return render(request, 'enterotp.html')
+            error_message = "You have entered incorrect OTP."
+            return render(request, 'error.html', {'error_message': error_message})
 
     return render(request, 'forgetpass.html')
 
