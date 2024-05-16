@@ -73,7 +73,7 @@ def signin(request):
 
         # Check for valid user credentials
         if user is not None and check_password(password, user.password):
-            return render(request, 'home.html')
+            return render(request, 'home2.html')
 
         # Check for valid admin credentials
         elif admin is not None and check_password(password, admin.password):
@@ -82,7 +82,7 @@ def signin(request):
         # Handle incorrect credentials
         else:
             error_message = "Invalid email or password."
-            return render(request, 'error.html', {'error_message': error_message})
+            return render(request, 'signin.html', {'error_message': error_message})
 
     else:
         return render(request, 'signin.html')
@@ -139,10 +139,12 @@ def resetpass(request):
             if user:
                 user.password = make_password(new_password)
                 user.save()
-                
                 del request.session['reset_code']
                 del request.session['reset_email']
-                return render(request, 'signin.html')   
+                return render(request, 'signin.html') 
+        else:
+            error_message = "passwords doesnt match"
+            return render(request, 'error.html', {'error_message': error_message})      
 
     else:
         return render(request, 'resetpass.html')
@@ -151,8 +153,42 @@ def resetpass(request):
 def index(request):
     return render(request, 'index.html')
 
+from django.shortcuts import render
+from django.http import HttpResponse
+from .models import EnergyConsumption
+
 def home(request):
-    return render(request, 'home.html')
+    # Get user_id from the request
+    user_id = request.GET.get('user_id', None)
+
+    # Check if user_id is provided and valid
+    if user_id:
+        try:
+            # Get the user's consumption data
+            latest_consumption = EnergyConsumption.objects.filter(user_id=user_id).order_by('-id').first()
+
+            # Check if consumption data exists for the user
+            if latest_consumption:
+                active_power = latest_consumption.active_power
+                consumption_data = latest_consumption.consumption_data
+                username = latest_consumption.user_id.username
+            else:
+                active_power = 0  # Set default value if no data exists
+                consumption_data = 0
+                username = "Unknown"  # Set default username
+
+            return render(request, 'home2.html', {
+                'username': username,
+                'active_power': active_power,
+                'consumption_data': consumption_data,
+            })
+        except Exception as e:
+            return HttpResponse(f"Error: {e}")
+    else:
+        return HttpResponse("Please provide a valid user_id in the request.")
+
+
+
 
 def energyc(request):
     if request.method == 'POST':
