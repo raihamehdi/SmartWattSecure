@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Forget Password</title>
+    <title>OTP Verification</title>
     <link href="{% static 'Forgetpassword2.css' %}" rel="stylesheet">
 </head>
 <body>
@@ -13,29 +13,21 @@
             <path d="M12 5l-8.5 7.5 8.5 7.5v-5.5h11v-4h-11z"/>
         </svg>
     </button>
-    
-    
-
     <div class="container">
         <div class="image-container">
-            <img src="{% static 'smartwatt/forgetpasswordpageimage.png' %}" alt="Forget Password Image">
+            <img src="{% static 'smartwatt/ForgetPassword.png' %}" alt="OTP Image">
         </div>
         <div class="content">
             <h2>Enter 4 Digits Code</h2>
             <form method="POST" action="{% url 'verifyotp' %}">
                 {% csrf_token %}
-                <label for="otp">Enter OTP:</label>
-                <input type="text" id="otp" name="otp" required>
+                <label for="otp">Enter OTP:</label><br><br>
+                <input type="text" id="otp" name="otp" required><br><br>
                 <button type="submit">Verify OTP</button>
             </form>
-            <label class="otplabel" for="otp">Enter the 4 digits code that you receive on your email.</label><br><br>
-           
-             <button type="submit">Send</button>
-            
-            
+            <p class="otplabel">Enter the 4-digit code that you received on your email.</p>
+            <p class="resend-code">Didn't receive a code? <a href="#" class="resend-btn">Resend code</a></p>
         </div>
     </div>
 </body>
 </html>
-
-
