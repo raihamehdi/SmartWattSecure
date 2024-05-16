@@ -118,14 +118,14 @@ def verifyotp(request):
         email = request.session.get('reset_email')
         user_id = request.session.get('reset_user_id')  # Get user_id from session
 
-        if entered_otp == saved_otp and user_id:
+        if entered_otp == saved_otp:
             
             request.session['reset_code'] = saved_otp
             request.session['reset_email'] = email
             return render(request, 'resetpass.html')
-        else:
-            error_message = "You have entered incorrect OTP."
-            return render(request, 'error.html', {'error_message': error_message})
+        # else:
+        #     error_message = "You have entered incorrect OTP."
+        #     return render(request, 'error.html', {'error_message': error_message})
 
     return render(request, 'forgetpass.html')
 
@@ -159,7 +159,7 @@ from .models import EnergyConsumption
 
 def home(request):
     # Get user_id from the request
-    user_id = request.GET.get('user_id', None)
+    user_id = request.GET.get('user', None)
 
     # Check if user_id is provided and valid
     if user_id:

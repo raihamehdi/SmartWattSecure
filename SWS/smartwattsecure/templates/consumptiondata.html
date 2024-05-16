@@ -29,8 +29,8 @@
         {% for consumption in consumptions %}
         <tr>
             <td>{{ consumption.consumption_id }}</td>
-            <td>{{ consumption.active_power }}</td>
-            <td>{{ consumption.consumption_data }}</td>
+            <td>{{ consumption.active_power }}kW</td>
+            <td>{{ consumption.consumption_data }}kWh</td>
             <td>{{ consumption.user_id }}</td>
         </tr>
         {% endfor %}
