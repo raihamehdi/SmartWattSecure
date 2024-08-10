@@ -247,57 +247,56 @@ def semi_svm_based_pattern_matching(Csuspicious, L, C, y, thresholdG=-1.00):
 
     return Canomaly
 
+# Load and preprocess the data for SVM training
+data = load_data('household_power_consumption.csv', delimiter=',')
+if data is not None:
+    # Create target variable: 0 for normal (<= 3kWh), 1 for suspicious (> 3kWh)
+    data['Target'] = (data['Global_active_power'] > 3).astype(int)
+
+    # Select features and target variable
+    X = data[['Global_active_power', 'Global_reactive_power', 'Voltage',
+              'Global_intensity', 'Sub_metering_1', 'Sub_metering_2','Sub_metering_3']]
+    y = data['Target']
+
+    # Standardize the data
+    scaler = StandardScaler()
+    X_scaled = scaler.fit_transform(X)
+
+    # Split the data into training and testing sets
+    X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
+
+    # Initialize the SVM classifier
+    svm_model = SVC(kernel='linear', C=1.0, random_state=42)
+
+    # Train the model
+    svm_model.fit(X_train, y_train)
+
+    # Make predictions on the test set
+    y_pred = svm_model.predict(X_test)
+
+    # Evaluate the model
+    print(confusion_matrix(y_test, y_pred))
+    print(classification_report(y_test, y_pred))
+    print(f"Accuracy: {accuracy_score(y_test, y_pred)}")
+
+    # Predict on the entire dataset
+    data['Predicted_Target'] = svm_model.predict(X_scaled)
+
+    # Separate normal and suspicious data points
+    normal_data = data[data['Predicted_Target'] == 0]
+    suspicious_data = data[data['Predicted_Target'] == 1]
+
+    # Display some of the suspicious data points
+    print(suspicious_data.head())
+    # Apply semi-SVM based pattern matching on suspicious clusters
+    L = np.column_stack((X_train, y_train))
+    C = [np.column_stack((X_train[y_train == label], y_train[y_train == label])) for label in np.unique(y_train)]
+    Csus, Cnor = suspicious_data_selection('household_power_consumption.csv')
+    Canomaly = semi_svm_based_pattern_matching(Csus, L, C, y_train)
 
 
-def main():
-    # Load and preprocess data
-    data = load_data('household_power_consumption.csv', delimiter=',')
-    if data is not None:
-        # Create target variable: 0 for normal (<= 3kWh), 1 for suspicious (> 3kWh)
-        data['Target'] = (data['Global_active_power'] > 3).astype(int)
 
-        # Select features and target variable
-        X = data[['Global_active_power', 'Global_reactive_power', 'Voltage',
-                'Global_intensity', 'Sub_metering_1', 'Sub_metering_2']]
-        y = data['Target']
-
-        # Standardize the data
-        scaler = StandardScaler()
-        X_scaled = scaler.fit_transform(X)
-
-        # Split the data into training and testing sets
-        X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
-
-        # Initialize and train the SVM classifier
-        svm_model = SVC(kernel='linear', C=1.0, random_state=42)
-        svm_model.fit(X_train, y_train)
-
-        # Make predictions and evaluate the model
-        y_pred = svm_model.predict(X_test)
-        print(confusion_matrix(y_test, y_pred))
-        print(classification_report(y_test, y_pred))
-        print(f"Accuracy: {accuracy_score(y_test, y_pred)}")
-
-        # Predict on the entire dataset
-        data['Predicted_Target'] = svm_model.predict(X_scaled)
-
-        # Separate normal and suspicious data points
-        normal_data = data[data['Predicted_Target'] == 0]
-        suspicious_data = data[data['Predicted_Target'] == 1]
-
-        # Display some of the suspicious data points
-        print(suspicious_data.head())
-
-        # Apply semi-SVM based pattern matching on suspicious clusters
-        L = np.column_stack((X_train, y_train))
-        C = [np.column_stack((X_train[y_train == label], y_train[y_train == label])) for label in np.unique(y_train)]
-        Csus, Cnor = suspicious_data_selection('household_power_consumption.csv')
-        Canomaly = semi_svm_based_pattern_matching(Csus, L, C, y_train)
-
-        print("Anomalous Data Points Identified:")
-        print(Canomaly)
-    else:
-        print("Data loading failed.")
-
-if __name__ == "__main__":
-    main()
+    print("Anomalous Data Points Identified:")
+    print(Canomaly)
+else:
+    print("Data loading failed.")
