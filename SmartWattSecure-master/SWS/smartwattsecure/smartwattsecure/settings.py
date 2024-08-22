@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -37,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'smartwatt'
+    'smartwatt.apps.SmartwattConfig',
+    
 ]
 
 MIDDLEWARE = [
@@ -55,7 +57,7 @@ ROOT_URLCONF = 'smartwattsecure.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR,"templates"],
+        'DIRS': [os.path.join(BASE_DIR,"templates")],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -76,8 +78,12 @@ WSGI_APPLICATION = 'smartwattsecure.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'smartwatt',
+        'USER': 'root',
+        'PASSWORD':'root123',
+        'HOST':'127.0.0.1',
+        'PORT': '3306'
     }
 }
 
@@ -124,16 +130,12 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# EMAIL_HOST = 'smtp.gmail.com'  
-# EMAIL_PORT = 587  
-# EMAIL_USE_TLS = True
-# EMAIL_HOST_USER = ''  
-# EMAIL_HOST_PASSWORD = 'opcy lhuc apdd qmfc'  
+# EMAIL_HOST = 'smtp.gmail.com'  # SMTP server address
+# EMAIL_PORT = 587  # SMTP server port (587 for TLS, 465 for SSL)
+# EMAIL_USE_TLS = True  # Set it to True if your SMTP server requires TLS
+# EMAIL_HOST_USER = 'concreteheaven1@gmail.com'  # Your email address
+# EMAIL_HOST_PASSWORD = 'eboy cdba btvq zivw'  # Your email password
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'  # SMTP server address
-EMAIL_PORT = 587  # SMTP server port (587 for TLS, 465 for SSL)
-EMAIL_USE_TLS = True  # Set it to True if your SMTP server requires TLS
-EMAIL_HOST_USER = 'concreteheaven1@gmail.com'  # Your email address
-EMAIL_HOST_PASSWORD = 'eboy cdba btvq zivw'  # Your email password
-
+AUTH_USER_MODEL = 'smartwatt.CustomUser'
+LOGIN_REDIRECT_URL ='home'
+LOGOUT_REDIRECT_URL='home'

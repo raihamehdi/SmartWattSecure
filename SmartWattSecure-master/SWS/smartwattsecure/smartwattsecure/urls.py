@@ -15,9 +15,12 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import include, path
-
+from django.urls import path, include # new
+from django.views.generic.base import TemplateView # new
 urlpatterns = [
-    path('', include('smartwatt.urls')),
-    path('admin/', admin.site.urls),
+path('admin/', admin.site.urls),
+path('smartwatt/', include('smartwatt.urls')), # new
+path('smartwatt/', include('django.contrib.auth.urls')), # new
+path('', TemplateView.as_view(template_name='home.html'),
+name='home'), # new
 ]
