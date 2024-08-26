@@ -5,13 +5,14 @@ from django.db import models
 class CustomUser(AbstractUser):
     pass
 
-# class EnergyConsumption(models.Model):
-#     consumption_id = models.AutoField(primary_key=True)
-#     active_power = models.FloatField()
-#     time = models.FloatField() 
-#     user_id = models.OneToOneField(User, on_delete=models.CASCADE, null=False) 
-#     @property
-#     def consumption_data(self):
-#         return self.active_power * self.time
-#     def __str__(self):
-#         return f'{self.consumption_id}, {self.active_power}, {self.consumption_data}, {self.user_id}'
+from django.db import models
+
+class EnergyData(models.Model):
+    timestamp = models.DateTimeField(auto_now_add=True)
+    voltage = models.FloatField()
+    current = models.FloatField()
+    power = models.FloatField()
+    total_units_consumed = models.FloatField()  # Add this field
+
+    def __str__(self):
+        return f"{self.timestamp} - Voltage: {self.voltage}V, Current: {self.current}A, Power: {self.power}W"

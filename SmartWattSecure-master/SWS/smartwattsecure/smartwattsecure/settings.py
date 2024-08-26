@@ -57,7 +57,7 @@ ROOT_URLCONF = 'smartwattsecure.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR,"templates")],
+        'DIRS': [BASE_DIR / "templates"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -128,13 +128,6 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# EMAIL_HOST = 'smtp.gmail.com'  # SMTP server address
-# EMAIL_PORT = 587  # SMTP server port (587 for TLS, 465 for SSL)
-# EMAIL_USE_TLS = True  # Set it to True if your SMTP server requires TLS
-# EMAIL_HOST_USER = 'concreteheaven1@gmail.com'  # Your email address
-# EMAIL_HOST_PASSWORD = 'eboy cdba btvq zivw'  # Your email password
 
 AUTH_USER_MODEL = 'smartwatt.CustomUser'
 LOGIN_REDIRECT_URL ='home'
