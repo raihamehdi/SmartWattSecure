@@ -1,49 +1,65 @@
-# Create your views here.
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
+from django.http import JsonResponse
+from django.shortcuts import render
 from .forms import CustomUserCreationForm
+from .arduino import get_mock_data, predict
+from .models import EnergyData
+
 
 class SignUpView(CreateView):
     form_class = CustomUserCreationForm
     success_url = reverse_lazy('login')
     template_name = 'signup.html'
     
-from django.shortcuts import render
-from .arduino import get_mock_data
 
 def dashboard(request):
-    # Get the mock data
-    data = get_mock_data()
-    return render(request, 'dashboard.html', {'data': data})
-
-
-from django.http import JsonResponse
-from .models import EnergyData
-from .arduino import get_mock_data
+    if request.method == 'GET':
+        data = EnergyData.objects.all()
+        return render(request, 'dashboard.html', {'data': data})
 
 def update_energy_data(request):
     if request.method == 'GET':
-        data = get_mock_data()  # Get mock data from arduino.py
+        data = get_mock_data()
+        power = data['power']
+        reactive_power = data['reactive_power']
+        voltage = data['voltage']
+        X_test = [[power, reactive_power, voltage]]
+
+        # Get the actual prediction from the model
+        predictions = predict(X_test)
+
+        # Determine if the data is suspicious or normal based on the prediction
+        prediction_result = 'suspicious' if predictions[0] == 1 else 'normal'
+
+        # Store the generated data and the prediction result in the database
         EnergyData.objects.create(
             voltage=data['voltage'],
             current=data['current'],
             power=data['power'],
-            total_units_consumed=data['total_units_consumed']
+            reactive_power=data['reactive_power'],
+            total_units_consumed=data['total_units_consumed'],
+            prediction=prediction_result
         )
-        return JsonResponse({'status': 'success', 'data': data})
+        
+        # Return the generated data and prediction result
+        return JsonResponse({'data': data, 'predictions': prediction_result})
     return JsonResponse({'status': 'failure'}, status=400)
 
-from django.http import JsonResponse
-from .models import EnergyData
+
 
 def energy_data_api(request):
-    data = EnergyData.objects.all().values('timestamp', 'voltage', 'current', 'power')
-    return JsonResponse(list(data), safe=False)
+    data = EnergyData.objects.all()
+    return JsonResponse(list(data.values()), safe=False)
 
-from django.shortcuts import render
 
 def dashboard2(request):
-    return render(request, 'smartwatt/dashboard2.html')
+    update_energy_data(request)
+    return render(request, 'dashboard2.html')
+
+
+
+
 
 
 

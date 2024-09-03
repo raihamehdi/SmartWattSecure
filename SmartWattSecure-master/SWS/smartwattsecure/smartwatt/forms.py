@@ -13,3 +13,9 @@ class CustomUserChangeForm(UserChangeForm):
     class Meta:
         model = CustomUser
         fields = ('username', 'email')
+
+def clean_email(self):
+    email = self.cleaned_data.get('email')
+    if "example.com" not in email:
+        raise forms.ValidationError("Please use a valid email address.")
+    return email

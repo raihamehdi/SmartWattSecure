@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Smart Watt Dashboard</title>
+</head>
+<body>
+    <h1>Smart Watt Dashboard</h1>
+    {% for datas in data  %}
+    <h2>Time: {{datas.timestamp}}</h2>
+    <h3>Your Readings are {{datas.prediction}}</h3>
+    <p>Voltage: {{ datas.voltage }} V</p>
+    <p>Current: {{ datas.current }} A</p>
+    <p>Power: {{ datas.power }} W</p>
+    <p>Reactive Power: {{ datas.reactive_power }} W</p>
+    <p>Total Units Consumed: {{ datas.total_units_consumed }} kWh</p>
+    {% endfor %}
+</body>
+</html>

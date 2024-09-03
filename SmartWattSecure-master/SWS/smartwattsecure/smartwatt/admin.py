@@ -2,7 +2,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from .forms import CustomUserCreationForm, CustomUserChangeForm
-from .models import CustomUser
+from .models import CustomUser, EnergyData
 # Register your models here.
 
 class CustomUserAdmin(UserAdmin):
@@ -10,5 +10,5 @@ class CustomUserAdmin(UserAdmin):
     form = CustomUserChangeForm
     model = CustomUser
 
-admin.site.register(CustomUser)
-# admin.site.register(CustomUserAdmin)
+admin.site.register(CustomUser, CustomUserAdmin)
+admin.site.register(EnergyData)
