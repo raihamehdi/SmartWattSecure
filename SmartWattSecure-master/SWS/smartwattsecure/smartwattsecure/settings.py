@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'smartwatt.apps.SmartwattConfig',
+    'django_crontab'
     
 ]
 
@@ -113,7 +114,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Karachi'
 
 USE_I18N = True
 
@@ -128,6 +129,11 @@ STATIC_ROOT = BASE_DIR / 'mystatic'
 STATICFILES_DIRS = [
     BASE_DIR / 'static'
 ]
+
+CRONJOBS = [
+    ('0 * * * *', 'smartwatt.cron.handle')
+]
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field

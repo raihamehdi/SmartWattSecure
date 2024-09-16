@@ -5,6 +5,8 @@ from django.shortcuts import render
 from .forms import CustomUserCreationForm
 from .arduino import get_mock_data, predict
 from .models import EnergyData
+from datetime import datetime
+from django.utils import timezone
 
 
 class SignUpView(CreateView):
@@ -22,9 +24,12 @@ def update_energy_data(request):
     if request.method == 'GET':
         data = get_mock_data()
         power = data['power']
-        reactive_power = data['reactive_power']
         voltage = data['voltage']
-        X_test = [[power, reactive_power, voltage]]
+        now = timezone.now()
+        hour = now.hour  
+        day_of_week = now.weekday()  
+        month = now.month 
+        X_test = [[power, voltage, hour, day_of_week, month]]
 
         # Get the actual prediction from the model
         predictions = predict(X_test)
@@ -37,9 +42,9 @@ def update_energy_data(request):
             voltage=data['voltage'],
             current=data['current'],
             power=data['power'],
-            reactive_power=data['reactive_power'],
             total_units_consumed=data['total_units_consumed'],
-            prediction=prediction_result
+            prediction=prediction_result,
+            timestamp=now
         )
         
         # Return the generated data and prediction result

@@ -13,7 +13,6 @@
     <canvas id="voltageChart" width="400" height="200"></canvas>
     <canvas id="currentChart" width="400" height="200"></canvas>
     <canvas id="powerChart" width="400" height="200"></canvas>
-    <canvas id="reactivepowerChart" width="400" height="200"></canvas>
     <canvas id="totaluseChart" width="400" height="200"></canvas>
 
     <script>
@@ -25,15 +24,12 @@
                     const voltageData = data.map(entry => entry.voltage);
                     const currentData = data.map(entry => entry.current);
                     const powerData = data.map(entry => entry.power);
-                    const reactivepowerData = data.map(entry => entry.reactive_power);
                     const labels = data.map(entry => entry.timestamp);
-                    const labels2 = data.map(entry => entry.prediction);
                     const totaluse = data.map(entry => entry.total_units_consumed);
 
                     updateChart('voltageChart', 'Voltage (V)', labels, voltageData, 'rgba(255, 99, 132, 1)');
                     updateChart('currentChart', 'Current (A)', labels, currentData, 'rgba(54, 162, 235, 1)');
                     updateChart('powerChart', 'Power (W)', labels, powerData, 'rgba(75, 192, 192, 1)');
-                    updateChart('reactivepowerChart', 'reactivePower (W)', labels, reactivepowerData, 'rgba(75, 192, 192, 1)');
                     updateChart('totaluseChart', 'totalunits (W)', labels, totaluse, 'rgba(75, 192, 192, 1)');
                 });
         }
@@ -49,6 +45,18 @@
                         borderColor: borderColor,
                         fill: false
                     }]
+                },
+                options: {
+                    scales: {
+                        x: {
+                            min: 0, 
+                            max: 6 
+                        },
+                        y: {
+                            min: 0,  
+                            max: 260
+                        }
+                    }
                 }
             });
         }

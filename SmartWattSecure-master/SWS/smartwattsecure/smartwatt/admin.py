@@ -11,4 +11,5 @@ class CustomUserAdmin(UserAdmin):
     model = CustomUser
 
 admin.site.register(CustomUser, CustomUserAdmin)
+    
 admin.site.register(EnergyData)
