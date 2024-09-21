@@ -38,8 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'smartwatt.apps.SmartwattConfig',
-    'django_crontab'
+    'smartwatt.apps.SmartwattConfig'
     
 ]
 
@@ -130,9 +129,7 @@ STATICFILES_DIRS = [
     BASE_DIR / 'static'
 ]
 
-CRONJOBS = [
-    ('0 * * * *', 'smartwatt.cron.handle')
-]
+
 
 
 # Default primary key field type

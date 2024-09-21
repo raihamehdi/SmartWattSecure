@@ -35,13 +35,18 @@ def update_energy_data(request):
         predictions = predict(X_test)
 
         # Determine if the data is suspicious or normal based on the prediction
-        prediction_result = 'suspicious' if predictions[0] == 1 else 'normal'
+        if predictions[0] == 0:  # 'Normal' prediction
+            prediction_result = "normal"
+        elif predictions[0] == 1:  # 'High' prediction
+            prediction_result = "high"
+        else:  # 'Suspicious' prediction
+            prediction_result = "suspicious"
 
         # Store the generated data and the prediction result in the database
         EnergyData.objects.create(
-            voltage=data['voltage'],
             current=data['current'],
             power=data['power'],
+            voltage=data['voltage'],
             total_units_consumed=data['total_units_consumed'],
             prediction=prediction_result,
             timestamp=now
