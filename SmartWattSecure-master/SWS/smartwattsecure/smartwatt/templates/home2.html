@@ -1,0 +1,45 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+    <link rel="stylesheet" href="{% static 'home2.css' %}">
+</head>
+<body>
+    <div class="navbar">
+        <img src="{% static 'smartwatt/Logo.png' %}"  alt="Logo" class="logo">
+        <ul class="nav-links">
+            <li><a href="#">Home</a></li>
+            <li><a href="#">Insights</a></li>
+            <li><a href="/">About</a></li>
+            <li><a href="#">Support</a></li>
+            <li><a href="#">Profile</a></li>
+            
+        </ul>
+    </div>
+    <hr class="separator">
+    <div class="content">
+        <div class="greeting">
+            <h1 class="greeting-title">Hi {{ user.username }}!</h1>
+            <p class="greeting-message">Welcome to your dashboard</p>
+        </div>
+        <div class="circles-container">
+            <div class="power-circle">
+                <div class="circle">
+                    <label for="active_power">{{ active_power }}kW</label>
+                </div>
+                <p>Active Power</p>
+            </div>
+            <div class="consumption-circle">
+                <div class="circle">
+                    <label for="consumption_data">{{ consumption_data }}kWh</label>
+                </div>
+                <p>Today's Consumption</p>
+            </div>
+        </div>
+    </div>
+    <!-- <script src="home.js"></script> -->
+</body>
+</html>
