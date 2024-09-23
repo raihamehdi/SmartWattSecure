@@ -35,7 +35,7 @@ def predict(X):
     scaler = load_scaler()
     X_scaled = scaler.transform(X)  # Apply same scaling as training
     predictions = model.predict(X_scaled)
-    
+    print(predictions)
     return predictions           
 
 if __name__ == '__main__':
@@ -48,6 +48,6 @@ if __name__ == '__main__':
     month = now.month  
     
     X_test = [[power, voltage, hour, day_of_week, month]]
-    
+    print(power)
     predict(X_test)
 
