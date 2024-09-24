@@ -1,0 +1,125 @@
+/* Global Styles */
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    height: 100%;
+}
+
+/* Sidebar */
+.sidebar {
+    background-color: #c62828;
+    width: 250px; /* Fixed width */
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: white;
+    position: fixed;
+    height: 100%;
+    left: 0;
+    top: 0;
+    z-index: 1000; /* Sidebar will always stay above content */
+}
+
+.logo {
+    margin-bottom: 40px;
+    font-size: 2em;
+    font-weight: bold;
+}
+
+.sidebar-nav ul {
+    list-style: none;
+    padding: 0;
+    width: 100%; /* Full width of sidebar */
+}
+
+.sidebar-nav li {
+    margin-bottom: 20px;
+    border-bottom: 1px solid #f1f1f1; /* Thin line between buttons */
+}
+
+.sidebar-nav a {
+    color: white;
+    text-decoration: none;
+    font-size: 1.2em;
+    padding: 10px 20px;
+    display: block;
+    text-align: center;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    width: 100%; /* Keep the width fixed within sidebar */
+    box-sizing: border-box; /* Ensure padding doesn't affect width */
+}
+
+.sidebar-nav a:hover {
+    background-color: #ff5252; /* Lighter red on hover */
+    color: white;
+}
+
+.sidebar-nav a.active {
+    background-color: #b71c1c; /* Active state */
+    color: #fff;
+}
+
+/* Main Content */
+.main-content {
+    margin-left: 250px; /* Adjusted to fit next to sidebar */
+    padding: 70px;
+    width: calc(100% - 250px); /* Full-width minus sidebar */
+    background-color: #f5f5f5;
+    overflow: auto; /* Prevents content overflow */
+}
+
+/* Main Header */
+.main-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.main-header h1 {
+    margin: 0;
+}
+
+/* Profile Button */
+.profile-menu {
+    position: relative;
+}
+
+.profile-btn {
+    background-color: #fff;
+    color: #c62828;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    font-size: 1.2em;
+    border: 2px solid #c62828;
+    cursor: pointer;
+}
+
+.profile-dropdown {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 50px;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.profile-btn:hover + .profile-dropdown {
+    display: block;
+}
+
+/* Responsive for Laptops */
+@media (max-width: 1024px) {
+    .dashboard-main {
+        grid-template-columns: 1fr;
+    }
+}

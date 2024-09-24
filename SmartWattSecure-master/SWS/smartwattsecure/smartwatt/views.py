@@ -67,6 +67,9 @@ def dashboard2(request):
     update_energy_data(request)
     return render(request, 'dashboard2.html')
 
+def index(request):
+    return render(request, 'index.html')
+
 
 
 
