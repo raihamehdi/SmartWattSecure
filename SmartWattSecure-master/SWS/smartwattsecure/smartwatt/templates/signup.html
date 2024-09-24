@@ -1,11 +1,35 @@
-<!-- templates/signup.html -->
-{% extends 'base.html' %}
-{% block title %}Sign Up{% endblock title %}
-{% block content %}
-<h2>Sign Up</h2>
-<form method="post">
-{% csrf_token %}
-{{ form.as_p }}
-<button type="submit">Sign Up</button>
-</form>
-{% endblock content %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign Up</title>
+    <link rel="stylesheet" href="static/css/signup.css" />
+  </head>
+  <body>
+    <div class="modal-overlay">
+      <!-- <div class="container"> -->
+      <div class="modal">
+        <h2>Sign Up</h2>
+        <form action="/signup" method="POST">
+          <label for="username">Username:</label>
+          <input type="text" id="username" name="username" required />
+
+          <label for="email">Email:</label>
+          <input type="email" id="email" name="email" required />
+
+          <label for="password">Password:</label>
+          <input type="password" id="password" name="password" required />
+
+          <div class="buttons">
+            <button type="submit">Sign Up</button>
+            <button type="button" class="cancel-button">Cancel</button>
+          </div>
+
+          <p>Already have an account? <a href="login.html">Login</a></p>
+        </form>
+      </div>
+    </div>
+    <script src="static/css/script.js"></script>
+  </body>
+</html>

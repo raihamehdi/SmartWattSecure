@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Analytics - Smart Watt Secure</title>
+    <link rel="stylesheet" href="static/css/ana.css" />
+    <!-- Use the same CSS file as Dashboard -->
+  </head>
+  <body>
+    <div class="dashboard-wrapper">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <div class="logo">
+          <h2>SWS</h2>
+        </div>
+        <nav class="sidebar-nav">
+          <ul>
+            <li><a href="dashboard.html" id="dashboard-link">Dashboard</a></li>
+            <li>
+              <a href="analytics.html" id="analytics-link" class="active"
+                >Analytics</a
+              >
+            </li>
+            <li><a href="contact.html" id="contact-link">Contact</a></li>
+          </ul>
+        </nav>
+      </aside>
+
+      <!-- Main Content -->
+      <div class="main-content">
+        <header class="main-header">
+          <h1>Analytics</h1>
+          <div class="profile-menu">
+            <!-- Circular profile button with letter -->
+            <button class="profile-btn">A</button>
+            <!-- <div class="profile-dropdown">
+                            <a href="#">Change Name</a>
+                            <a href="#">Change Password</a>
+                        </div> -->
+          </div>
+        </header>
+      </div>
+    </div>
+
+    <script>
+      // JavaScript to toggle the active class between links
+      const dashboardLink = document.getElementById("dashboard-link");
+      const analyticsLink = document.getElementById("analytics-link");
+      const contactLink = document.getElementById("contact-link");
+
+      dashboardLink.addEventListener("click", function () {
+        dashboardLink.classList.add("active");
+        analyticsLink.classList.remove("active");
+        contactLink.classList.remove("active");
+      });
+
+      analyticsLink.addEventListener("click", function () {
+        analyticsLink.classList.add("active");
+        dashboardLink.classList.remove("active");
+        contactLink.classList.remove("active");
+      });
+
+      contactLink.addEventListener("click", function () {
+        contactLink.classList.add("active");
+        dashboardLink.classList.remove("active");
+        analyticsLink.classList.remove("active");
+      });
+    </script>
+  </body>
+</html>

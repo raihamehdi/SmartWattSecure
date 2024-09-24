@@ -1,175 +1,1253 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<html class="no-js" lang="zxx">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <title>Smart Watt Secure</title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <link rel="stylesheet" href="static/global.css" />
-    <link rel="stylesheet" href="static/index.css" />
-    <link rel="stylesheet" href="static/internal.css">
+    <!-- Place favicon.ico in the root directory -->
     <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="shortcut icon"
+      type="image/x-icon"
+      href="static/img/logo/favicon.png"
     />
-   <title>Home Energy Management</title>
 
-</head>
-<body>
-  <header>
-    <div class="container">
-      <nav>
-          <div class="logo-container">
-              <span class="logo-text">SmartWattSecure</span>
-          </div>
-          <div class="nav-buttons">
-            <ul>
-              <!--<li><a href="#">Home</a></li> -->
-              <li><a href="#" class="button">About</a></li>
-              <li><a href="#" class="button">Support</a></li>
-          </ul>
-              <div>
-                  <a href="/signin" class="button">Sign In</a>
-                  <a href="/signup" class="button">Sign Up</a>
-              </div>
-          </div>
-      </nav>
-  </div>
-  </header>
-  <main>
-    <div class="page-container">
-      <div class="hero">
-        <!-- <h1>Enhancing security and efficiency in home energy management</h1> -->
-      </div>
-      <div class="carousel-container">
-        <div class="carousel">
-          <div class="carousel-item">
-            <img src="static/smartwatt/Bulb.png" alt="Carousel Image 1">
-          </div>
-          <div class="carousel-item">
-            <img src="static/smartwatt/Bulb.png" alt="Carousel Image 2">
-          </div>
-          <div class="carousel-item">
-            <img src="static/smartwatt/Bulb.png" alt="Carousel Image 3">
-          </div>
+    <!-- CSS here -->
+    <link rel="stylesheet" href="static/css/bootstrap.css" />
+    <link rel="stylesheet" href="static/css/animate.css" />
+    <link rel="stylesheet" href="static/css/swiper-bundle.css" />
+    <link rel="stylesheet" href="static/css/slick.css" />
+    <link rel="stylesheet" href="static/css/magnific-popup.css" />
+    <link rel="stylesheet" href="static/css/flaticon_biddut.css" />
+    <link rel="stylesheet" href="static/css/font-awesome-pro.css" />
+    <link rel="stylesheet" href="static/css/spacing.css" />
+    <link rel="stylesheet" href="static/css/custom-animation.css" />
+    <link rel="stylesheet" href="static/css/main.css" />
+  </head>
+
+  <body>
+    <!-- pre loader area start -->
+    <div id="loading">
+      <div id="loading-center">
+        <div id="loading-center-absolute">
+          <div class="object" id="object_four"></div>
+          <div class="object" id="object_three"></div>
+          <div class="object" id="object_two"></div>
+          <div class="object" id="object_one"></div>
         </div>
       </div>
-        <section class="about-us-inner">
-          <div class="frame-parent">
-            <div class="frame-wrapper">
-              <div class="frame-group">
-                <div class="frame-container">
-                  <div class="ellipse-parent">
-                    <div class="frame-child"></div>
-                    <div class="frame-item"></div>
-                    <div class="frame-inner"></div>
+    </div>
+    <!-- pre loader area end -->
+
+    <!-- back to top start -->
+    <div class="back-to-top-wrapper">
+      <button id="back_to_top" type="button" class="back-to-top-btn">
+        <svg
+          width="12"
+          height="7"
+          viewBox="0 0 12 7"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M11 6L6 1L1 6"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </button>
+    </div>
+    <!-- back to top end -->
+
+    <header>
+      <div class="tp-header-transparent">
+        <!-- header top area start -->
+        <div
+          class="tp-header-top-area tp-header-top-wrap tp-header-top-space p-relative black-bg"
+        >
+          <div class="container">
+            <div class="row align-items-center">
+              <div class="col-xl-6 col-lg-8 col-md-8 col-sm-6">
+                <div class="tp-header-top-left-box text-center text-md-start">
+                  <ul>
+                    <li>
+                      <i class="flaticon-pin"></i>
+                      <a href="#">76 San Fransisco Street. New York</a>
+                    </li>
+                    <li class="d-none d-md-inline-block">
+                      <i class="flaticon-mail-1"></i>
+                      <a
+                        href="https://template.wphix.com/cdn-cgi/l/email-protection#9df3f8f8f9f5f8f1edddfef2f0edfcf3e4b3fef2f0"
+                        ><span
+                          class="__cf_email__"
+                          data-cfemail="5c323939383439302c1c3f33312c3d3225723f3331"
+                          >[email&#160;protected]</span
+                        ></a
+                      >
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div
+                class="col-xl-6 col-lg-4 col-md-4 col-sm-6 d-none d-sm-block"
+              >
+                <div class="tp-header-top-right-box text-end">
+                  <ul>
+                    <li>
+                      <div class="tp-header-top-right-social">
+                        <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+                        <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="#"><i class="fa-brands fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fa-brands fa-twitter"></i></a>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- header top area end -->
+
+        <!-- header area start -->
+        <div
+          id="header-sticky"
+          class="tp-header-area tp-header-style-2 tp-header-style-3"
+        >
+          <div class="container">
+            <div class="row align-items-center">
+              <div class="col-xl-2 col-lg-4 col-md-4 col-6">
+                <div class="tp-header-logo">
+                  <a href="index.html">
+                    <img src="static/img/logo/white-logo.png" alt="" />
+                  </a>
+                </div>
+              </div>
+              <div class="col-xl-8 d-none d-xl-block">
+                <div
+                  class="tp-header-main-menu tp-header-menu-border-2 text-end text-xxl-start"
+                >
+                  <nav class="tp-main-menu-content">
+                    <ul class="d-flex justify-content-center">
+                      <li class="has-dropdown">
+                        <a href="index.html">Home</a>
+                      </li>
+                      <li class="has-dropdown">
+                        <a href="#about">About</a>
+                      </li>
+                      <li class="has-dropdown">
+                        <a href="#contact">Contact</a>
+                      </li>
+                    </ul>
+                  </nav>
+                </div>
+              </div>
+              <div class="col-xxl-2 col-xl-2 col-lg-8 col-md-8 col-6">
+                <div class="tp-header-main-menu tp-header-menu-border-2">
+                  <div class="tp-header-right-box">
+                    <div
+                      class="tp-header-right-action d-flex align-items-center justify-content-end"
+                    >
+                      <a href="login.html">LogIn</a>
+                      <div class="tp-header-right-shop p-relative">
+                        <a href="signup.html">SignUp</a>
+                      </div>
+                      <div class="tp-header-bar d-xl-none">
+                        <button class="tp-menu-bar">
+                          <i class="fa-sharp fa-regular fa-bars-staggered"></i>
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 </div>
-                <h1 class="save-energy-and">Save Energy and Money</h1>
               </div>
-            </div>
-            <div class="understanding-how-much">
-              Understanding how much energy your home is using, when and where,
-              empowers you to find savings. Sense gives you the tools to break it
-              down and take action.
             </div>
           </div>
-        </section>
-        <section class="enhanced-security-parent">
-          <div class="enhanced-security-grandparent">
-            <div class="enhanced-security-great-grandp">
-              <div class="enhanced-security-content">
-                <h1 class="enhanced-security">Enhanced Security</h1>
-                <div class="enhanced-security-content-child"></div>
-              </div>
-              <div class="sws-enables-timely">
-                SWS enables timely detection of anomalies such as theft or leakage
-                in home energy consumption. By promptly alerting homeowners to
-                deviations from normal usage patterns, it helps safeguard their
-                property and resources.
-              </div>
-            </div>
-            <img
-              class="how-tallyprime-ensures-enhance-icon"
-              loading="lazy"
-              alt=""
-              src="static/smartwatt/About1.png"
-            />
-          </div>
-        </section>
-        <section class="improved-efficiency-parent">
-          <div class="improved-efficiency-grandparen">
-            <img
-              class="image-2-icon"
-              loading="lazy"
-              alt=""
-              src="static/smartwatt/About2.jpeg"
-        />
+        </div>
+        <!-- header area end -->
+      </div>
+    </header>
 
-        <div class="improved-efficiency-content">
-          <div class="improved-efficiency-inner-cont">
-            <h1 class="improved-efficiency">Improved Efficiency</h1>
-            <div class="improved-efficiency-inner-cont-child"></div>
-          </div>
-          <div class="with-detailed-feedback">
-            With detailed feedback on electricity usage provided by SWS,
-            homeowners can optimize their energy consumption habits. This
-            leads to reduced waste, lower utility bills, and a more
-            environmentally sustainable lifestyle.
+    <main>
+      <!-- home section start-->
+      <!-- hero area start -->
+      <div class="tp-slider-3-area black-bg p-relative">
+        <div class="tp-slider-3-wrapper fix p-relative">
+          <div class="tp-slider-3-arrow-box"></div>
+          <div class="tp-slider-dots dots-color"></div>
+          <div class="swiper-container tp-slider-3-active">
+            <div class="swiper-wrapper">
+              <div class="tp-slider-3-shape-2 d-none d-sm-block">
+                <img src="static/img/hero/shape-3-2.png" alt="" />
+              </div>
+              <div class="swiper-slide">
+                <div class="tp-slider-3-height p-relative">
+                  <div class="tp-slider-3-shape-1 d-none d-xl-block">
+                    <img src="static/img/hero/shape-3-1.png" alt="" />
+                  </div>
+                  <div
+                    class="tp-slider-3-bg"
+                    data-background="static/img/hero/hero-3-1.png"
+                  ></div>
+                  <div class="container">
+                    <div class="row">
+                      <div class="col-xl-12">
+                        <div class="tp-slider-3-content z-index-3">
+                          <div class="tp-slider-3-title-box">
+                            <span class="tp-slider-2-subtitle pb-5"
+                              ><i>//</i>WE ARE BEST ELECTRIC SERVICE
+                              COMPANY</span
+                            >
+                            <h1 class="tp-slider-3-title mb-40">
+                              Electrical is All <br />About Electricians
+                            </h1>
+                          </div>
+                          <div class="tp-slider-3-button">
+                            <a class="tp-btn hover-2" href="about-us.html"
+                              ><span>Discover More</span></a
+                            >
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="swiper-slide">
+                <div class="tp-slider-3-height p-relative">
+                  <div class="tp-slider-3-shape-1 d-none d-xl-block">
+                    <img src="static/img/hero/shape-3-1.png" alt="" />
+                  </div>
+                  <div
+                    class="tp-slider-3-bg"
+                    data-background="static/img/hero/hero-3-2.png"
+                  ></div>
+                  <div class="container">
+                    <div class="row">
+                      <div class="col-xl-12">
+                        <div class="tp-slider-3-content z-index-3">
+                          <div class="tp-slider-3-title-box">
+                            <span class="tp-slider-2-subtitle pb-5"
+                              ><i>//</i>WE ARE BEST ELECTRIC SERVICE
+                              COMPANY</span
+                            >
+                            <h1 class="tp-slider-3-title mb-40">
+                              Electrical is All <br />About Electricians
+                            </h1>
+                          </div>
+                          <div class="tp-slider-3-button">
+                            <a class="tp-btn hover-2" href="about-us.html"
+                              ><span>Discover More</span></a
+                            >
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="swiper-slide">
+                <div class="tp-slider-3-height p-relative">
+                  <div class="tp-slider-3-shape-1 d-none d-xl-block">
+                    <img src="static/img/hero/shape-3-1.png" alt="" />
+                  </div>
+                  <div
+                    class="tp-slider-3-bg"
+                    data-background="static/img/hero/hero-3-3.png"
+                  ></div>
+                  <div class="container">
+                    <div class="row">
+                      <div class="col-xl-12">
+                        <div class="tp-slider-3-content z-index-3">
+                          <div class="tp-slider-3-title-box">
+                            <span class="tp-slider-2-subtitle pb-5"
+                              ><i>//</i>WE ARE BEST ELECTRIC SERVICE
+                              COMPANY</span
+                            >
+                            <h1 class="tp-slider-3-title mb-40">
+                              Electrical is All <br />About Electricians
+                            </h1>
+                          </div>
+                          <div class="tp-slider-3-button">
+                            <a class="tp-btn hover-2" href="about-us.html"
+                              ><span>Discover More</span></a
+                            >
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </section>
-    <section class="proactive-monitoring-parent">
-      <div class="proactive-monitoring-grandpare">
-        <div class="proactive-monitoring-great-gra">
-          <div class="proactive-monitoring-great-gre">
-            <div class="proactive-monitoring-content">
-              <h1 class="proactive-monitoring">Proactive Monitoring</h1>
-              <div class="proactive-monitoring-content-child"></div>
+      <!-- hero area end -->
+
+      <!-- feature area start -->
+      <div id="feature-box" class="tp-feature-2-area p-relative grey-bg">
+        <div
+          class="tp-feature-2-bg pt-120 pb-90"
+          data-background="static/img/feature/bg-1.png"
+        >
+          <div class="container">
+            <div class="row">
+              <div
+                class="col-xl-3 col-lg-4 col-md-6 mb-30 wow tpfadeUp"
+                data-wow-duration=".9s"
+                data-wow-delay=".3s"
+              >
+                <div class="tp-feature-2-item">
+                  <div class="tp-feature-2-icon">
+                    <span><i class="flaticon-lowest-price"></i></span>
+                  </div>
+                  <div class="tp-feature-2-text">
+                    <h5 class="tp-feature-2-title">Affradable price</h5>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="col-xl-3 col-lg-4 col-md-6 mb-30 wow tpfadeUp"
+                data-wow-duration=".9s"
+                data-wow-delay=".5s"
+              >
+                <div class="tp-feature-2-item">
+                  <div class="tp-feature-2-icon">
+                    <span><i class="flaticon-guaranteed"></i></span>
+                  </div>
+                  <div class="tp-feature-2-text">
+                    <h5 class="tp-feature-2-title">100% Gurantee</h5>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="col-xl-3 col-lg-4 col-md-6 mb-30 wow tpfadeUp"
+                data-wow-duration=".9s"
+                data-wow-delay=".7s"
+              >
+                <div class="tp-feature-2-item active">
+                  <div class="tp-feature-2-icon">
+                    <span><i class="flaticon-repair"></i></span>
+                  </div>
+                  <div class="tp-feature-2-text">
+                    <h5 class="tp-feature-2-title">24/7 Availabilty</h5>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="col-xl-3 col-lg-4 col-md-6 mb-30 wow tpfadeUp"
+                data-wow-duration=".9s"
+                data-wow-delay=".9s"
+              >
+                <div class="tp-feature-2-item">
+                  <div class="tp-feature-2-icon">
+                    <span><i class="flaticon-award"></i></span>
+                  </div>
+                  <div class="tp-feature-2-text">
+                    <h5 class="tp-feature-2-title">Award winning</h5>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-          <div class="sws-centralizes-home">
-            SWS centralizes home power management, offering real-time
-            monitoring for proactive issue detection. This minimizes
-            disruptions, ensuring smooth energy system operation.
+        </div>
+      </div>
+      <!-- feature area end -->
+      <!-- home section ends -->
+
+      <!-- about area start -->
+      <section id="about">
+        <div class="tp-about-area p-relative pt-120 pb-120">
+          <div class="tp-about-shape-5 d-none d-xl-block">
+            <img src="static/img/about/shape-3-1.png" alt="" />
+          </div>
+          <div class="container">
+            <div class="row">
+              <div
+                class="col-xl-6 col-lg-6 wow tpfadeLeft"
+                data-wow-duration=".9s"
+                data-wow-delay=".5s"
+              >
+                <div
+                  class="tp-about-right-box text-end tp-about-right-wrap p-relative"
+                >
+                  <div
+                    class="tp-about-2-thumb-text text-start d-none d-lg-block"
+                    data-background="static/img/about/bg-1.jpg"
+                  >
+                    <h6>
+                      <i
+                        class="purecounter"
+                        data-purecounter-duration="1"
+                        data-purecounter-end="35"
+                        >0</i
+                      >+
+                    </h6>
+                    <span>Years of experience</span>
+                  </div>
+                  <div class="tp-about-main-thumb">
+                    <img src="static/img/about/thumb-3-2.jpg" alt="" />
+                  </div>
+                  <div class="tp-about-thumb-sm">
+                    <img src="static/img/about/thumb-3-1.jpg" alt="" />
+                  </div>
+                  <div class="tp-about-shape-2 d-none d-lg-block">
+                    <img src="static/img/about/shape-1-3.png" alt="" />
+                  </div>
+                  <div class="tp-about-shape-6 d-none d-xl-block">
+                    <img src="static/img/about/shape-3-2.png" alt="" />
+                  </div>
+                </div>
+              </div>
+              <div
+                class="col-xl-6 col-lg-6 wow tpfadeRight"
+                data-wow-duration=".9s"
+                data-wow-delay=".7s"
+              >
+                <div class="tp-about-left-box tp-about-ml">
+                  <div class="tp-about-section-box mb-15">
+                    <span class="tp-section-subtitle"
+                      ><span>//</span> WE ARE BIDDUT ELECTRIC COMPANY</span
+                    >
+                    <h4 class="tp-section-title">
+                      Produce your own clean save the environment
+                    </h4>
+                  </div>
+                  <div class="tp-about-text">
+                    <p class="pb-15">
+                      Nullam eu nibh vitae est tempor molestie id sed ex.
+                      Quisque dignissim maximus ipsum, sed rutrum metus
+                      tincidunt et. Sed eget tincidunt ipsum. Eget tincidunt
+                    </p>
+                    <div
+                      class="tp-about-icon-wrap p-relative d-flex justify-content-between mb-40"
+                    >
+                      <div class="tp-about-icon-shape d-none d-xl-block">
+                        <img src="static/img/about/shape-1-6.png" alt="" />
+                      </div>
+                      <div
+                        class="tp-about-icon-box d-flex align-items-center mb-20"
+                      >
+                        <div class="tp-about-icon icon-color">
+                          <span><i class="flaticon-electrician"></i></span>
+                        </div>
+                        <div class="tp-about-icon-text">
+                          <h5>
+                            Expert <br />
+                            electrician
+                          </h5>
+                        </div>
+                      </div>
+                      <div
+                        class="tp-about-icon-box d-flex align-items-center mb-20"
+                      >
+                        <div class="tp-about-icon">
+                          <span><i class="flaticon-plug"></i></span>
+                        </div>
+                        <div class="tp-about-icon-text">
+                          <h5>Safety <br />assurance</h5>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="tp-about-list mb-45">
+                      <ul>
+                        <li>
+                          <i class="fa-light fa-badge-check"></i>At vero eos et
+                          accusamus et iusto odio.
+                        </li>
+                        <li>
+                          <i class="fa-light fa-badge-check"></i>Sed ut
+                          perspiciatis unde omnis iste natus sit.
+                        </li>
+                        <li>
+                          <i class="fa-light fa-badge-check"></i>Established
+                          fact that a reader will be distracted.
+                        </li>
+                      </ul>
+                    </div>
+                    <div class="tp-about-button-box d-flex align-items-center">
+                      <a class="tp-btn-black" href="about-us.html"
+                        ><span>KNOW MORE</span></a
+                      >
+                      <img src="static/img/about/shape-1-1.png" alt="" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-        <img
-          class="a89437b6eebb84daf3-observabili-icon"
-          loading="lazy"
-          alt=""
-          src="static/smartwatt/Abou3.svg"
-        />
-      </div>
-    </section>
-      <div class="call-to-action">
-        <a href="#" class="button">Sign In</a>
-        <a href="#" class="button">Talk With Us</a>
-      </div>
-    </div>
-  </main>
-  <footer>
-    <div class="container" style="background-color: #add8e6; padding: 10px 0;">
-      <div style="display: flex; align-items: center; justify-content: space-between;">
-        <p><center>&copy; 2024 SWS</center></p>
-      </div>
-    </div>
-  </footer>
+        <!-- about area end -->
 
-  <script>
-    const carousel = document.querySelector('.carousel');
-    let currentItemIndex = 0;
+        <!-- service area start -->
+        <div class="tp-service-3-area grey-bg p-relative fix pt-120 pb-90">
+          <div class="tp-service-3-shape-1 d-none d-xl-block">
+            <img src="static/img/service/shape-3-1.png" alt="" />
+          </div>
+          <div class="tp-service-3-shape-2 d-none d-xl-block">
+            <img src="static/img/service/shape-3-3.png" alt="" />
+          </div>
+          <div class="container">
+            <div class="row">
+              <div class="col-xl-12">
+                <div class="tp-service-3-section-title text-center mb-50">
+                  <span class="tp-section-subtitle"
+                    ><span>//</span>OUR BIDDUT SERVICES</span
+                  >
+                  <h4 class="tp-section-title">
+                    Outstanding residential & <br />commercial services
+                  </h4>
+                </div>
+              </div>
+              <div
+                class="col-xl-4 col-lg-4 col-md-6 mb-30 wow tpfadeUp"
+                data-wow-duration=".9s"
+                data-wow-delay=".3s"
+              >
+                <div
+                  class="tp-service-3-item fix"
+                  data-background="static/img/service/sv-3-1.jpg"
+                >
+                  <div class="tp-service-3-shape-3">
+                    <img src="static/img/service/shape-3-2.png" alt="" />
+                  </div>
+                  <div class="tp-service-3-content z-index">
+                    <div class="tp-service-3-icon pb-40">
+                      <span><i class="flaticon-creative"></i></span>
+                    </div>
+                    <div class="tp-service-3-text pb-30">
+                      <h4 class="tp-service-3-title pb-15">
+                        <a href="service-details.html">Indoor lighting</a>
+                      </h4>
+                      <p>
+                        This box could corrode over time losse connection, dust
+                      </p>
+                    </div>
+                    <a href="service-details.html">
+                      <div
+                        class="tp-service-3-link d-flex justify-content-between"
+                      >
+                        <span>Read More</span>
+                        <i class="flaticon-right-arrow"></i>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="col-xl-4 col-lg-4 col-md-6 mb-30 wow tpfadeUp"
+                data-wow-duration=".9s"
+                data-wow-delay=".5s"
+              >
+                <div
+                  class="tp-service-3-item active fix"
+                  data-background="static/img/service/sv-3-1.jpg"
+                >
+                  <div class="tp-service-3-shape-3">
+                    <img src="static/img/service/shape-3-2.png" alt="" />
+                  </div>
+                  <div class="tp-service-3-content z-index">
+                    <div class="tp-service-3-icon pb-40">
+                      <span><i class="flaticon-air-conditioner"></i></span>
+                    </div>
+                    <div class="tp-service-3-text pb-30">
+                      <h4 class="tp-service-3-title pb-15">
+                        <a href="service-details.html">Air Conditioning</a>
+                      </h4>
+                      <p>
+                        This box could corrode over time losse connection, dust
+                      </p>
+                    </div>
+                    <a href="service-details.html">
+                      <div
+                        class="tp-service-3-link d-flex justify-content-between"
+                      >
+                        <span>Read More</span>
+                        <i class="flaticon-right-arrow"></i>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="col-xl-4 col-lg-4 col-md-6 mb-30 wow tpfadeUp"
+                data-wow-duration=".9s"
+                data-wow-delay=".7s"
+              >
+                <div
+                  class="tp-service-3-item fix"
+                  data-background="static/img/service/sv-3-1.jpg"
+                >
+                  <div class="tp-service-3-shape-3">
+                    <img src="static/img/service/shape-3-2.png" alt="" />
+                  </div>
+                  <div class="tp-service-3-content z-index">
+                    <div class="tp-service-3-icon pb-40">
+                      <span><i class="flaticon-surveillance"></i></span>
+                    </div>
+                    <div class="tp-service-3-text pb-30">
+                      <h4 class="tp-service-3-title pb-15">
+                        <a href="service-details.html">Indoor lighting</a>
+                      </h4>
+                      <p>
+                        This box could corrode over time losse connection, dust
+                      </p>
+                    </div>
+                    <a href="service-details.html">
+                      <div
+                        class="tp-service-3-link d-flex justify-content-between"
+                      >
+                        <span>Read More</span>
+                        <i class="flaticon-right-arrow"></i>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- service area end -->
 
-    function slideCarousel() {
-      currentItemIndex = (currentItemIndex + 1) % 3;
-      carousel.style.transform = `translateX(-${currentItemIndex * 100}%)`;
-    }
+        <!-- choose area start -->
+        <div class="tp-choose-3-area p-relative black-bg-2 pt-120 pb-70">
+          <div
+            class="tp-choose-3-bg"
+            data-background="static/img/choose/bg-3-1.jpg"
+          >
+            <div class="tp-choose-3-text d-none d-lg-block">
+              <span>For emmergency</span>
+              <a href="tel:+99934564234297">+999 345 6423 4297</a>
+            </div>
+          </div>
+          <div class="container">
+            <div class="row">
+              <div
+                class="col-xl-6 col-lg-6 offset-lg-6 offset-xl-6 wow tpfadeRight"
+                data-wow-duration=".9s"
+                data-wow-delay=".7s"
+              >
+                <div class="tp-choose-content tp-choose-item-wrap z-index">
+                  <div class="tp-choose-section-box mb-30">
+                    <span class="tp-section-subtitle text-color"
+                      ><span>//</span>WHY CHOOSE OUR BIDDUT</span
+                    >
+                    <h4 class="tp-section-title text-white">
+                      Great reason for the people <br />choose our biddut
+                    </h4>
+                  </div>
+                  <div class="tp-choose-text mb-50">
+                    <p>
+                      For more than a decade, we’ve been building the fueling
+                      network of the future. We have delivered more places to
+                      charge than anyone else, and people <br />count on us for
+                      charging systemtic
+                    </p>
+                  </div>
+                  <div class="tp-choose-wrap">
+                    <div class="row">
+                      <div class="col-xl-6 col-lg-6 col-md-6 mb-20">
+                        <div class="tp-choose-item d-flex align-items-center">
+                          <span><i class="flaticon-battery"></i></span>
+                          <h5 class="tp-choose-item-title">Custom support</h5>
+                        </div>
+                      </div>
+                      <div class="col-xl-6 col-lg-6 col-md-6 mb-20">
+                        <div class="tp-choose-item d-flex align-items-center">
+                          <span><i class="flaticon-electrician-1"></i></span>
+                          <h5 class="tp-choose-item-title">Insured expert</h5>
+                        </div>
+                      </div>
+                      <div class="col-xl-6 col-lg-6 col-md-6 mb-20">
+                        <div class="tp-choose-item d-flex align-items-center">
+                          <span><i class="flaticon-price-tag"></i></span>
+                          <h5 class="tp-choose-item-title">Flat rate</h5>
+                        </div>
+                      </div>
+                      <div class="col-xl-6 col-lg-6 col-md-6 mb-20">
+                        <div class="tp-choose-item d-flex align-items-center">
+                          <span><i class="flaticon-service"></i></span>
+                          <h5 class="tp-choose-item-title">24/7 Available</h5>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- choose area end -->
 
-    setInterval(slideCarousel, 3000);
-      // Enable carousel autoplay
-      $('.carousel').carousel({
-        interval: 2000 // Change slide every 2 seconds
-      });
-  </script>
-</body>
+        <!-- step area start -->
+        <div class="tp-step-area pt-120 pb-90">
+          <div class="container">
+            <div class="step-margin">
+              <div class="row">
+                <div class="col-xl-12">
+                  <div class="tp-step-section-box text-center mb-50">
+                    <span class="tp-section-subtitle"
+                      ><span>//</span>OUR WORKING STEPS</span
+                    >
+                    <h4 class="tp-section-title">
+                      We provide professional <br />electric services
+                    </h4>
+                  </div>
+                </div>
+                <div
+                  class="col-xl-3 col-lg-4 col-md-6 mb-60 wow tpfadeUp"
+                  data-wow-duration=".9s"
+                  data-wow-delay=".3s"
+                >
+                  <div class="tp-step-item-box">
+                    <div class="tp-step-item p-relative text-center">
+                      <div class="tp-step-icon">
+                        <span><i class="flaticon-problem-solving"></i></span>
+                      </div>
+                      <div class="tp-step-text">
+                        <h5 class="tp-step-title">
+                          <a href="service-details.html">Identify problem</a>
+                        </h5>
+                        <p>
+                          This box could corrode over losse connection, dust
+                        </p>
+                      </div>
+                      <div class="tp-step-number">
+                        <span>Step 01</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="col-xl-3 col-lg-4 col-md-6 mb-60 wow tpfadeUp"
+                  data-wow-duration=".9s"
+                  data-wow-delay=".5s"
+                >
+                  <div class="tp-step-item-box active tp-step-item-box-pl">
+                    <div class="tp-step-item p-relative text-center">
+                      <div class="tp-step-icon">
+                        <span><i class="flaticon-plug-1"></i></span>
+                      </div>
+                      <div class="tp-step-text">
+                        <h5 class="tp-step-title">
+                          <a href="service-details.html">Provide time & cost</a>
+                        </h5>
+                        <p>
+                          This box could corrode over losse connection, dust
+                        </p>
+                      </div>
+                      <div class="tp-step-number">
+                        <span>Step 02</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="col-xl-3 col-lg-4 col-md-6 mb-60 wow tpfadeUp"
+                  data-wow-duration=".9s"
+                  data-wow-delay=".7s"
+                >
+                  <div class="tp-step-item-box">
+                    <div class="tp-step-item p-relative text-center">
+                      <div class="tp-step-icon">
+                        <span><i class="flaticon-service"></i></span>
+                      </div>
+                      <div class="tp-step-text">
+                        <h5 class="tp-step-title">
+                          <a href="service-details.html">Implement service</a>
+                        </h5>
+                        <p>
+                          This box could corrode over losse connection, dust
+                        </p>
+                      </div>
+                      <div class="tp-step-number">
+                        <span>Step 03</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="col-xl-3 col-lg-4 col-md-6 mb-60 wow tpfadeUp"
+                  data-wow-duration=".9s"
+                  data-wow-delay=".9s"
+                >
+                  <div class="tp-step-item-box tp-step-item-box-pl">
+                    <div class="tp-step-item p-relative text-center">
+                      <div class="tp-step-icon">
+                        <span><i class="flaticon-creative"></i></span>
+                      </div>
+                      <div class="tp-step-text">
+                        <h5 class="tp-step-title">
+                          <a href="service-details.html">Identify problem</a>
+                        </h5>
+                        <p>
+                          This box could corrode over losse connection, dust
+                        </p>
+                      </div>
+                      <div class="tp-step-number">
+                        <span>Step 04</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- step area end -->
+
+        <!-- faq area start -->
+        <div class="tp-faq-area p-relative pt-120 pb-120">
+          <div
+            class="tp-faq-thumb"
+            data-background="static/img/cta/faq-bg.jpg"
+          ></div>
+          <div class="tp-faq-text d-none d-xxl-block">
+            <h5>OUR FAQ’S</h5>
+          </div>
+          <div class="container">
+            <div class="row">
+              <div
+                class="col-xxl-7 col-xl-6 col-lg-6 wow tpfadeLeft"
+                data-wow-duration=".9s"
+                data-wow-delay=".s"
+              >
+                <div class="tp-custom-accordion">
+                  <div class="accordion" id="accordionExample">
+                    <div class="accordion-items tp-faq-active">
+                      <h2 class="accordion-header" id="headingOne">
+                        <button
+                          class="accordion-buttons"
+                          type="button"
+                          data-bs-toggle="collapse"
+                          data-bs-target="#collapseOne"
+                          aria-expanded="true"
+                          aria-controls="collapseOne"
+                        >
+                          Can I get your service wheAn I need
+                        </button>
+                      </h2>
+                      <div
+                        id="collapseOne"
+                        class="accordion-collapse collapse show"
+                        aria-labelledby="headingOne"
+                        data-bs-parent="#accordionExample"
+                      >
+                        <div class="accordion-body">
+                          The transfer of an immigrant visa application from
+                          USCIS to the National takes about 30-60 days. Before
+                          phoning to confirm receipt of an application, the
+                          National Visa Center recommends waiting at least 60
+                          days from
+                        </div>
+                      </div>
+                    </div>
+                    <div class="accordion-items">
+                      <h2 class="accordion-header" id="headingTwo">
+                        <button
+                          class="accordion-buttons collapsed"
+                          type="button"
+                          data-bs-toggle="collapse"
+                          data-bs-target="#collapseTwo"
+                          aria-expanded="false"
+                          aria-controls="collapseTwo"
+                        >
+                          Can’t I just call a handyman to fix minor electrical
+                          problems?
+                        </button>
+                      </h2>
+                      <div
+                        id="collapseTwo"
+                        class="accordion-collapse collapse"
+                        aria-labelledby="headingTwo"
+                        data-bs-parent="#accordionExample"
+                      >
+                        <div class="accordion-body">
+                          The transfer of an immigrant visa application from
+                          USCIS to the National takes about 30-60 days. Before
+                          phoning to confirm receipt of an application, the
+                          National Visa Center recommends waiting at least 60
+                          days from
+                        </div>
+                      </div>
+                    </div>
+                    <div class="accordion-items">
+                      <h2 class="accordion-header" id="headingThree">
+                        <button
+                          class="accordion-buttons collapsed"
+                          type="button"
+                          data-bs-toggle="collapse"
+                          data-bs-target="#collapseThree"
+                          aria-expanded="false"
+                          aria-controls="collapseThree"
+                        >
+                          Do I need to be present when your team is working?
+                        </button>
+                      </h2>
+                      <div
+                        id="collapseThree"
+                        class="accordion-collapse collapse"
+                        aria-labelledby="headingThree"
+                        data-bs-parent="#accordionExample"
+                      >
+                        <div class="accordion-body">
+                          The transfer of an immigrant visa application from
+                          USCIS to the National takes about 30-60 days. Before
+                          phoning to confirm receipt of an application, the
+                          National Visa Center recommends waiting at least 60
+                          days from
+                        </div>
+                      </div>
+                    </div>
+                    <div class="accordion-items">
+                      <h2 class="accordion-header" id="headingFour">
+                        <button
+                          class="accordion-buttons collapsed"
+                          type="button"
+                          data-bs-toggle="collapse"
+                          data-bs-target="#collapseFour"
+                          aria-expanded="false"
+                          aria-controls="collapseFour"
+                        >
+                          How do you handle emergency electrical issues?
+                        </button>
+                      </h2>
+                      <div
+                        id="collapseFour"
+                        class="accordion-collapse collapse"
+                        aria-labelledby="headingFour"
+                        data-bs-parent="#accordionExample"
+                      >
+                        <div class="accordion-body">
+                          The transfer of an immigrant visa application from
+                          USCIS to the National takes about 30-60 days. Before
+                          phoning to confirm receipt of an application, the
+                          National Visa Center recommends waiting at least 60
+                          days from
+                        </div>
+                      </div>
+                    </div>
+                    <div class="accordion-items mb-0">
+                      <h2 class="accordion-header" id="headingFour4">
+                        <button
+                          class="accordion-buttons collapsed"
+                          type="button"
+                          data-bs-toggle="collapse"
+                          data-bs-target="#collapseFour4"
+                          aria-expanded="false"
+                          aria-controls="collapseFour4"
+                        >
+                          Are You Licensed and Insured?
+                        </button>
+                      </h2>
+                      <div
+                        id="collapseFour4"
+                        class="accordion-collapse collapse"
+                        aria-labelledby="headingFour4"
+                        data-bs-parent="#accordionExample"
+                      >
+                        <div class="accordion-body">
+                          The transfer of an immigrant visa application from
+                          USCIS to the National takes about 30-60 days. Before
+                          phoning to confirm receipt of an application, the
+                          National Visa Center recommends waiting at least 60
+                          days from
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- faq area end -->
+      </section>
+
+      <!-- contact area start -->
+      <section id="contact">
+        <div class="tp-contact-2-area tp-contact-2-bg fix p-relative">
+          <div class="tp-contact-2-shape-1 d-none d-lg-block">
+            <img src="static/img/contact/shape-2-1.png" alt="" />
+          </div>
+          <div class="tp-contact-2-shape-2 d-none d-lg-block">
+            <img src="static/img/contact/shape-2-2.png" alt="" />
+          </div>
+          <div class="tp-contact-2-shape-3 d-none d-lg-block">
+            <img src="static/img/contact/shape-2-3.png" alt="" />
+          </div>
+          <div class="tp-contact-2-shape-4 d-none d-xxl-block">
+            <img src="static/img/contact/shape-2-4.png" alt="" />
+          </div>
+          <div class="container">
+            <div class="row">
+              <div class="col-xl-6 col-lg-6 offset-xl-6 offset-lg-6">
+                <div class="tp-contact-2-item z-index">
+                  <div class="tp-contact-2-section-box mb-40">
+                    <span class="tp-contact-2-subtitle">Contact us</span>
+                    <h4 class="tp-contact-2-title">Get a call back</h4>
+                  </div>
+                  <div class="tp-contact-2-input-box">
+                    <input type="text" placeholder="Your Name*" />
+                    <input type="email" placeholder="Your Email*" />
+                    <input type="text" placeholder="Your Phone*" />
+                    <textarea placeholder="Messege*"></textarea>
+                  </div>
+                  <button type="submit" class="tp-btn w-100 text-center">
+                    <span>Send Message</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="tp-contact-2-thumb">
+            <img src="static/img/contact/contact-2-1.png" alt="" />
+          </div>
+        </div>
+      </section>
+      <!-- contact area end -->
+    </main>
+
+    <footer>
+      <!-- footer area start -->
+      <div class="tp-footer-area pt-120 pb-120 p-relative z-index-3 black-bg">
+        <div class="tp-footer-shape-1 d-none d-lg-block">
+          <img src="static/img/footer/shape-1-1.png" alt="" />
+        </div>
+        <div class="tp-footer-shape-2 d-none d-lg-block">
+          <img src="static/img/footer/shape-1-2.png" alt="" />
+        </div>
+        <div class="container">
+          <div class="row">
+            <div
+              class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-50 wow tpfadeUp"
+              data-wow-duration=".9s"
+              data-wow-delay=".3s"
+            >
+              <div class="tp-footer-widget footer-cols-1">
+                <div class="tp-footer-logo">
+                  <a href="index.html"
+                    ><img src="static/img/logo/white-logo.png" alt=""
+                  /></a>
+                </div>
+                <div class="tp-footer-text">
+                  <p>
+                    Desires to obtain pain of it because it is pain but
+                    occasionally circum We work with a passion of challenges
+                  </p>
+                </div>
+                <div class="tp-footer-contact">
+                  <a
+                    href="https://template.wphix.com/cdn-cgi/l/email-protection#22404b46465756414d4f52434c5b62454f434b4e0c414d4f"
+                    ><i class="flaticon-mail-1"></i
+                    ><span
+                      class="__cf_email__"
+                      data-cfemail="2c4e45484859584f43415c4d42556c4b414d4540024f4341"
+                      >[email&#160;protected]</span
+                    ></a
+                  >
+                  <a href="#"
+                    ><i class="flaticon-pin"></i>Division San fransico , USA
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div
+              class="col-xl-2 col-lg-4 col-md-6 col-sm-6 mb-50 wow tpfadeUp"
+              data-wow-duration=".9s"
+              data-wow-delay=".5s"
+            >
+              <div class="tp-footer-widget footer-cols-2">
+                <h4 class="tp-footer-title">Usefull Links</h4>
+                <div class="tp-footer-list">
+                  <ul>
+                    <li>
+                      <a href="#"
+                        ><i class="fa-sharp fa-solid fa-plus"></i>About
+                        Biddut</a
+                      >
+                    </li>
+                    <li>
+                      <a href="#"
+                        ><i class="fa-sharp fa-solid fa-plus"></i>Our Team</a
+                      >
+                    </li>
+                    <li>
+                      <a href="#"
+                        ><i class="fa-sharp fa-solid fa-plus"></i>Our
+                        Portfolio</a
+                      >
+                    </li>
+                    <li>
+                      <a href="#"
+                        ><i class="fa-sharp fa-solid fa-plus"></i
+                        >Testimonials</a
+                      >
+                    </li>
+                    <li>
+                      <a href="#"
+                        ><i class="fa-sharp fa-solid fa-plus"></i>Blog
+                        Details</a
+                      >
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div
+              class="col-xl-3 col-lg-4 col-md-6 col-sm-6 mb-50 wow tpfadeUp"
+              data-wow-duration=".9s"
+              data-wow-delay=".7s"
+            >
+              <div class="tp-footer-widget footer-cols-3">
+                <h4 class="tp-footer-title">Services</h4>
+                <div class="tp-footer-list">
+                  <ul>
+                    <li>
+                      <a href="#"
+                        ><i class="fa-sharp fa-solid fa-plus"></i>Air
+                        Conditioning</a
+                      >
+                    </li>
+                    <li>
+                      <a href="#"
+                        ><i class="fa-sharp fa-solid fa-plus"></i>Electrical
+                        Panels</a
+                      >
+                    </li>
+                    <li>
+                      <a href="#"
+                        ><i class="fa-sharp fa-solid fa-plus"></i>Security
+                        System</a
+                      >
+                    </li>
+                    <li>
+                      <a href="#"
+                        ><i class="fa-sharp fa-solid fa-plus"></i>Indoor
+                        Lighting</a
+                      >
+                    </li>
+                    <li>
+                      <a href="#"
+                        ><i class="fa-sharp fa-solid fa-plus"></i> Electrical
+                        Services</a
+                      >
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div
+              class="col-xl-3 col-lg-4 col-md-6 col-sm-6 mb-50 wow tpfadeUp"
+              data-wow-duration=".9s"
+              data-wow-delay=".9s"
+            >
+              <div class="tp-footer-widget footer-cols-4">
+                <h4 class="tp-footer-title">Instagram</h4>
+                <div class="tp-footer-thumb-wrap">
+                  <div class="tp-footer-thumb-box d-flex">
+                    <div class="tp-footer-thumb p-relative">
+                      <img src="static/img/footer/footer-1-1.jpg" alt="" />
+                      <div class="tp-footer-thumb-icon">
+                        <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                      </div>
+                    </div>
+                    <div class="tp-footer-thumb p-relative">
+                      <img src="static/img/footer/footer-1-2.jpg" alt="" />
+                      <div class="tp-footer-thumb-icon">
+                        <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                      </div>
+                    </div>
+                    <div class="tp-footer-thumb p-relative">
+                      <img src="static/img/footer/footer-1-3.jpg" alt="" />
+                      <div class="tp-footer-thumb-icon">
+                        <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="tp-footer-thumb-box d-flex">
+                    <div class="tp-footer-thumb p-relative">
+                      <img src="static/img/footer/footer-1-4.jpg" alt="" />
+                      <div class="tp-footer-thumb-icon">
+                        <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                      </div>
+                    </div>
+                    <div class="tp-footer-thumb p-relative">
+                      <img src="static/img/footer/footer-1-5.jpg" alt="" />
+                      <div class="tp-footer-thumb-icon">
+                        <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                      </div>
+                    </div>
+                    <div class="tp-footer-thumb p-relative">
+                      <img src="static/img/footer/footer-1-6.jpg" alt="" />
+                      <div class="tp-footer-thumb-icon">
+                        <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- footer area end -->
+
+      <!-- copy-right area start -->
+      <div class="tp-copyright-area tp-copyright-space black-bg-2">
+        <div class="container">
+          <div class="row align-items-center">
+            <div
+              class="col-xl-6 col-lg-6 col-md-6 col-sm-6 wow tpfadeUp"
+              data-wow-duration=".9s"
+              data-wow-delay=".3s"
+            >
+              <div class="tp-copyright-left text-center text-md-start">
+                <p>© Copyright 2023 by <a href="#">SWS.com</a></p>
+              </div>
+            </div>
+            <div
+              class="col-xl-6 col-lg-6 col-md-6 col-sm-6 wow tpfadeUp"
+              data-wow-duration=".9s"
+              data-wow-delay=".5s"
+            >
+              <div class="tp-copyright-social text-center text-md-end">
+                <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+                <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                <a href="#"><i class="fa-brands fa-linkedin-in"></i></a>
+                <a href="#"><i class="fa-brands fa-twitter"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- copy-right area end -->
+    </footer>
+
+    <!-- JS here -->
+    <script
+      data-cfasync="false"
+      src="../../cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"
+    ></script>
+    <script src="static/js/vendor/jquery.js"></script>
+    <script src="static/js/vendor/waypoints.js"></script>
+    <script src="static/js/bootstrap-bundle.js"></script>
+    <script src="static/js/swiper-bundle.js"></script>
+    <script src="static/js/slick.js"></script>
+    <script src="static/js/range-slider.js"></script>
+    <script src="static/js/magnific-popup.js"></script>
+    <script src="static/js/nice-select.js"></script>
+    <script src="static/js/purecounter.js"></script>
+    <script src="static/js/wow.js"></script>
+    <script src="static/js/isotope-pkgd.js"></script>
+    <script src="static/js/jarallax.js"></script>
+    <script src="static/js/imagesloaded-pkgd.js"></script>
+    <script src="static/js/ajax-form.js"></script>
+    <script src="static/js/main.js"></script>
+  </body>
 </html>

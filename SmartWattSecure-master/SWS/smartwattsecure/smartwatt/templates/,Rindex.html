@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="stylesheet" href="static/global.css" />
+    <link rel="stylesheet" href="static/index.css" />
+    <link rel="stylesheet" href="static/internal.css" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+    />
+    <title>Home Energy Management</title>
+  </head>
+  <body>
+    <header>
+      <div class="container">
+        <nav>
+          <div class="logo-container">
+            <span class="logo-text">SmartWattSecure</span>
+          </div>
+          <div class="nav-buttons">
+            <ul>
+              <!--<li><a href="#">Home</a></li> -->
+              <li><a href="#" class="button">About</a></li>
+              <li><a href="#" class="button">Support</a></li>
+            </ul>
+            <div>
+              <a href="/signin" class="button">Sign In</a>
+              <a href="/signup" class="button">Sign Up</a>
+            </div>
+          </div>
+        </nav>
+      </div>
+    </header>
+    <main>
+      <div class="page-container">
+        <div class="hero">
+          <!-- <h1>Enhancing security and efficiency in home energy management</h1> -->
+        </div>
+        <div class="carousel-container">
+          <div class="carousel">
+            <div class="carousel-item">
+              <img src="static/css/Bulb.png" alt="Carousel Image 1" />
+            </div>
+            <div class="carousel-item">
+              <img src="static/css/Bulb.png" alt="Carousel Image 2" />
+            </div>
+            <div class="carousel-item">
+              <img src="static/css/Bulb.png" alt="Carousel Image 3" />
+            </div>
+          </div>
+        </div>
+        <section class="about-us-inner">
+          <div class="frame-parent">
+            <div class="frame-wrapper">
+              <div class="frame-group">
+                <div class="frame-container">
+                  <div class="ellipse-parent">
+                    <div class="frame-child"></div>
+                    <div class="frame-item"></div>
+                    <div class="frame-inner"></div>
+                  </div>
+                </div>
+                <h1 class="save-energy-and">Save Energy and Money</h1>
+              </div>
+            </div>
+            <div class="understanding-how-much">
+              Understanding how much energy your home is using, when and where,
+              empowers you to find savings. Sense gives you the tools to break
+              it down and take action.
+            </div>
+          </div>
+        </section>
+        <section class="enhanced-security-parent">
+          <div class="enhanced-security-grandparent">
+            <div class="enhanced-security-great-grandp">
+              <div class="enhanced-security-content">
+                <h1 class="enhanced-security">Enhanced Security</h1>
+                <div class="enhanced-security-content-child"></div>
+              </div>
+              <div class="sws-enables-timely">
+                SWS enables timely detection of anomalies such as theft or
+                leakage in home energy consumption. By promptly alerting
+                homeowners to deviations from normal usage patterns, it helps
+                safeguard their property and resources.
+              </div>
+            </div>
+            <img
+              class="how-tallyprime-ensures-enhance-icon"
+              loading="lazy"
+              alt=""
+              src="static/css/About1.png"
+            />
+          </div>
+        </section>
+        <section class="improved-efficiency-parent">
+          <div class="improved-efficiency-grandparen">
+            <img
+              class="image-2-icon"
+              loading="lazy"
+              alt=""
+              src="static/css/About2.jpeg"
+            />
+
+            <div class="improved-efficiency-content">
+              <div class="improved-efficiency-inner-cont">
+                <h1 class="improved-efficiency">Improved Efficiency</h1>
+                <div class="improved-efficiency-inner-cont-child"></div>
+              </div>
+              <div class="with-detailed-feedback">
+                With detailed feedback on electricity usage provided by SWS,
+                homeowners can optimize their energy consumption habits. This
+                leads to reduced waste, lower utility bills, and a more
+                environmentally sustainable lifestyle.
+              </div>
+            </div>
+          </div>
+        </section>
+        <section class="proactive-monitoring-parent">
+          <div class="proactive-monitoring-grandpare">
+            <div class="proactive-monitoring-great-gra">
+              <div class="proactive-monitoring-great-gre">
+                <div class="proactive-monitoring-content">
+                  <h1 class="proactive-monitoring">Proactive Monitoring</h1>
+                  <div class="proactive-monitoring-content-child"></div>
+                </div>
+              </div>
+              <div class="sws-centralizes-home">
+                SWS centralizes home power management, offering real-time
+                monitoring for proactive issue detection. This minimizes
+                disruptions, ensuring smooth energy system operation.
+              </div>
+            </div>
+            <img
+              class="a89437b6eebb84daf3-observabili-icon"
+              loading="lazy"
+              alt=""
+              src="static/css/Abou3.svg"
+            />
+          </div>
+        </section>
+        <div class="call-to-action">
+          <a href="#" class="button">Sign In</a>
+          <a href="#" class="button">Talk With Us</a>
+        </div>
+      </div>
+    </main>
+    <footer>
+      <div class="container" style="background-color: #add8e6; padding: 10px 0">
+        <div
+          style="
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+          "
+        >
+          <p><center>&copy; 2024 SWS</center></p>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      const carousel = document.querySelector(".carousel");
+      let currentItemIndex = 0;
+
+      function slideCarousel() {
+        currentItemIndex = (currentItemIndex + 1) % 3;
+        carousel.style.transform = `translateX(-${currentItemIndex * 100}%)`;
+      }
+
+      setInterval(slideCarousel, 3000);
+      // Enable carousel autoplay
+      $(".carousel").carousel({
+        interval: 2000, // Change slide every 2 seconds
+      });
+    </script>
+  </body>
+</html>
