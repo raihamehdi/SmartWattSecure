@@ -1,10 +1,11 @@
+{%load static%}
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sign Up</title>
-    <link rel="stylesheet" href="static/css/signup.css" />
+    <link rel="stylesheet" href="{% static 'css/signup.css'%}" />
   </head>
   <body>
     <div class="modal-overlay">
@@ -26,10 +27,10 @@
             <button type="button" class="cancel-button">Cancel</button>
           </div>
 
-          <p>Already have an account? <a href="login.html">Login</a></p>
+          <p>Already have an account? <a href="/login">Login</a></p>
         </form>
       </div>
     </div>
-    <script src="static/css/script.js"></script>
+    <script src="static/js/script.js"></script>
   </body>
 </html>

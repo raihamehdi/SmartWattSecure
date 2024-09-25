@@ -14,6 +14,8 @@ class SignUpView(CreateView):
     success_url = reverse_lazy('login')
     template_name = 'signup.html'
     
+# def signup(request):
+#     return render(request, signup.html)
 
 def dashboard(request):
     if request.method == 'GET':
