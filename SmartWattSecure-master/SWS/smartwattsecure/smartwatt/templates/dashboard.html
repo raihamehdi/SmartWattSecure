@@ -1,4 +1,4 @@
-{% load static %}
+{%load static%}
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -17,12 +17,14 @@
         <nav class="sidebar-nav">
           <ul>
             <li>
-              <a href="dashboard/" id="dashboard-link" class="active"
-                >Dashboard</a
-              >
+              <a href="{% url 'dashboard' %}" id="dashboard-link">Dashboard</a>
             </li>
-            <li><a href="analytics/" id="analytics-link">Analytics</a></li>
-            <li><a href="contact/" id="contact-link">Contact</a></li>
+            <li>
+              <a href="{% url 'analytics' %}" id="analytics-link">Analytics</a>
+            </li>
+            <li>
+              <a href="{% url 'contact' %}" id="contact-link">Contact</a>
+            </li>
           </ul>
         </nav>
       </aside>
@@ -33,7 +35,6 @@
           {% if user.is_authenticated %}
             <h1>Welcome, {{ user.username }}!</h1>
             <div class="profile-menu">
-              <!-- Circular profile button with letter -->
               <button class="profile-btn">A</button>
             </div>
           {% else %}
@@ -43,30 +44,14 @@
 
         <main class="dashboard-main">
           <section class="dashboard-section">
-            <h2>Daily Usage</h2>
-            <div class="dashboard-card">
-              <p>Usage: 50 kWh</p>
-            </div>
-          </section>
-
-          <section class="dashboard-section">
-            <h2>Voltage</h2>
-            <div class="dashboard-card">
-              <p>Voltage: 220V</p>
-            </div>
-          </section>
-
-          <section class="dashboard-section">
-            <h2>Power</h2>
-            <div class="dashboard-card">
-              <p>Power: 5kW</p>
-            </div>
-          </section>
-
-          <section class="dashboard-section">
-            <h2>Notifications</h2>
-            <div class="dashboard-card">
-              <p>No new notifications</p>
+            <h2>Latest Energy Data</h2>
+            <div id="energy-data" class="dashboard-card">
+              <!-- These will be updated dynamically by the fetchData function -->
+              <p>Voltage: <span id="voltage">-</span> V</p>
+              <p>Current: <span id="current">-</span> A</p>
+              <p>Power: <span id="power">-</span> W</p>
+              <p>Total Units Consumed: <span id="total-units">-</span> kWh</p>
+              <p>Prediction: <span id="prediction">-</span></p>
             </div>
           </section>
         </main>
@@ -74,28 +59,37 @@
     </div>
 
     <script>
-      // JavaScript to toggle the active class between links
-      const dashboardLink = document.getElementById("dashboard-link");
-      const analyticsLink = document.getElementById("analytics-link");
-      const contactLink = document.getElementById("contact-link");
-
-      dashboardLink.addEventListener("click", function () {
-        dashboardLink.classList.add("active");
-        analyticsLink.classList.remove("active");
-        contactLink.classList.remove("active");
-      });
-
-      analyticsLink.addEventListener("click", function () {
-        analyticsLink.classList.add("active");
-        dashboardLink.classList.remove("active");
-        contactLink.classList.remove("active");
-      });
-
-      contactLink.addEventListener("click", function () {
-        contactLink.classList.add("active");
-        dashboardLink.classList.remove("active");
-        analyticsLink.classList.remove("active");
-      });
+      // Fetch the latest data using AJAX
+      function fetchData() {
+        fetch('/api/energy_data/')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Network response was not ok");
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.length > 0) {
+                    const latestData = data[0];  // Get the latest entry
+    
+                    document.getElementById('voltage').innerText = `${latestData.voltage}`;
+                    document.getElementById('current').innerText = `${latestData.current}`;
+                    document.getElementById('power').innerText = `${latestData.power}`;
+                    document.getElementById('total-units').innerText = `${latestData.total_units_consumed}`;
+                    document.getElementById('prediction').innerText = `${latestData.prediction}`;
+                } else {
+                    console.log("No data available.");
+                }
+            })
+            .catch(error => {
+                console.error("There was a problem with the fetch operation:", error);
+            });
+    }
+    
+    setInterval(fetchData, 10000);
     </script>
   </body>
 </html>
+
+
+

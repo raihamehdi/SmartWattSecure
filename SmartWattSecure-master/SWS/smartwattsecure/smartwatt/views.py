@@ -34,13 +34,21 @@ def login(request):
     return render(request, 'registration/login.html')
 
 ##-----DASHBOARD VIEW-----##
-def dashboard(request):
-    if request.method == 'GET':
-        data = EnergyData.objects.all()
-        return render(request, 'dashboard.html', {'data': data})
+# def dashboard(request):
+#     if request.method == 'GET':
+#         data = EnergyData.objects.all()
+#         return render(request, 'dashboard.html', {'data': data})
 
 def dashboard(request):
-    return render(request, 'dashboard.html')
+    if request.user.is_authenticated:
+        # Fetch the latest energy data for the logged-in user
+        energy_data = EnergyData.objects.filter(user=request.user).order_by('-timestamp').first()
+
+        return render(request, 'dashboard.html', {
+            'energy_data': energy_data
+        })
+    else:
+        return render(request, 'dashboard.html')
 
 def analytics(request):
     return render(request, 'analytics.html')
@@ -80,8 +88,23 @@ def update_energy_data(request):
     return JsonResponse({'status': 'failure'}, status=400)
 
 def energy_data_api(request):
-    data = EnergyData.objects.all()
-    return JsonResponse(list(data.values()), safe=False)
+    if request.user.is_authenticated:
+        # Attempt to update the energy data
+        update_response = update_energy_data(request)
+
+        if update_response.status_code == 200:
+            # Fetch the latest energy data for the authenticated user
+            user_data = EnergyData.objects.filter(user=request.user).order_by('-timestamp')
+            data = list(user_data.values('timestamp', 'voltage', 'current', 'power', 'total_units_consumed', 'prediction'))
+            
+            # Return the data as a JSON response
+            return JsonResponse(data, safe=False)
+        
+        # If the update was unsuccessful
+        return JsonResponse({'error': 'Failed to update data'}, status=500)
+    
+    # If the user is not authenticated, return an error
+    return JsonResponse({'error': 'User not authenticated'}, status=403)
 
 def dashboard2(request):
     update_energy_data(request)
