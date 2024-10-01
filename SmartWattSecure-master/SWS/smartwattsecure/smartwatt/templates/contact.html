@@ -1,12 +1,11 @@
-{%load static%}
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Analytics - Smart Watt Secure</title>
-    <link rel="stylesheet" href="{% static 'css/cont.css'%}" />
-    <!-- Use the same CSS file as Dashboard -->
+    <title>Contact - Smart Watt Secure</title>
+    <link rel="stylesheet" href="{% static 'css/cont.css' %}" />
   </head>
   <body>
     <div class="dashboard-wrapper">
@@ -17,13 +16,9 @@
         </div>
         <nav class="sidebar-nav">
           <ul>
-            <li><a href="dashboard.html" id="dashboard-link">Dashboard</a></li>
-            <li><a href="analytics.html" id="analytics-link">Analytics</a></li>
-            <li>
-              <a href="contact.html" id="contact-link" class="active"
-                >Contact</a
-              >
-            </li>
+            <li><a href="{% url 'dashboard' %}" id="dashboard-link">Dashboard</a></li>
+            <li><a href="{% url 'analytics' %}" id="analytics-link">Analytics</a></li>
+            <li><a href="{% url 'contact' %}" id="contact-link">Contact</a></li>
           </ul>
         </nav>
       </aside>
@@ -33,39 +28,40 @@
         <header class="main-header">
           <h1>Contact</h1>
           <div class="profile-menu">
-            <!-- Circular profile button with letter -->
             <button class="profile-btn">A</button>
-            <!-- <div class="profile-dropdown">
-                            <a href="#">Change Name</a>
-                            <a href="#">Change Password</a>
-                        </div> -->
           </div>
         </header>
       </div>
     </div>
 
     <script>
-      // JavaScript to toggle the active class between links
-      const dashboardLink = document.getElementById("dashboard-link");
-      const analyticsLink = document.getElementById("analytics-link");
-      const contactLink = document.getElementById("contact-link");
+      document.addEventListener("DOMContentLoaded", function () {
+        const currentPath = window.location.pathname;
 
-      dashboardLink.addEventListener("click", function () {
-        dashboardLink.classList.add("active");
-        analyticsLink.classList.remove("active");
-        contactLink.classList.remove("active");
-      });
+        const dashboardLink = document.getElementById("dashboard-link");
+        const analyticsLink = document.getElementById("analytics-link");
+        const contactLink = document.getElementById("contact-link");
 
-      analyticsLink.addEventListener("click", function () {
-        analyticsLink.classList.add("active");
-        dashboardLink.classList.remove("active");
-        contactLink.classList.remove("active");
-      });
+        // Set active class based on current path
+        if (currentPath.includes('dashboard')) {
+          dashboardLink.classList.add("active");
+        } else if (currentPath.includes('analytics')) {
+          analyticsLink.classList.add("active");
+        } else if (currentPath.includes('contact')) {
+          contactLink.classList.add("active");
+        }
 
-      contactLink.addEventListener("click", function () {
-        contactLink.classList.add("active");
-        dashboardLink.classList.remove("active");
-        analyticsLink.classList.remove("active");
+        // Event delegation for link clicks
+        document.querySelector('.sidebar-nav ul').addEventListener('click', function(event) {
+          if (event.target.tagName === 'A') {
+            // Remove active class from all links
+            dashboardLink.classList.remove("active");
+            analyticsLink.classList.remove("active");
+            contactLink.classList.remove("active");
+            // Add active class to the clicked link
+            event.target.classList.add("active");
+          }
+        });
       });
     </script>
   </body>

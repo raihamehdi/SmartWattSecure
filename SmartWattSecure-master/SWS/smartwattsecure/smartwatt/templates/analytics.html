@@ -17,15 +17,14 @@
         </div>
         <nav class="sidebar-nav">
           <ul>
-            <li><a href="dashboard.html" id="dashboard-link">Dashboard</a></li>
+            <li><a href="{% url 'dashboard' %}" id="dashboard-link">Dashboard</a></li>
             <li>
-              <a href="analytics.html" id="analytics-link" class="active"
-                >Analytics</a
-              >
+              <a href="{% url 'analytics' %}" id="analytics-link" class="active">Analytics</a>
             </li>
-            <li><a href="contact.html" id="contact-link">Contact</a></li>
+            <li><a href="{% url 'contact' %}" id="contact-link">Contact</a></li>
           </ul>
         </nav>
+        
       </aside>
 
       <!-- Main Content -->
@@ -45,6 +44,18 @@
     </div>
 
     <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const currentPath = window.location.pathname;
+        
+        if (currentPath.includes('dashboard')) {
+          dashboardLink.classList.add("active");
+        } else if (currentPath.includes('analytics')) {
+          analyticsLink.classList.add("active");
+        } else if (currentPath.includes('contact')) {
+          contactLink.classList.add("active");
+        }
+      });
+      
       // JavaScript to toggle the active class between links
       const dashboardLink = document.getElementById("dashboard-link");
       const analyticsLink = document.getElementById("analytics-link");

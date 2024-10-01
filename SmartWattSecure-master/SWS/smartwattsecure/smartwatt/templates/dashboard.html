@@ -1,11 +1,11 @@
-{%load static%}
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dashboard - Smart Watt Secure</title>
-    <link rel="stylesheet" href="{% static 'css/db.css'%}" />
+    <link rel="stylesheet" href="{% static 'css/db.css' %}" />
   </head>
   <body>
     <div class="dashboard-wrapper">
@@ -17,12 +17,12 @@
         <nav class="sidebar-nav">
           <ul>
             <li>
-              <a href="dashboard.html" id="dashboard-link" class="active"
+              <a href="dashboard/" id="dashboard-link" class="active"
                 >Dashboard</a
               >
             </li>
-            <li><a href="analytics.html" id="analytics-link">Analytics</a></li>
-            <li><a href="contact.html" id="contact-link">Contact</a></li>
+            <li><a href="analytics/" id="analytics-link">Analytics</a></li>
+            <li><a href="contact/" id="contact-link">Contact</a></li>
           </ul>
         </nav>
       </aside>
@@ -30,15 +30,15 @@
       <!-- Main Content -->
       <div class="main-content">
         <header class="main-header">
-          <h1>Welcome, Alex!</h1>
-          <div class="profile-menu">
-            <!-- Circular profile button with letter -->
-            <button class="profile-btn">A</button>
-            <!-- <div class="profile-dropdown">
-                        <a href="#">Change Name</a>
-                        <a href="#">Change Password</a>
-                    </div> -->
-          </div>
+          {% if user.is_authenticated %}
+            <h1>Welcome, {{ user.username }}!</h1>
+            <div class="profile-menu">
+              <!-- Circular profile button with letter -->
+              <button class="profile-btn">A</button>
+            </div>
+          {% else %}
+            <p>You are not logged in.</p>
+          {% endif %}
         </header>
 
         <main class="dashboard-main">
