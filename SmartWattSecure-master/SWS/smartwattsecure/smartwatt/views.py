@@ -2,7 +2,7 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
-from .arduino import get_mock_data, predict
+from .arduino import data, predict
 from .models import EnergyData, CustomUser
 from datetime import datetime
 from django.utils import timezone
@@ -34,11 +34,6 @@ def login(request):
     return render(request, 'registration/login.html')
 
 ##-----DASHBOARD VIEW-----##
-# def dashboard(request):
-#     if request.method == 'GET':
-#         data = EnergyData.objects.all()
-#         return render(request, 'dashboard.html', {'data': data})
-
 def dashboard(request):
     if request.user.is_authenticated:
         # Fetch the latest energy data for the logged-in user
@@ -57,14 +52,16 @@ def contact(request):
     return render(request, 'contact.html')
 
 def update_energy_data(request):
-    if request.method == 'GET':
-        data = get_mock_data()
-        power = data['power']
-        voltage = data['voltage']
-        now = timezone.now()
-        hour = now.hour  
-        day_of_week = now.weekday()  
-        month = now.month 
+    """Fetches new energy data from Arduino, saves it, and returns response."""
+    arduino_data = data()
+    if arduino_data:
+        voltage, current, power, total_units_consumed = arduino_data
+        now = datetime.now()
+        hour = now.hour
+        day_of_week = now.weekday()
+        month = now.month
+
+        # Prepare data for prediction
         X_test = [[power, voltage, hour, day_of_week, month]]
         predictions = predict(X_test)
         if predictions[0] == 0:  
@@ -73,47 +70,30 @@ def update_energy_data(request):
             prediction_result = "high"
         else:  
             prediction_result = "suspicious"
-
-        EnergyData.objects.create(
-            user = request.user,
-            current=data['current'],
-            power=data['power'],
-            voltage=data['voltage'],
-            total_units_consumed=data['total_units_consumed'],
-            prediction=prediction_result,
-            timestamp=now
-        )
         
-        return JsonResponse({'data': data, 'predictions': prediction_result})
-    return JsonResponse({'status': 'failure'}, status=400)
+        # Create a new EnergyData object for the user
+        energy_data = EnergyData.objects.create(
+            user=request.user,
+            timestamp=now,
+            voltage=voltage,
+            current=current,
+            power=power,
+            total_units_consumed=total_units_consumed,
+            prediction=prediction_result
+        )
+
+        energy_data.save()
+        return JsonResponse({'status': 'success'}, status=200)
+    else:
+        return JsonResponse({'error': 'Failed to fetch data from Arduino'}, status=500)
 
 def energy_data_api(request):
     if request.user.is_authenticated:
-        # Attempt to update the energy data
         update_response = update_energy_data(request)
-
         if update_response.status_code == 200:
-            # Fetch the latest energy data for the authenticated user
             user_data = EnergyData.objects.filter(user=request.user).order_by('-timestamp')
             data = list(user_data.values('timestamp', 'voltage', 'current', 'power', 'total_units_consumed', 'prediction'))
-            
-            # Return the data as a JSON response
             return JsonResponse(data, safe=False)
-        
-        # If the update was unsuccessful
         return JsonResponse({'error': 'Failed to update data'}, status=500)
-    
-    # If the user is not authenticated, return an error
     return JsonResponse({'error': 'User not authenticated'}, status=403)
-
-def dashboard2(request):
-    update_energy_data(request)
-    return render(request, 'dashboard2.html')
-
-
-
-
-
-
-
 
