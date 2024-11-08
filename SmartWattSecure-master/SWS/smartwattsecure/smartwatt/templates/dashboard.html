@@ -33,12 +33,12 @@
       <div class="main-content">
         <header class="main-header">
           {% if user.is_authenticated %}
-            <h1>Welcome, {{ user.username }}!</h1>
-            <div class="profile-menu">
-              <button class="profile-btn">A</button>
-            </div>
+          <h1>Welcome, {{ user.username }}!</h1>
+          <div class="profile-menu">
+            <button class="profile-btn">A</button>
+          </div>
           {% else %}
-            <p>You are not logged in.</p>
+          <p>You are not logged in.</p>
           {% endif %}
         </header>
 
@@ -59,37 +59,35 @@
     </div>
 
     <script>
-      // Fetch the latest data using AJAX
-      function fetchData() {
-        fetch('/api/energy_data/')
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error("Network response was not ok");
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.length > 0) {
-                    const latestData = data[0];  // Get the latest entry
-    
-                    document.getElementById('voltage').innerText = `${latestData.voltage}`;
-                    document.getElementById('current').innerText = `${latestData.current}`;
-                    document.getElementById('power').innerText = `${latestData.power}`;
-                    document.getElementById('total-units').innerText = `${latestData.total_units_consumed}`;
-                    document.getElementById('prediction').innerText = `${latestData.prediction}`;
-                } else {
-                    console.log("No data available.");
-                }
-            })
-            .catch(error => {
-                console.error("There was a problem with the fetch operation:", error);
-            });
-    }
-    
-    setInterval(fetchData, 10000);
+        // Fetch the latest data using AJAX
+        function fetchData() {
+          fetch('/api/energy_data/')
+              .then(response => {
+                  if (!response.ok) {
+                      throw new Error("Network response was not ok");
+                  }
+                  return response.json();
+              })
+              .then(data => {
+                  if (data.length > 0) {
+                      const latestData = data[0];  // Get the latest entry
+
+                      document.getElementById('voltage').innerText = `${latestData.voltage}`;
+                      document.getElementById('current').innerText = `${latestData.current}`;
+                      document.getElementById('power').innerText = `${latestData.power}`;
+                      document.getElementById('total-units').innerText = `${latestData.total_units_consumed}`;
+                      document.getElementById('prediction').innerText = `${latestData.prediction}`;
+
+                  } else {
+                      console.log("No data available.");
+                  }
+              })
+              .catch(error => {
+                  console.error("There was a problem with the fetch operation:", error);
+              });
+      }
+
+      setInterval(fetchData, 10000);
     </script>
   </body>
 </html>
-
-
-

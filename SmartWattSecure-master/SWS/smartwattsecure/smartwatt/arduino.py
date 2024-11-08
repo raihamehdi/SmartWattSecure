@@ -25,6 +25,13 @@ def predict(X):
     model = load_model()
     scaler = load_scaler()
     X_df = pd.DataFrame(X, columns=['power', 'voltage', 'hour', 'day_of_week', 'month'])
+    X_df = X_df.rename(columns={
+        'power': 'Global_active_power',
+        'voltage': 'Voltage',
+        'hour': 'Hour',
+        'day_of_week': 'DayOfWeek',
+        'month': 'Month'
+    })
     X_scaled = scaler.transform(X_df)
     predictions = model.predict(X_scaled)
     return predictions
