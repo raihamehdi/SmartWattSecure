@@ -14,7 +14,6 @@ body, html {
     overflow: hidden; /* Ensures no overflow issues */
 }
 
-
 /* Sidebar */
 .sidebar {
     background-color: #c62828;
@@ -83,8 +82,8 @@ body, html {
 .main-header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
+    align-items: left;
+    margin-bottom: 1px;
 }
 
 .main-header h1 {
@@ -94,6 +93,7 @@ body, html {
 /* Profile Button */
 .profile-menu {
     position: relative;
+    margin-left: auto;
 }
 
 .profile-btn {
@@ -126,39 +126,88 @@ body, html {
     display: block;
 }
 
-/* Dashboard Sections */
+/* Dashboard Main Layout */
 .dashboard-main {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Align content to the left, next to sidebar */
+    margin-left: 1px; /* Offset for sidebar */
+    background-color: #f5f5f5;
+    height: 100%;
+    width: calc(100% - 250px); /* Ensure content fills the rest of the screen */
 }
 
+/* Dashboard Sections */
 .dashboard-section {
+    width: 100%;
+    max-width: 1200px;
     background-color: #f5f5f5;
     padding: 15px;
     border-radius: 5px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px; /* Adds space between sections */
 }
 
+/* Dashboard Section Header */
+.dashboard-section h2 {
+    color: #c62828;
+    text-align: left;
+    font-size: 30px;
+    margin-bottom: 20px;
+}
+
+/* Dashboard Card - Grid Layout for Data Boxes */
 .dashboard-card {
-    background-color: #fff;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Two columns for boxes */
+    grid-template-rows: repeat(2, 1fr) auto;
+    gap: 20px;
+    width: 130%;
     padding: 20px;
+    box-sizing: border-box;
+}
+
+/* Each Data Box */
+.data-box {
+    background-color: #fff;
+    padding: 10px;
     border-radius: 8px;
     text-align: center;
     font-size: 1.2em;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 150px; /* Consistent height for all boxes */
+    width: 95%;
+    transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth transition for hover effect */
 }
 
-.dashboard-section h2 {
-    color: #c62828;
+/* Hover Effect for Data Boxes */
+.data-box:hover {
+    background-color: #c62828; /* Change color to sidebar color on hover */
+    color: white; /* Change text color to white */
+    transform: scale(1.05); /* Enlarge the box on hover */
 }
 
-.dashboard-card p {
-    margin: 0;
+/* Fifth Box - Full-width and slightly larger */
+.dashboard-card .data-box:nth-child(5) {
+    grid-column: 1 / span 2; /* Make the fifth box take the full width */
+    height: 145px; /* Larger height for emphasis */
+    padding: 10px;
+    width: 46.7%;
 }
 
 /* Responsive for Laptops */
 @media (max-width: 1024px) {
     .dashboard-main {
+        padding: 10px;
+    }
+    .dashboard-section {
+        padding: 10px;
+    }
+    .dashboard-card {
         grid-template-columns: 1fr;
+        grid-template-rows: auto;
     }
 }
