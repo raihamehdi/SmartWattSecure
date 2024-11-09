@@ -97,3 +97,16 @@ def energy_data_api(request):
         return JsonResponse({'error': 'Failed to update data'}, status=500)
     return JsonResponse({'error': 'User not authenticated'}, status=403)
 
+from .models import EnergyData
+
+def units_consumed_view(request):
+    data = EnergyData.objects.all().values('timestamp', 'total_units_consumed')
+    response_data = [
+        {
+            'date': item['timestamp'].strftime('%Y-%m-%d'),  # Format timestamp as desired
+            'units': item['total_units_consumed']
+        }
+        for item in data
+    ]
+    return JsonResponse(response_data, safe=False)
+

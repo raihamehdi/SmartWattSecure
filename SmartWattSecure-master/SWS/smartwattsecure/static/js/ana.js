@@ -1,3 +1,38 @@
+document.addEventListener("DOMContentLoaded", function () {
+    const currentPath = window.location.pathname;
+
+        if (currentPath.includes("dashboard")) {
+        dashboardLink.classList.add("active");
+        } else if (currentPath.includes("analytics")) {
+        analyticsLink.classList.add("active");
+        } else if (currentPath.includes("contact")) {
+        contactLink.classList.add("active");
+        }
+    });
+
+    // JavaScript to toggle the active class between links
+    const dashboardLink = document.getElementById("dashboard-link");
+    const analyticsLink = document.getElementById("analytics-link");
+    const contactLink = document.getElementById("contact-link");
+
+    dashboardLink.addEventListener("click", function () {
+        dashboardLink.classList.add("active");
+        analyticsLink.classList.remove("active");
+        contactLink.classList.remove("active");
+    });
+
+    analyticsLink.addEventListener("click", function () {
+        analyticsLink.classList.add("active");
+        dashboardLink.classList.remove("active");
+        contactLink.classList.remove("active");
+    });
+
+    contactLink.addEventListener("click", function () {
+        contactLink.classList.add("active");
+        dashboardLink.classList.remove("active");
+        analyticsLink.classList.remove("active");
+    });
+
 window.onload = function () {
     // Remove active class from all buttons (just in case)
     document.querySelectorAll('.sidebar-nav a').forEach(function (link) {
@@ -7,3 +42,52 @@ window.onload = function () {
     // Add active class to the Analytics button
     document.getElementById('analytics-link').classList.add('active');
 };
+
+document.addEventListener("DOMContentLoaded", function () {
+    fetch("/api/units-consumed/")
+        .then((response) => response.json())
+        .then((data) => {
+            const labels = data.map((item) => item.date);
+            const units = data.map((item) => item.units);
+
+            const ctx = document.getElementById("unitsConsumedChart").getContext("2d");
+            
+            // Set the width and height directly in JavaScript to force proper sizing
+            ctx.canvas.width = document.getElementById("chartContainer").offsetWidth;
+            ctx.canvas.height = 300; // Force a specific height for visibility
+
+            new Chart(ctx, {
+                type: "line",
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: "Units Consumed",
+                        data: units,
+                        borderColor: "#c62828",
+                        backgroundColor: "rgba(198, 40, 40, 0.1)",
+                        fill: true,
+                    }],
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            title: { display: true, text: "Date" },
+                        },
+                        y: {
+                            title: { display: true, text: "Units" },
+                            beginAtZero: true
+                        },
+                    },
+                },
+            });
+        })
+        .catch((error) => console.error("Error fetching data:", error));
+});
+
+
+// Adjust chart container styles to fit within the panel
+const chartContainer = document.getElementById('chartContainer');
+chartContainer.style.height = '300px';  // Adjust height as needed
+chartContainer.style.width = '100%';    // Make it take the full panel width

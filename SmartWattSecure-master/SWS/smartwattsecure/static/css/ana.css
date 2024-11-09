@@ -117,6 +117,33 @@ body, html {
     display: block;
 }
 
+.analytics-wrapper {
+    padding: 20px;
+    padding-left: 20px;
+    text-align: center;
+}
+
+.chart-title {
+    text-align: left;            /* Align to the left */
+    font-size: 1.5em;            /* Increase font size */
+    color: #c62828;              /* Red color */
+    margin-bottom: 10px;         /* Add spacing below the title */
+    padding-left: 10px;          /* Optional: add slight padding for consistency */
+}
+
+#chartContainer {
+    width: 100%;         /* Full width within container */
+    max-width: 600px;    /* Restrict maximum width */
+    height: 300px;       /* Fixed height for visibility */
+    margin: 0;           /* Remove auto centering */
+}
+
+#unitsConsumedChart {
+    display: block;
+    width: 100%;       /* Full width within container */
+    height: 100%;      /* Matches container height */
+}
+
 /* Responsive for Laptops */
 @media (max-width: 1024px) {
     .dashboard-main {

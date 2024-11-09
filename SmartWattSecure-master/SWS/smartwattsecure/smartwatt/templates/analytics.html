@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Analytics - Smart Watt Secure</title>
     <link rel="stylesheet" href="{% static 'css/ana.css'%}" />
+    <link rel="stylesheet" href="{% static 'js/ana.js'%}" />
     <!-- Use the same CSS file as Dashboard -->
   </head>
   <body>
@@ -17,14 +18,17 @@
         </div>
         <nav class="sidebar-nav">
           <ul>
-            <li><a href="{% url 'dashboard' %}" id="dashboard-link">Dashboard</a></li>
             <li>
-              <a href="{% url 'analytics' %}" id="analytics-link" class="active">Analytics</a>
+              <a href="{% url 'dashboard' %}" id="dashboard-link">Dashboard</a>
+            </li>
+            <li>
+              <a href="{% url 'analytics' %}" id="analytics-link" class="active"
+                >Analytics</a
+              >
             </li>
             <li><a href="{% url 'contact' %}" id="contact-link">Contact</a></li>
           </ul>
         </nav>
-        
       </aside>
 
       <!-- Main Content -->
@@ -40,43 +44,56 @@
                         </div> -->
           </div>
         </header>
+
+        <div class="analytics-wrapper">
+          <h2 class="chart-title">Units Consumed Over Time</h2>
+          <div id="chartContainer">
+            <canvas id="unitsConsumedChart"></canvas>
+          </div>
+        </div>
       </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
       document.addEventListener("DOMContentLoaded", function () {
-        const currentPath = window.location.pathname;
-        
-        if (currentPath.includes('dashboard')) {
-          dashboardLink.classList.add("active");
-        } else if (currentPath.includes('analytics')) {
-          analyticsLink.classList.add("active");
-        } else if (currentPath.includes('contact')) {
-          contactLink.classList.add("active");
-        }
-      });
-      
-      // JavaScript to toggle the active class between links
-      const dashboardLink = document.getElementById("dashboard-link");
-      const analyticsLink = document.getElementById("analytics-link");
-      const contactLink = document.getElementById("contact-link");
+        fetch("/api/units-consumed/")
+          .then((response) => response.json())
+          .then((data) => {
+            const labels = data.map((item) => item.date); // Replace with actual field name
+            const units = data.map((item) => item.units); // Replace with actual field name
 
-      dashboardLink.addEventListener("click", function () {
-        dashboardLink.classList.add("active");
-        analyticsLink.classList.remove("active");
-        contactLink.classList.remove("active");
-      });
-
-      analyticsLink.addEventListener("click", function () {
-        analyticsLink.classList.add("active");
-        dashboardLink.classList.remove("active");
-        contactLink.classList.remove("active");
-      });
-
-      contactLink.addEventListener("click", function () {
-        contactLink.classList.add("active");
-        dashboardLink.classList.remove("active");
-        analyticsLink.classList.remove("active");
+            const ctx = document
+              .getElementById("unitsConsumedChart")
+              .getContext("2d");
+            new Chart(ctx, {
+              type: "line",
+              data: {
+                labels: labels,
+                datasets: [
+                  {
+                    label: "Units Consumed",
+                    data: units,
+                    borderColor: "#c62828",
+                    backgroundColor: "rgba(198, 40, 40, 0.1)",
+                    fill: true,
+                  },
+                ],
+              },
+              options: {
+                responsive: true,
+                scales: {
+                  x: {
+                    title: { display: true, text: "Date" },
+                  },
+                  y: {
+                    title: { display: true, text: "Units" },
+                  },
+                },
+              },
+            });
+          })
+          .catch((error) => console.error("Error fetching data:", error));
       });
     </script>
   </body>
