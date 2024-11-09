@@ -1,37 +1,35 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const currentPath = window.location.pathname;
-
-        if (currentPath.includes("dashboard")) {
-        dashboardLink.classList.add("active");
-        } else if (currentPath.includes("analytics")) {
-        analyticsLink.classList.add("active");
-        } else if (currentPath.includes("contact")) {
-        contactLink.classList.add("active");
-        }
-    });
-
-    // JavaScript to toggle the active class between links
     const dashboardLink = document.getElementById("dashboard-link");
     const analyticsLink = document.getElementById("analytics-link");
     const contactLink = document.getElementById("contact-link");
 
-    dashboardLink.addEventListener("click", function () {
-        dashboardLink.classList.add("active");
+    // Remove 'active' class from all links
+    function clearActive() {
+        dashboardLink.classList.remove("active");
         analyticsLink.classList.remove("active");
         contactLink.classList.remove("active");
+    }
+
+    // Set 'active' class for the analytics link
+    clearActive();
+    analyticsLink.classList.add("active");
+
+    // Add event listeners to ensure correct active class when clicked
+    dashboardLink.addEventListener("click", function () {
+        clearActive();
+        dashboardLink.classList.add("active");
     });
 
     analyticsLink.addEventListener("click", function () {
+        clearActive();
         analyticsLink.classList.add("active");
-        dashboardLink.classList.remove("active");
-        contactLink.classList.remove("active");
     });
 
     contactLink.addEventListener("click", function () {
+        clearActive();
         contactLink.classList.add("active");
-        dashboardLink.classList.remove("active");
-        analyticsLink.classList.remove("active");
     });
+});
 
 window.onload = function () {
     // Remove active class from all buttons (just in case)
