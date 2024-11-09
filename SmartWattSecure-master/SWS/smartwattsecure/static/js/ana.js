@@ -42,49 +42,44 @@ window.onload = function () {
 };
 
 document.addEventListener("DOMContentLoaded", function () {
-    fetch("/api/units-consumed/")
-        .then((response) => response.json())
-        .then((data) => {
-            const labels = data.map((item) => item.date);
-            const units = data.map((item) => item.units);
+    const dailyBtn = document.getElementById("daily-btn");
+    const weeklyBtn = document.getElementById("weekly-btn");
+    const monthlyBtn = document.getElementById("monthly-btn");
 
-            const ctx = document.getElementById("unitsConsumedChart").getContext("2d");
-            
-            // Set the width and height directly in JavaScript to force proper sizing
-            ctx.canvas.width = document.getElementById("chartContainer").offsetWidth;
-            ctx.canvas.height = 300; // Force a specific height for visibility
+    function fetchData(filter) {
+        fetch(`/api/units-consumed/?filter=${filter}`)
+            .then(response => response.json())
+            .then(data => updateChart(data))
+            .catch(error => console.error("Error fetching data:", error));
+    }
 
-            new Chart(ctx, {
-                type: "line",
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: "Units Consumed",
-                        data: units,
-                        borderColor: "#c62828",
-                        backgroundColor: "rgba(198, 40, 40, 0.1)",
-                        fill: true,
-                    }],
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        x: {
-                            title: { display: true, text: "Date" },
-                        },
-                        y: {
-                            title: { display: true, text: "Units" },
-                            beginAtZero: true
-                        },
-                    },
-                },
-            });
-        })
-        .catch((error) => console.error("Error fetching data:", error));
+    function updateChart(data) {
+        const labels = data.map(item => item.date);
+        const units = data.map(item => item.units);
+        
+        // Update chart data
+        chart.data.labels = labels;
+        chart.data.datasets[0].data = units;
+        chart.update();
+    }
+
+    // Event listeners for buttons
+    dailyBtn.addEventListener("click", () => fetchData('daily'));
+    weeklyBtn.addEventListener("click", () => fetchData('weekly'));
+    monthlyBtn.addEventListener("click", () => fetchData('monthly'));
+
+    // Fetch daily data initially
+    fetchData('daily');
 });
 
-
+fetch(`/api/units-consumed/?filter=${filter}`)
+    .then(response => response.json())
+    .then(data => {
+        console.log("Fetched Data:", data);  // Log data to verify content
+        updateChart(data);
+    })
+    .catch(error => console.error("Error fetching data:", error));
+    
 // Adjust chart container styles to fit within the panel
 const chartContainer = document.getElementById('chartContainer');
 chartContainer.style.height = '300px';  // Adjust height as needed
