@@ -59,7 +59,7 @@ input[type="email"]:focus, input[type="password"]:focus, input[type="text"]:focu
 
 button {
     padding: 10px 20px;
-    background-color: red;
+    background-color: #DD0733;
     border: none;
     border-radius: 5px;
     color: white;
@@ -67,7 +67,7 @@ button {
 }
 
 button:hover {
-    background-color: #ff3333;
+    background-color: #DD0733;
 }
 
 .cancel-button {

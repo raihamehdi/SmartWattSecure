@@ -1,213 +1,281 @@
-/* Global Styles */
-body, html {
-    margin: 0;
-    padding: 0;
-    font-family: Arial, sans-serif;
-    height: 100%;
+/* Main Header Styling */
+#dashboard-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  background-color: #ffffff;
+  border-bottom: 1px solid #000000;
+  z-index: 999;
+  height: 82px;
+  display: flex;
+  align-items: center;
+  padding: 0 15px;
 }
 
-/* Dashboard Wrapper */
-.dashboard-wrapper {
-    display: flex;
-    height: 100vh;
-    width: 100vw;
-    overflow: hidden; /* Ensures no overflow issues */
+/* Flex container to align columns */
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  flex-wrap: wrap; /* Enables wrapping for smaller screens */
 }
 
-/* Sidebar */
-.sidebar {
-    background-color: #c62828;
-    width: 250px; /* Fixed width */
-    padding: 20px;
-    display: flex;
+/* Column Styling */
+.logo-section {
+  flex: 1;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.nav-section {
+  flex: 3;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px; /* Space between navigation links */
+}
+
+.icons-section {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+/* Responsive Styling */
+@media (max-width: 768px) {
+  .header-container {
     flex-direction: column;
     align-items: center;
-    color: white;
-    position: fixed;
-    height: 100%;
-    left: 0;
-    top: 0;
-    z-index: 1000; /* Sidebar will always stay above content */
-}
-
-.logo {
-    margin-bottom: 40px;
-    font-size: 2em;
-    font-weight: bold;
-}
-
-.sidebar-nav ul {
-    list-style: none;
-    padding: 0;
-    width: 100%; /* Full width of sidebar */
-}
-
-.sidebar-nav li {
-    margin-bottom: 20px;
-    border-bottom: 1px solid #f1f1f1; /* Thin line between buttons */
-}
-
-.sidebar-nav a {
-    color: white;
-    text-decoration: none;
-    font-size: 1.2em;
-    padding: 10px 20px;
-    display: block;
     text-align: center;
-    transition: background-color 0.3s ease, color 0.3s ease;
-    width: 100%; /* Keep the width fixed within sidebar */
-    box-sizing: border-box; /* Ensure padding doesn't affect width */
+  }
+
+  .nav-section {
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+  .icons-section {
+    margin-top: 10px;
+    justify-content: center;
+  }
 }
 
-.sidebar-nav a:hover {
-    background-color: #ff5252; /* Lighter red on hover */
-    color: white;
+/* Navigation Menu Styling */
+.tp-header-main-menu ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 40px; /* Reduced gap for smaller screens */
 }
 
-.sidebar-nav a.active {
-    background-color: #b71c1c; /* Active state */
-    color: #fff;
+.tp-header-main-menu ul li a {
+  color: #000000;
+  font-size: 18px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 600;
+  text-decoration: none;
+  position: relative;
+  padding: 5px 0;
+  transition: color 0.3s ease; 
 }
 
-/* Main Content */
-.main-content {
-    margin-left: 250px; /* Adjusted to fit next to sidebar */
-    padding: 70px;
-    width: calc(100% - 250px); /* Full-width minus sidebar */
-    background-color: #f5f5f5;
-    overflow: auto; /* Prevents content overflow */
+.tp-header-main-menu ul li a:hover {
+  color: #DD0733;
 }
 
-/* Main Header */
+.tp-header-main-menu ul li a::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 0;
+  height: 2px;
+  background-color: #DD0733;
+  transition: width 0.7s ease;
+}
+
+.tp-header-main-menu ul li a:hover::after {
+  width: 100%;
+}
+
+/* Icon styling */
+.icon-link {
+  font-size: 20px;
+  color: #000000;
+  margin-left: 15px;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.icon-link:hover {
+  color: #DD0733;
+}
+
+.icon-link svg {
+  fill: #000000;
+  stroke: #000000;
+  stroke-width: 1;
+  transition: fill 0.3s ease, stroke 0.3s ease;
+}
+
+.icon-link:hover svg {
+  fill: #DD0733;
+  stroke: #DD0733;
+}
+
+/* Light Image Styling */
+.light-image-container {
+  position: absolute;
+  padding-right: 4%;
+  top: 70px;
+  right: 20px; /* Adjust for smaller screens */
+  z-index: 10;
+}
+
+.light-image {
+  width: 120px;
+  transition: transform 0.5s ease, opacity 0.5s ease;
+  opacity: 0.9;
+  transform-origin: top center;
+}
+
+@media (max-width: 768px) {
+  .light-image {
+    width: 100px;
+    right: 10px;
+  }
+}
+
+.light-image:hover {
+  transform: translateY(5px) scale(1.05);
+  opacity: 1;
+}
+
+/* Floating Animation */
+@keyframes float {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(5px); }
+  100% { transform: translateY(0); }
+}
+
+.light-image {
+  animation: float 2s ease-in-out infinite;
+  opacity: 0.9;
+}
+
+/* Main Header Message Styling */
 .main-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: left;
-    margin-bottom: 1px;
+  position: absolute;
+  top: 120px;
+  left: 70px;
+  font-size: 1.2rem;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 700;
+  color: #333333;
 }
 
-.main-header h1 {
-    margin: 0;
+@media (max-width: 768px) {
+  .main-header {
+    top: 90px;
+    left: 20px;
+    font-size: 1.25rem;
+  }
 }
 
-/* Profile Button */
-.profile-menu {
-    position: relative;
-    margin-left: auto;
+@media (max-width: 480px) {
+  .main-header {
+    top: 80px;
+    left: 10px;
+    font-size: 1rem;
+  }
+
+  .light-image-container {
+    top: 110px;
+    right: 10px;
+  }
+
+  .light-image {
+    width: 80px;
+  }
 }
 
-.profile-btn {
-    background-color: #fff;
-    color: #c62828;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-weight: bold;
-    font-size: 1.2em;
-    border: 2px solid #c62828;
-    cursor: pointer;
+/* General Layout Adjustments */
+.container-fluid {
+  max-width: 93%;
+  padding-top: 10.5%;
 }
 
-.profile-dropdown {
-    display: none;
-    position: absolute;
-    right: 0;
-    top: 50px;
-    background-color: white;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    padding: 10px;
+/* Wrapper to control the alignment and width of the chart container */
+.chart-wrapper {
+  display: flex;
+  justify-content: flex-start; /* Aligns the chart to the left */
+  padding-left: 3%; /* Adds space on the left */
 }
 
-.profile-btn:hover + .profile-dropdown {
-    display: block;
+/* Chart Container for Controlling Size and Position */
+.chart-container {
+  width: 100%; /* Full width within the wrapper */
+  max-width: 800px; /* Restricts maximum width for larger screens */
+  height: 400px; /* Controls height of the chart */
+  overflow: hidden;
 }
 
-/* Dashboard Main Layout */
-.dashboard-main {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start; /* Align content to the left, next to sidebar */
-    margin-left: 1px; /* Offset for sidebar */
-    background-color: #f5f5f5;
-    height: 100%;
-    width: calc(100% - 250px); /* Ensure content fills the rest of the screen */
+/* Chart Canvas Adjustment */
+#unitsConsumedChart {
+  width: 100%;
+  height: 100%;
 }
 
-/* Dashboard Sections */
-.dashboard-section {
-    width: 100%;
-    max-width: 1200px;
-    background-color: #f5f5f5;
-    padding: 15px;
-    border-radius: 5px;
-    margin-bottom: 30px; /* Adds space between sections */
+/* PDF Button Styling */
+#download-pdf {
+  background-color: #DD0733;
+  color: #ffffff;
+  border: none;
+  padding: 6px 12px;
+  font-size: 14px;
+  position: relative;
+  overflow: hidden;
+  transition: background-color 0.3s ease;
 }
 
-/* Dashboard Section Header */
-.dashboard-section h2 {
-    color: #c62828;
-    text-align: left;
-    font-size: 30px;
-    margin-bottom: 20px;
+/* Hover effect on PDF Button */
+#download-pdf:hover {
+  color: #ffffff; /* Ensure text stays white on hover */
 }
 
-/* Dashboard Card - Grid Layout for Data Boxes */
-.dashboard-card {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr); /* Two columns for boxes */
-    grid-template-rows: repeat(2, 1fr) auto;
-    gap: 20px;
-    width: 130%;
-    padding: 20px;
-    box-sizing: border-box;
+#download-pdf::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background-color: #000;
+  transition: left 0.8s ease;
+  z-index: 0;
 }
 
-/* Each Data Box */
-.data-box {
-    background-color: #fff;
-    padding: 10px;
-    border-radius: 8px;
-    text-align: center;
-    font-size: 1.2em;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 150px; /* Consistent height for all boxes */
-    width: 95%;
-    transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth transition for hover effect */
+#download-pdf:hover::before {
+  left: 0;
 }
 
-/* Hover Effect for Data Boxes */
-.data-box:hover {
-    background-color: #c62828; /* Change color to sidebar color on hover */
-    color: white; /* Change text color to white */
-    transform: scale(1.05); /* Enlarge the box on hover */
+#download-pdf span {
+  position: relative;
+  z-index: 1;
 }
 
-/* Fifth Box - Full-width and slightly larger */
-.dashboard-card .data-box:nth-child(5) {
-    grid-column: 1 / span 2; /* Make the fifth box take the full width */
-    height: 145px; /* Larger height for emphasis */
-    padding: 10px;
-    width: 46.7%;
-}
-
-/* Responsive for Laptops */
-@media (max-width: 1024px) {
-    .dashboard-main {
-        padding: 10px;
-    }
-    .dashboard-section {
-        padding: 10px;
-    }
-    .dashboard-card {
-        grid-template-columns: 1fr;
-        grid-template-rows: auto;
-    }
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .chart-container {
+    max-width: 100%; /* Full width on smaller screens */
+    height: 300px; /* Adjust height for smaller screens */
+  }
 }

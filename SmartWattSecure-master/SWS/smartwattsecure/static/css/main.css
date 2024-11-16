@@ -56,7 +56,7 @@
 	---------------------------------
 	05. BLOG CSS
 	---------------------------------
-	    5.1 blog css start
+	  5.1 blog css start
 		5.2 Postbox css
 		5.3 Recent Post css
 		5.4 Sidebar css
@@ -14591,7 +14591,6 @@ td.product-thumbnail img {
   border: medium none;
   color: #fff;
   display: inline-block;
-  float: left;
   font-size: 12px;
   font-weight: 700;
   height: 40px;
@@ -14925,7 +14924,7 @@ p.checkout-coupon input[type=text]:focus {
 }
 
 .payment-method .btn-link {
-  -moz-user-select: none;
+  /* -moz-user-select: none; */
   background: no-repeat;
   border: medium none;
   border-radius: 0;
