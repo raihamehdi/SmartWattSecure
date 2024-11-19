@@ -3,3 +3,11 @@ html, body {
     padding: 0;
     box-sizing: border-box; /* Ensures consistent box model across all elements */
   }
+
+.faq {
+    padding-top: 5%;
+}
+
+.tp-faq-thumb {
+    padding-top: 30%;
+}

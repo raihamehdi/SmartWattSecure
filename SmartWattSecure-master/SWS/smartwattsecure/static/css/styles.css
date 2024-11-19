@@ -1,0 +1,145 @@
+/* Main Header Styling */
+#dashboard-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    background-color: #ffffff;
+    border-bottom: 1px solid #000000;
+    z-index: 999;
+    height: 82px;
+    display: flex;
+    align-items: center;
+    padding: 0 15px;
+    outline: 2px solid red; 
+  }
+  
+  /* Flex container to align columns */
+  .header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    flex-wrap: wrap; /* Enables wrapping for smaller screens */
+  }
+  
+  /* Column Styling */
+  .logo-section {
+    width: 200px; /* Set an appropriate fixed width for your logo */
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex: 1; /* Fixed width for consistency */
+  }
+  
+  .nav-section {
+    flex: 3;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px; /* Space between navigation links */
+  }
+  
+  .icons-section {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    min-width: 150px;
+  }
+  
+  /* Responsive Styling */
+  @media (max-width: 768px) {
+    .header-container {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+  
+    .nav-section {
+      gap: 10px;
+      margin-top: 10px;
+    }
+  
+    .icons-section {
+      margin-top: 10px;
+      justify-content: center;
+    }
+  }
+  
+  /* Navigation Menu Styling */
+  .tp-header-main-menu ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 40px; /* Reduced gap for smaller screens */
+  }
+  
+  .tp-header-main-menu ul li a {
+    color: #000000;
+    font-size: 18px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 600;
+    text-decoration: none;
+    position: relative;
+    padding: 5px 0;
+    transition: color 0.3s ease; 
+  }
+  
+  .tp-header-main-menu ul li a:hover {
+    color: #DD0733;
+  }
+  
+  .tp-header-main-menu ul li a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    width: 0;
+    height: 2px;
+    background-color: #DD0733;
+    transition: width 0.7s ease;
+  }
+
+  .tp-header-main-menu ul li a:hover,
+.tp-header-main-menu ul li a.active {
+    color: #DD0733;
+}
+
+.tp-header-main-menu ul li a.active::after {
+    width: 100%;
+    background-color: #DD0733;
+}
+  
+  /* Icon styling */
+  .icon-link {
+    font-size: 20px;
+    color: #000000;
+    margin-left: 15px;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+  
+  .icon-link:hover {
+    color: #DD0733;
+  }
+  
+  .icon-link svg {
+    fill: #000000;
+    stroke: #000000;
+    stroke-width: 1;
+    transition: fill 0.3s ease, stroke 0.3s ease;
+  }
+  
+  .icon-link:hover svg {
+    fill: #DD0733;
+    stroke: #DD0733;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+}

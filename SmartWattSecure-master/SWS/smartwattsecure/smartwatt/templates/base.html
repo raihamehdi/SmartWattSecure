@@ -1,17 +1,119 @@
 <!-- templates/base.html -->
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>{% block title %}My Site{% endblock title %}</title>
-        {% load static %}
-        <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-    </head>
-<body>
-<main>
-{% block content %}
-{% endblock content %}
-</main>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}My Site{% endblock title %}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+  </head>
+  <body>
+    <header>
+      <div id="dashboard-header" class="tp-header-area">
+        <div class="header-container">
+          <!-- Logo Section -->
+          <div class="header-column logo-section">
+            <a href="dashboard.html">
+              <img src="{% static 'img/logo/favicon.png' %}" alt="Logo" />
+            </a>
+          </div>
+
+          <!-- Navigation Section -->
+          <div class="header-column nav-section">
+            <nav class="tp-header-main-menu">
+              <ul class="d-flex justify-content-center align-items-center">
+                <li>
+                  <a
+                    href="{% url 'dashboard' %}"
+                    class="{% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}"
+                  >
+                    Dashboard
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="{% url 'contact' %}"
+                    class="{% if request.resolver_match.url_name == 'contact' %}active{% endif %}"
+                  >
+                    Contact
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="{% url 'help' %}"
+                    class="{% if request.resolver_match.url_name == 'help' %}active{% endif %}"
+                  >
+                    Help
+                  </a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+
+          <!-- Icons Section (Notifications and Profile) -->
+          <div class="header-column icons-section">
+            <a href="#notifications" class="icon-link">
+              <!-- Inline SVG for notification icon -->
+              <svg
+                height="40px"
+                width="40px"
+                xmlns="http://www.w3.org/2000/svg"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+                viewBox="0 0 24 30"
+                style="enable-background: new 0 0 24 24"
+                xml:space="preserve"
+              >
+                <g>
+                  <path
+                    d="M11.997,1.854c0.574,0,1.041,0.467,1.041,1.041h1.041c0-1.148-0.933-2.081-2.081-2.081c-1.148,0-2.081,0.933-2.081,2.081h1.041C10.956,2.321,11.423,1.854,11.997,1.854z"
+                    fill="#000"
+                  />
+                  <path
+                    d="M11.993,22.146c-0.658,0-1.263-0.229-1.663-0.63c-0.19-0.19-0.415-0.505-0.415-0.93l-1.041-0.002c-0.001,0.61,0.254,1.202,0.719,1.668c0.593,0.594,1.468,0.935,2.399,0.935c1.721,0,3.123-1.167,3.126-2.601l-1.041-0.002C14.076,21.446,13.141,22.146,11.993,22.146z"
+                    fill="#000"
+                  />
+                  <path
+                    d="M21.351,17.854c0.067-0.731,0.146-1.836-0.333-2.72l-0.083-0.087c-0.143-0.17-0.312-0.327-0.491-0.492c-0.7-0.649-1.659-1.538-1.865-4.152C18.3,6.93,15.949,3.415,11.997,3.415c-3.952,0-6.303,3.515-6.582,6.988c-0.207,2.613-1.165,3.502-1.865,4.151c-0.179,0.166-0.348,0.323-0.491,0.492l-0.059,0.087c-0.479,0.884-0.424,1.988-0.356,2.72c0.018,0.193-0.012,0.361-0.012,0.492v0.305L2.944,18.8c2.202,1.231,5.088,1.804,9.03,1.804c3.943,0,6.862-0.573,9.065-1.804l0.324-0.149v-0.305C21.363,18.215,21.333,18.046,21.351,17.854z M20.268,17.758c-0.009,0.095-0.017,0.185-0.023,0.269c-2.01,1.047-4.642,1.536-8.247,1.536c-3.605,0-6.237-0.489-8.248-1.536c-0.007-0.084-0.015-0.174-0.023-0.269c-0.058-0.626-0.136-1.477,0.164-2.081c0.098-0.109,0.224-0.226,0.368-0.36c0.779-0.722,1.956-1.814,2.195-4.831c0.233-2.904,2.068-6.03,5.544-6.03s5.311,3.126,5.544,6.03c0.239,3.018,1.417,4.11,2.196,4.832c0.144,0.134,0.27,0.251,0.368,0.36C20.404,16.28,20.325,17.132,20.268,17.758z"
+                    fill="#000"
+                  />
+                </g>
+              </svg>
+            </a>
+            <a href="#profile" class="icon-link">
+              <!-- Inline SVG for user profile icon -->
+              <svg
+                width="40px"
+                height="40px"
+                xmlns="http://www.w3.org/2000/svg"
+                data-name="Layer 1"
+                viewBox="0 0 48 60"
+                x="0px"
+                y="0px"
+              >
+                <title>_users</title>
+                <path
+                  d="M4.53,44a.5.5,0,0,1-.5-.5v-5A10.39,10.39,0,0,1,14.28,28H27.53a.5.5,0,0,1,0,1H14.28A9.39,9.39,0,0,0,5,38.5v5A.5.5,0,0,1,4.53,44Z"
+                  fill="#000"
+                />
+                <path
+                  d="M24,5a9,9,0,1,1-9,9,9,9,0,0,1,9-9m0-1A10,10,0,1,0,34,14,10,10,0,0,0,24,4Z"
+                  fill="#000"
+                />
+                <path
+                  d="M36,39a3,3,0,1,1,3-3A3,3,0,0,1,36,39Zm0-5a2,2,0,1,0,2,2A2,2,0,0,0,36,34Z"
+                  fill="#000"
+                />
+                <path
+                  d="M36,44a2.71,2.71,0,0,1-2.07-1,1.7,1.7,0,0,0-1.45-.6,2.75,2.75,0,0,1-2.14-.78,2.72,2.72,0,0,1-.78-2.14,1.74,1.74,0,0,0-.6-1.45,2.71,2.71,0,0,1,0-4.14,1.74,1.74,0,0,0,.6-1.45,2.72,2.72,0,0,1,.78-2.14,2.75,2.75,0,0,1,2.14-.78,1.74,1.74,0,0,0,1.45-.6,2.8,2.8,0,0,1,4.14,0,1.73,1.73,0,0,0,1.45.6,2.7,2.7,0,0,1,2.92,2.92,1.74,1.74,0,0,0,.6,1.45,2.71,2.71,0,0,1,0,4.14,1.74,1.74,0,0,0-.6,1.45,2.72,2.72,0,0,1-.78,2.14,2.75,2.75,0,0,1-2.14.78,1.7,1.7,0,0,0-1.45.6A2.71,2.71,0,0,1,36,44Zm-3.38-2.56a2.7,2.7,0,0,1,2.07,1,1.79,1.79,0,0,0,2.62,0,2.67,2.67,0,0,1,2.29-.95,1.72,1.72,0,0,0,1.85-1.85,2.68,2.68,0,0,1,.95-2.29,1.73,1.73,0,0,0,0-2.62,2.68,2.68,0,0,1-.95-2.29,1.72,1.72,0,0,0-1.85-1.85,2.7,2.7,0,0,1-2.29-.95h0a1.79,1.79,0,0,0-2.62,0,2.7,2.7,0,0,1-2.29.95,1.72,1.72,0,0,0-1.85,1.85,2.68,2.68,0,0,1-.95,2.29,1.73,1.73,0,0,0,0,2.62,2.68,2.68,0,0,1,.95,2.29,1.72,1.72,0,0,0,1.85,1.85Z"
+                  fill="#000"
+                />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </header>
+    <main>{% block content %} {% endblock content %}</main>
+  </body>
 </html>

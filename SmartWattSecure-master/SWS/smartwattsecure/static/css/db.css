@@ -1,213 +1,264 @@
-/* Global Styles */
-body, html {
-    margin: 0;
-    padding: 0;
-    font-family: Arial, sans-serif;
-    height: 100%;
+html, body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box; /* Ensures consistent box model across all elements */
 }
 
-/* Dashboard Wrapper */
-.dashboard-wrapper {
-    display: flex;
-    height: 100vh;
-    width: 100vw;
-    overflow: hidden; /* Ensures no overflow issues */
+/* Light Image Styling */
+.light-image-container {
+  position: absolute;
+  padding-right: 4%;
+  top: 70px;
+  right: 20px; /* Adjust for smaller screens */
+  z-index: 10;
 }
 
-/* Sidebar */
-.sidebar {
-    background-color: #c62828;
-    width: 250px; /* Fixed width */
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    color: white;
-    position: fixed;
-    height: 100%;
-    left: 0;
-    top: 0;
-    z-index: 1000; /* Sidebar will always stay above content */
+.light-image {
+  width: 120px;
+  transition: transform 0.5s ease, opacity 0.5s ease;
+  opacity: 0.9;
+  transform-origin: top center;
 }
 
-.logo {
-    margin-bottom: 40px;
-    font-size: 2em;
-    font-weight: bold;
+@media (max-width: 768px) {
+  .light-image {
+    width: 100px;
+    right: 10px;
+  }
 }
 
-.sidebar-nav ul {
-    list-style: none;
-    padding: 0;
-    width: 100%; /* Full width of sidebar */
+.light-image:hover {
+  transform: translateY(5px) scale(1.05);
+  opacity: 1;
 }
 
-.sidebar-nav li {
-    margin-bottom: 20px;
-    border-bottom: 1px solid #f1f1f1; /* Thin line between buttons */
+/* Floating Animation */
+@keyframes float {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(5px); }
+  100% { transform: translateY(0); }
 }
 
-.sidebar-nav a {
-    color: white;
-    text-decoration: none;
-    font-size: 1.2em;
-    padding: 10px 20px;
-    display: block;
-    text-align: center;
-    transition: background-color 0.3s ease, color 0.3s ease;
-    width: 100%; /* Keep the width fixed within sidebar */
-    box-sizing: border-box; /* Ensure padding doesn't affect width */
+.light-image {
+  animation: float 2s ease-in-out infinite;
+  opacity: 0.9;
 }
 
-.sidebar-nav a:hover {
-    background-color: #ff5252; /* Lighter red on hover */
-    color: white;
-}
-
-.sidebar-nav a.active {
-    background-color: #b71c1c; /* Active state */
-    color: #fff;
-}
-
-/* Main Content */
-.main-content {
-    margin-left: 250px; /* Adjusted to fit next to sidebar */
-    padding: 70px;
-    width: calc(100% - 250px); /* Full-width minus sidebar */
-    background-color: #f5f5f5;
-    overflow: auto; /* Prevents content overflow */
-}
-
-/* Main Header */
+/* Main Header Message Styling */
 .main-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: left;
-    margin-bottom: 1px;
+  position: absolute;
+  top: 130px;
+  left: 70px;
+  font-size: 1.2rem;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 800 !important;
+  color: #333333;
 }
 
-.main-header h1 {
-    margin: 0;
+@media (max-width: 768px) {
+  .main-header {
+    top: 90px;
+    left: 20px;
+    font-size: 1.25rem;
+  }
 }
 
-/* Profile Button */
-.profile-menu {
-    position: relative;
-    margin-left: auto;
+@media (max-width: 480px) {
+  .main-header {
+    top: 80px;
+    left: 10px;
+    font-size: 1rem;
+  }
+
+  .light-image-container {
+    top: 110px;
+    right: 10px;
+  }
+
+  .light-image {
+    width: 80px;
+  }
 }
 
-.profile-btn {
-    background-color: #fff;
-    color: #c62828;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-weight: bold;
-    font-size: 1.2em;
-    border: 2px solid #c62828;
-    cursor: pointer;
+.container-fluid {
+  padding-top: 10%;
 }
 
-.profile-dropdown {
-    display: none;
-    position: absolute;
-    right: 0;
-    top: 50px;
-    background-color: white;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    padding: 10px;
+.left-section {
+  padding-right: 30px !important;
+  padding-left: 40px !important;
+  padding-top: 50px !important;
 }
 
-.profile-btn:hover + .profile-dropdown {
-    display: block;
+.d-flex {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px; /* Space between the divs */
 }
 
-/* Dashboard Main Layout */
-.dashboard-main {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start; /* Align content to the left, next to sidebar */
-    margin-left: 1px; /* Offset for sidebar */
-    background-color: #f5f5f5;
-    height: 100%;
-    width: calc(100% - 250px); /* Ensure content fills the rest of the screen */
+.info-box {
+  position: relative;
+  background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent background for readability */
+  padding-top: 40px; /* Space for label */
+  padding-left: 20px;
+  width: 48%; /* Adjust width as needed */
+  height: 210px;
+  background-color: #f8f9fa;
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  text-align: left;
 }
 
-/* Dashboard Sections */
-.dashboard-section {
-    width: 100%;
-    max-width: 1200px;
-    background-color: #f5f5f5;
-    padding: 15px;
-    border-radius: 5px;
-    margin-bottom: 30px; /* Adds space between sections */
+.background-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 73vh; /* Full viewport height */
+  background-size: 70%; /* Adjust the width of the image */
+  background-position: left; /* Position it to the left */
+  background-repeat: no-repeat;
+  opacity: 0.9; /* Adjust opacity if you want it lighter */
+  z-index: 0;
+  animation: backgroundZoom 15s ease-in-out infinite;
 }
 
-/* Dashboard Section Header */
-.dashboard-section h2 {
-    color: #c62828;
-    text-align: left;
-    font-size: 30px;
-    margin-bottom: 20px;
+/* Keyframes for zoom and subtle movement */
+@keyframes backgroundZoom {
+  0% {
+    transform: scale(1); /* Start at original size */
+  }
+  50% {
+    transform: scale(1.05); /* Slightly zoom in */
+  }
+  100% {
+    transform: scale(1); /* Return to original size */
+  }
 }
 
-/* Dashboard Card - Grid Layout for Data Boxes */
-.dashboard-card {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr); /* Two columns for boxes */
-    grid-template-rows: repeat(2, 1fr) auto;
-    gap: 20px;
-    width: 130%;
-    padding: 20px;
-    box-sizing: border-box;
+.content {
+  position: relative;
+  z-index: 1 !important; /* Make sure content appears above background */
 }
 
-/* Each Data Box */
-.data-box {
-    background-color: #fff;
-    padding: 10px;
-    border-radius: 8px;
-    text-align: center;
-    font-size: 1.2em;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 150px; /* Consistent height for all boxes */
-    width: 95%;
-    transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth transition for hover effect */
+/* Label Styling Inside the Box */
+.info-box .label {
+  position: absolute;
+  top: 10px;
+  left: 15px;
+  font-weight: bold;
+  font-size: 25px;
+  margin: 0;
 }
 
-/* Hover Effect for Data Boxes */
-.data-box:hover {
-    background-color: #c62828; /* Change color to sidebar color on hover */
-    color: white; /* Change text color to white */
-    transform: scale(1.05); /* Enlarge the box on hover */
+.label {
+  font-weight: bold;
+  position: relative;
+  align-self: flex-start;
+  margin-bottom: 10px;
 }
 
-/* Fifth Box - Full-width and slightly larger */
-.dashboard-card .data-box:nth-child(5) {
-    grid-column: 1 / span 2; /* Make the fifth box take the full width */
-    height: 145px; /* Larger height for emphasis */
-    padding: 10px;
-    width: 46.7%;
+/* Content styling */
+.info-box p, .info-box div {
+  font-size: 18px;
+  margin: 0;
 }
 
-/* Responsive for Laptops */
-@media (max-width: 1024px) {
-    .dashboard-main {
-        padding: 10px;
-    }
-    .dashboard-section {
-        padding: 10px;
-    }
-    .dashboard-card {
-        grid-template-columns: 1fr;
-        grid-template-rows: auto;
-    }
+/* Bottom Div */
+.info-box:last-child {
+  width: 48%; /* Keep width consistent */
+  height: 210px; /* Keep height consistent */
+  margin: 20px auto 0 auto; /* Center horizontally by default */
+  margin-top: 20px; /* Space above the bottom div */
+  margin-right: 1px !important; /* Adjust this value to move slightly right */
+}
+
+.info-box h5 {
+  text-align: left;
+  margin-bottom: 10px;
+}
+
+.info-box p, .info-box div {
+  font-size: 18px;
+}
+
+/* Right Section Styling (Graph Container) */
+.right-section {
+  padding-left: 20px !important;
+  padding-right: 40px !important;
+  padding-top: 40px !important;
+}
+
+/* Card and Chart Styling */
+.card {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.chart-wrapper {
+  display: flex;
+  justify-content: center; /* Centers the chart within the card */
+}
+
+.chart-container {
+  width: 100%;
+  max-width: 600px; /* Controls the width of the chart */
+  height: 370px; /* Controls the height of the chart */
+}
+
+#unitsConsumedChart {
+  width: 100%;
+  height: 100%;
+}
+
+/* PDF Button Styling */
+#download-pdf {
+  background-color: #DD0733;
+  color: #ffffff;
+  border: none;
+  padding: 6px 12px;
+  font-size: 14px;
+  position: relative;
+  overflow: hidden;
+  transition: background-color 0.3s ease;
+}
+
+#download-pdf:hover {
+  color: #ffffff; /* Ensure text stays white on hover */
+}
+
+#download-pdf::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background-color: #000;
+  transition: left 0.8s ease;
+  z-index: 0;
+}
+
+#download-pdf:hover::before {
+  left: 0;
+}
+
+#download-pdf span {
+  position: relative;
+  z-index: 1;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .custom-div {
+      height: auto; /* Adjust height dynamically for small screens */
+  }
+  .chart-container {
+      max-width: 100%;
+      height: 300px; /* Adjust height for smaller screens */
+  }
 }

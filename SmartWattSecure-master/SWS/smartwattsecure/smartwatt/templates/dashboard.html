@@ -1,4 +1,4 @@
-{%load static%}
+{% extends "base.html" %} {% load static %} {% block content %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -6,113 +6,101 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dashboard - Smart Watt Secure</title>
     <link rel="stylesheet" href="{% static 'css/db.css' %}" />
-    <link rel="stylesheet" href="{% static 'js/db.js' %}" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{% static 'js/db.js' %}"></script>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
   </head>
   <body>
-    <div class="dashboard-wrapper">
-      <!-- Sidebar -->
-      <aside class="sidebar">
-        <div class="logo">
-          <h2>SWS</h2>
-        </div>
-        <nav class="sidebar-nav">
-          <ul>
-            <li>
-              <a href="{% url 'dashboard' %}" id="dashboard-link" class="active"
-                >Dashboard</a
-              >
-            </li>
-            <li>
-              <a href="{% url 'analytics' %}" id="analytics-link">Analytics</a>
-            </li>
-            <li>
-              <a href="{% url 'contact' %}" id="contact-link">Contact</a>
-            </li>
-          </ul>
-        </nav>
-      </aside>
-
-      <!-- Main Content -->
-      <div class="main-content">
-        <header class="main-header">
-          {% if user.is_authenticated %}
-          <h1>Welcome, {{ user.username }}!</h1>
-          <div class="profile-menu">
-            <button class="profile-btn">A</button>
-          </div>
-          {% else %}
-          <p>You are not logged in.</p>
-          {% endif %}
-        </header>
-
-        <main class="dashboard-main">
-          <section class="dashboard-section">
-            <h2>Latest Energy Data</h2>
-            <div id="energy-data" class="dashboard-card">
-              <!-- Each element is now in a separate div -->
-              <div class="data-box">
-                <p>Voltage: <span id="voltage">-</span> V</p>
-              </div>
-              <div class="data-box">
-                <p>Current: <span id="current">-</span> A</p>
-              </div>
-              <div class="data-box">
-                <p>Power: <span id="power">-</span> W</p>
-              </div>
-              <div class="data-box">
-                <p>Total Units Consumed: <span id="total-units">-</span> kWh</p>
-              </div>
-              <div class="data-box">
-                <p>Prediction: <span id="prediction">-</span></p>
-              </div>
-            </div>
-          </section>
-        </main>
+    <!-- Main Content Section -->
+    <section class="main-content">
+      <div class="main-header">
+        {% if user.is_authenticated %}
+        <h1>Welcome, {{ user.username }}!</h1>
+        {% else %}
+        <p>You are not logged in.</p>
+        {% endif %}
       </div>
+    </section>
+
+    <!-- Light Image Below Header -->
+    <div class="light-image-container">
+      <img
+        src="{% static 'img/bg/shape-1-4.png' %}"
+        alt="Hanging Light"
+        class="light-image"
+      />
     </div>
 
-    <script>
-      // Fetch the latest data using AJAX
-      function fetchData() {
-        fetch("/api/energy_data/")
-          .then((response) => {
-            if (!response.ok) {
-              throw new Error("Network response was not ok");
-            }
-            return response.json();
-          })
-          .then((data) => {
-            if (data.length > 0) {
-              const latestData = data[0]; // Get the latest entry
+    <div class="container-fluid mt-4">
+      <div class="row">
+        <!-- Left Side Divs -->
+        <div
+          class="col-md-6 left-section background-image content"
+          style="background-image: url('{% static 'img/bg/lines.png' %}')"
+        >
+          <div class="d-flex flex-wrap align-items-start">
+            <!-- Units Box -->
+            <div class="info-box custom-div me-3 mb-3">
+              <div class="label">Units</div>
+              <p id="unitsData">Fetching units...</p>
+            </div>
+            <!-- Current Box -->
+            <div class="info-box custom-div mb-3">
+              <div class="label">Current</div>
+              <p id="currentData">Fetching current...</p>
+            </div>
+            <!-- Voltage Box -->
+            <div class="info-box custom-div mt-3">
+              <div class="label">Voltage</div>
+              <div id="voltageData">Fetching voltage...</div>
+              <canvas
+                id="voltageGraph"
+                style="width: 100%; height: 70px"
+              ></canvas>
+            </div>
+          </div>
+        </div>
 
-              document.getElementById(
-                "voltage"
-              ).innerText = `${latestData.voltage}`;
-              document.getElementById(
-                "current"
-              ).innerText = `${latestData.current}`;
-              document.getElementById(
-                "power"
-              ).innerText = `${latestData.power}`;
-              document.getElementById(
-                "total-units"
-              ).innerText = `${latestData.total_units_consumed}`;
-              document.getElementById(
-                "prediction"
-              ).innerText = `${latestData.prediction}`;
-            } else {
-              console.log("No data available.");
-            }
-          })
-          .catch((error) => {
-            console.error(
-              "There was a problem with the fetch operation:",
-              error
-            );
-          });
-      }
-
-      setInterval(fetchData, 10000);
-    </script>
+        <!-- Graph Section -->
+        <div class="col-md-6 right-section">
+          <div class="card shadow-sm">
+            <div
+              class="card-header d-flex justify-content-between align-items-center"
+            >
+              <h5>Units Consumed</h5>
+              <div>
+                <label for="time-filter" class="form-label me-2"
+                  >View by:</label
+                >
+                <select
+                  id="time-filter"
+                  class="form-select form-select-sm d-inline-block"
+                  style="width: auto"
+                >
+                  <option value="weekly">Weekly</option>
+                  <option value="monthly">Monthly</option>
+                </select>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="chart-wrapper">
+                <div class="chart-container">
+                  <canvas id="unitsConsumedChart"></canvas>
+                </div>
+              </div>
+            </div>
+            <div class="card-footer text-end">
+              <button id="download-pdf" class="btn btn-danger">
+                <span>Download PDF</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </body>
 </html>
+{% endblock %}

@@ -1,0 +1,201 @@
+{% extends "base.html" %} {% load static %} {% block content %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/animate.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/swiper-bundle.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/slick.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/magnific-popup.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/flaticon_biddut.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/font-awesome-pro.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/spacing.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/custom-animation.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/main.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/help.css'%}" />
+    <link rel="stylesheet" href="{% static 'js/main.js'%}" />
+  </head>
+  <body>
+    <!-- faq area start -->
+    <div class="faq">
+      <div class="tp-faq-area p-relative pt-120 pb-120">
+        <div
+          class="tp-faq-thumb"
+          data-background="{% static 'img/cta/faq-bg.jpg' %}"
+        ></div>
+        <div class="tp-faq-text d-none d-xxl-block">
+          <h5>FAQ’S</h5>
+        </div>
+        <div class="container-fluid" style="padding-left: 100px">
+          <div class="row">
+            <div
+              class="col-xxl-7 col-xl-6 col-lg-6 wow tpfadeLeft"
+              data-wow-duration=".9s"
+              data-wow-delay=".s"
+            >
+              <div class="tp-custom-accordion">
+                <div class="accordion" id="accordionExample">
+                  <div class="accordion-items tp-faq-active">
+                    <h2 class="accordion-header" id="headingOne">
+                      <button
+                        class="accordion-buttons"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#collapseOne"
+                        aria-expanded="true"
+                        aria-controls="collapseOne"
+                      >
+                        Can I get your service wheAn I need
+                      </button>
+                    </h2>
+                    <div
+                      id="collapseOne"
+                      class="accordion-collapse collapse show"
+                      aria-labelledby="headingOne"
+                      data-bs-parent="#accordionExample"
+                    >
+                      <div class="accordion-body">
+                        The transfer of an immigrant visa application from USCIS
+                        to the National takes about 30-60 days. Before phoning
+                        to confirm receipt of an application, the National Visa
+                        Center recommends waiting at least 60 days from
+                      </div>
+                    </div>
+                  </div>
+                  <div class="accordion-items">
+                    <h2 class="accordion-header" id="headingTwo">
+                      <button
+                        class="accordion-buttons collapsed"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#collapseTwo"
+                        aria-expanded="false"
+                        aria-controls="collapseTwo"
+                      >
+                        Can’t I just call a handyman to fix minor electrical
+                        problems?
+                      </button>
+                    </h2>
+                    <div
+                      id="collapseTwo"
+                      class="accordion-collapse collapse"
+                      aria-labelledby="headingTwo"
+                      data-bs-parent="#accordionExample"
+                    >
+                      <div class="accordion-body">
+                        The transfer of an immigrant visa application from USCIS
+                        to the National takes about 30-60 days. Before phoning
+                        to confirm receipt of an application, the National Visa
+                        Center recommends waiting at least 60 days from
+                      </div>
+                    </div>
+                  </div>
+                  <div class="accordion-items">
+                    <h2 class="accordion-header" id="headingThree">
+                      <button
+                        class="accordion-buttons collapsed"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#collapseThree"
+                        aria-expanded="false"
+                        aria-controls="collapseThree"
+                      >
+                        Do I need to be present when your team is working?
+                      </button>
+                    </h2>
+                    <div
+                      id="collapseThree"
+                      class="accordion-collapse collapse"
+                      aria-labelledby="headingThree"
+                      data-bs-parent="#accordionExample"
+                    >
+                      <div class="accordion-body">
+                        The transfer of an immigrant visa application from USCIS
+                        to the National takes about 30-60 days. Before phoning
+                        to confirm receipt of an application, the National Visa
+                        Center recommends waiting at least 60 days from
+                      </div>
+                    </div>
+                  </div>
+                  <div class="accordion-items">
+                    <h2 class="accordion-header" id="headingFour">
+                      <button
+                        class="accordion-buttons collapsed"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#collapseFour"
+                        aria-expanded="false"
+                        aria-controls="collapseFour"
+                      >
+                        How do you handle emergency electrical issues?
+                      </button>
+                    </h2>
+                    <div
+                      id="collapseFour"
+                      class="accordion-collapse collapse"
+                      aria-labelledby="headingFour"
+                      data-bs-parent="#accordionExample"
+                    >
+                      <div class="accordion-body">
+                        The transfer of an immigrant visa application from USCIS
+                        to the National takes about 30-60 days. Before phoning
+                        to confirm receipt of an application, the National Visa
+                        Center recommends waiting at least 60 days from
+                      </div>
+                    </div>
+                  </div>
+                  <div class="accordion-items mb-0">
+                    <h2 class="accordion-header" id="headingFour4">
+                      <button
+                        class="accordion-buttons collapsed"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#collapseFour4"
+                        aria-expanded="false"
+                        aria-controls="collapseFour4"
+                      >
+                        Are You Licensed and Insured?
+                      </button>
+                    </h2>
+                    <div
+                      id="collapseFour4"
+                      class="accordion-collapse collapse"
+                      aria-labelledby="headingFour4"
+                      data-bs-parent="#accordionExample"
+                    >
+                      <div class="accordion-body">
+                        The transfer of an immigrant visa application from USCIS
+                        to the National takes about 30-60 days. Before phoning
+                        to confirm receipt of an application, the National Visa
+                        Center recommends waiting at least 60 days from
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- faq area end -->
+    <script src="{% static 'js/vendor/jquery.js' %}"></script>
+    <script src="{% static 'js/vendor/waypoints.js' %}"></script>
+    <script src="{% static 'js/bootstrap-bundle.js' %}"></script>
+    <script src="{% static 'js/swiper-bundle.js' %}"></script>
+    <script src="{% static 'js/slick.js' %}"></script>
+    <script src="{% static 'js/range-slider.js' %}"></script>
+    <script src="{% static 'js/magnific-popup.js' %}"></script>
+    <script src="{% static 'js/nice-select.js' %}"></script>
+    <script src="{% static 'js/purecounter.js' %}"></script>
+    <script src="{% static 'js/wow.js' %}"></script>
+    <script src="{% static 'js/isotope-pkgd.js' %}"></script>
+    <script src="{% static 'js/jarallax.js' %}"></script>
+    <script src="{% static 'js/imagesloaded-pkgd.js' %}"></script>
+    <script src="{% static 'js/ajax-form.js' %}"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+  </body>
+</html>
+{% endblock %}

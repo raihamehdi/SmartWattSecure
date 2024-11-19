@@ -45,8 +45,8 @@ def dashboard(request):
     else:
         return render(request, 'dashboard.html')
 
-def analytics(request):
-    return render(request, 'analytics.html')
+def help(request):
+    return render(request, 'help.html')
 
 def contact(request):
     return render(request, 'contact.html')
@@ -97,16 +97,23 @@ def energy_data_api(request):
         return JsonResponse({'error': 'Failed to update data'}, status=500)
     return JsonResponse({'error': 'User not authenticated'}, status=403)
 
+
 from .models import EnergyData
+from datetime import timedelta
 
 def units_consumed_view(request):
-    data = EnergyData.objects.all().values('timestamp', 'total_units_consumed')
-    response_data = [
-        {
-            'date': item['timestamp'].strftime('%Y-%m-%d'),  # Format timestamp as desired
-            'units': item['total_units_consumed']
-        }
-        for item in data
-    ]
+    filter_type = request.GET.get('filter', 'daily')  # Default to daily if no filter provided
+    
+    if filter_type == 'monthly':
+        start_date = timezone.now() - timedelta(days=30)
+    elif filter_type == 'weekly':
+        start_date = timezone.now() - timedelta(days=7)
+    else:  # Daily
+        start_date = timezone.now() - timedelta(days=1)
+    
+    data = EnergyData.objects.all().values('timestamp', 'total_units_consumed')  # For testing all data
+    
+    response_data = [{"date": d["timestamp"].date(), "units": d["total_units_consumed"]} for d in data]
     return JsonResponse(response_data, safe=False)
+
 
