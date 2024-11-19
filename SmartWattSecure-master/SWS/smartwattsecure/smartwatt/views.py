@@ -55,14 +55,14 @@ def update_energy_data(request):
     """Fetches new energy data from Arduino, saves it, and returns response."""
     arduino_data = data()
     if arduino_data:
-        voltage, current, power, total_units_consumed = arduino_data
+        voltage, current, power, total_units_consumed, lag_1, rolling_avg_60, lag_1440, rolling_avg_1440 = arduino_data
         now = datetime.now()
         hour = now.hour
         day_of_week = now.weekday()
         month = now.month
 
         # Prepare data for prediction
-        X_test = [[power, voltage, hour, day_of_week, month]]
+        X_test = [[power, voltage, hour, day_of_week, month, lag_1, rolling_avg_60, lag_1440, rolling_avg_1440]]
         predictions = predict(X_test)
         if predictions[0] == 0:  
             prediction_result = "normal"
