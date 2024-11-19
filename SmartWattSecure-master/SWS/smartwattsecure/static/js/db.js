@@ -131,7 +131,7 @@ document.getElementById("download-pdf").addEventListener("click", () => {
 // Function to fetch data from the backend
 async function fetchData() {
     try {
-      const response = await fetch('/api/data'); // Replace with your actual API endpoint
+      const response = await fetch('/api/energy_data'); // Replace with your actual API endpoint
       const data = await response.json();
 
       // Update text data in the boxes

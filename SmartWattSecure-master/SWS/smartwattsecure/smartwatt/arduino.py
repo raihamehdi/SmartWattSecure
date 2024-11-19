@@ -76,7 +76,7 @@ def data():
     ser = None
     try:
         ser = serial.Serial(ARDUINO_PORT, BAUD_RATE, timeout=10)
-        time.sleep(2)
+        time.sleep(1)
         while True:
             raw_data = ser.readline().decode().strip()
             if raw_data:

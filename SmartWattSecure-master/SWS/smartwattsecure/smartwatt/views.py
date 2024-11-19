@@ -4,7 +4,8 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from .arduino import data, predict
 from .models import EnergyData, CustomUser
-from datetime import datetime
+from datetime import datetime, time
+from django.utils.timezone import localtime
 from django.utils import timezone
 from django.contrib.auth import authenticate,login as auth_login
 from django.contrib import messages
@@ -87,15 +88,49 @@ def update_energy_data(request):
     else:
         return JsonResponse({'error': 'Failed to fetch data from Arduino'}, status=500)
 
+
 def energy_data_api(request):
     if request.user.is_authenticated:
         update_response = update_energy_data(request)
         if update_response.status_code == 200:
-            user_data = EnergyData.objects.filter(user=request.user).order_by('-timestamp')
-            data = list(user_data.values('timestamp', 'voltage', 'current', 'power', 'total_units_consumed', 'prediction'))
-            return JsonResponse(data, safe=False)
+            # Get the current time and start of the day (12 AM)
+            now = datetime.now()
+            start_of_day = datetime.combine(now.date(), time.min)  # Midnight
+
+            # Filter energy data for the authenticated user since 12 AM
+            user_data = EnergyData.objects.filter(
+                user=request.user,
+                timestamp__gte=start_of_day
+            ).order_by('-timestamp')
+
+            # Calculate total units consumed since 12 AM
+            total_units_since_midnight = sum(item.total_units_consumed for item in user_data)
+
+            # Prepare data for the latest record
+            latest_data = user_data.first()
+            local_timestamp = localtime(latest_data.timestamp)
+            formatted_timestamp = local_timestamp.strftime('%I:%M %p')
+            if latest_data:
+                response_data = {
+                    
+                    'timestamp': formatted_timestamp, 
+                    'voltage': latest_data.voltage,
+                    'current': latest_data.current,
+                    'power': latest_data.power,
+                    'total_units_since_midnight': round(total_units_since_midnight, 2),
+                    'total_units_consumed': latest_data.total_units_consumed,
+                    'prediction': latest_data.prediction,
+                }
+            else:
+                response_data = {
+                    'total_units_since_midnight': 0,
+                    'message': 'No data available since midnight.'
+                }
+
+            return JsonResponse(response_data, safe=False)
         return JsonResponse({'error': 'Failed to update data'}, status=500)
     return JsonResponse({'error': 'User not authenticated'}, status=403)
+
 
 
 from .models import EnergyData
