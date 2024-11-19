@@ -1,46 +1,186 @@
-{% load static %}
+{% extends "base.html" %} {% load static %} {% block content %}
 <!DOCTYPE html>
-<html lang="en">
+<html class="no-js" lang="zxx">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Contact - Smart Watt Secure</title>
     <link rel="stylesheet" href="{% static 'css/cont.css' %}" />
-    <link rel="stylesheet" href="{% static 'js/cont.js' %}" />
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/animate.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/swiper-bundle.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/slick.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/magnific-popup.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/flaticon_biddut.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/font-awesome-pro.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/spacing.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/custom-animation.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/main.css' %}" />
   </head>
   <body>
-    <div class="dashboard-wrapper">
-      <!-- Sidebar -->
-      <aside class="sidebar">
-        <div class="logo">
-          <h2>SWS</h2>
-        </div>
-        <nav class="sidebar-nav">
-          <ul>
-            <li>
-              <a href="{% url 'dashboard' %}" id="dashboard-link">Dashboard</a>
-            </li>
-            <li>
-              <a href="{% url 'analytics' %}" id="analytics-link">Analytics</a>
-            </li>
-            <li>
-              <a href="{% url 'contact' %}" id="contact-link" class="active"
-                >Contact</a
-              >
-            </li>
-          </ul>
-        </nav>
-      </aside>
-
-      <!-- Main Content -->
-      <div class="main-content">
-        <header class="main-header">
-          <h1>Contact</h1>
-          <div class="profile-menu">
-            <button class="profile-btn">A</button>
+    <main>
+      <!-- contact area start -->
+      <div class="tp-contact-3-area pt-120 pb-90">
+        <div class="container">
+          <div class="row">
+            <div
+              class="col-xl-4 col-lg-4 col-md-6 mb-30 wow tpfadeUp"
+              data-wow-duration=".9s"
+              data-wow-delay=".3s"
+            >
+              <div class="tp-contact-3-item text-center">
+                <div class="tp-contact-3-icon">
+                  <span
+                    ><img
+                      class="z-index"
+                      <img
+                      src="{% static 'img/contact/icon-1.png' %}"
+                      alt=""
+                  /></span>
+                </div>
+                <div class="tp-contact-3-text">
+                  <h5 class="tp-contact-3-title">Visit our place</h5>
+                  <a href="#"
+                    >88 New South Head Rd, Triple <br />
+                    New York</a
+                  >
+                </div>
+              </div>
+            </div>
+            <div
+              class="col-xl-4 col-lg-4 col-md-6 mb-30 wow tpfadeUp"
+              data-wow-duration=".9s"
+              data-wow-delay=".5s"
+            >
+              <div class="tp-contact-3-item text-center">
+                <div class="tp-contact-3-icon">
+                  <span
+                    ><img
+                      class="z-index"
+                      src="{% static 'img/contact/icon-2.png' %}"
+                      alt=""
+                  /></span>
+                </div>
+                <div class="tp-contact-3-text">
+                  <h5 class="tp-contact-3-title">Contact us</h5>
+                  <a
+                    href="https://template.wphix.com/cdn-cgi/l/email-protection#9dfff4f9f9e8e9ddeaf8ffeef4e9f8b3fef2f0"
+                    ><span
+                      class="__cf_email__"
+                      data-cfemail="32505b5656474672455750415b46571c515d5f"
+                      >[email&#160;protected]</span
+                    ></a
+                  >
+                  <br />
+                  <a href="tel:+60276247296">+(602) 762 472 96</a>
+                </div>
+              </div>
+            </div>
+            <div
+              class="col-xl-4 col-lg-4 col-md-6 mb-30 wow tpfadeUp"
+              data-wow-duration=".9s"
+              data-wow-delay=".7s"
+            >
+              <div class="tp-contact-3-item text-center">
+                <div class="tp-contact-3-icon">
+                  <span
+                    ><img
+                      class="z-index"
+                      src="{% static 'img/contact/icon-3.png' %}"
+                      alt=""
+                  /></span>
+                </div>
+                <div class="tp-contact-3-text">
+                  <h5 class="tp-contact-3-title">Office time</h5>
+                  <a href="#"
+                    >Five days 8:00 am - 5:00 pm <br />
+                    Firday is closed</a
+                  >
+                </div>
+              </div>
+            </div>
           </div>
-        </header>
+        </div>
       </div>
-    </div>
+      <!-- contact area end -->
+
+      <!-- form area start -->
+      <div class="tp-contact-form-area pb-130">
+        <div class="container">
+          <div class="row">
+            <div class="col-xl-12">
+              <div class="tp-contact-form-border">
+                <h4 class="tp-contact-form-title">Send your message</h4>
+                <form action="#">
+                  <div class="row">
+                    <div class="col-xl-6 col-lg-6 col-md-6 col-12 mb-20">
+                      <div class="tp-contact-form-input-box">
+                        <input type="text" placeholder="Enter your name" />
+                      </div>
+                    </div>
+                    <div class="col-xl-6 col-lg- col-md-6 col-12 mb-20">
+                      <div class="tp-contact-form-input-box">
+                        <input type="text" placeholder="Enter your email" />
+                      </div>
+                    </div>
+                    <div class="col-xl-6 col-lg-6 col-md-6 col-12 mb-20">
+                      <div class="tp-contact-form-input-box">
+                        <input type="text" placeholder="Your website" />
+                      </div>
+                    </div>
+                    <div class="col-xl-6 col-lg-6 col-md-6 col-12 mb-20">
+                      <div class="tp-contact-form-input-box">
+                        <input type="text" placeholder="Your subject" />
+                      </div>
+                    </div>
+                    <div class="col-12 mb-20">
+                      <div class="tp-contact-form-input-box">
+                        <textarea placeholder="Write your message"></textarea>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+                <button type="submit" class="tp-btn">
+                  <span>SEND message</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- form area end -->
+
+      <!-- map area end -->
+      <div class="tp-map-area">
+        <div class="tp-map__item">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d146513.05509247648!2d73.19133525789097!3d54.98596156928781!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x43aafde2f601090b%3A0x5eefc33861a69b1a!2z4KaT4Kau4Ka44KeN4KaVLCBPbXNrIE9ibGFzdCwg4Kaw4Ka-4Ka24Ka_4Kav4Ka84Ka-!5e0!3m2!1sbn!2sbd!4v1689181288902!5m2!1sbn!2sbd"
+            width="600"
+            height="450"
+            style="border: 0"
+            allowfullscreen=""
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+          ></iframe>
+        </div>
+      </div>
+      <!-- map area start -->
+    </main>
+    <script src="{% static 'js/vendor/jquery.js' %}"></script>
+    <script src="{% static 'js/vendor/waypoints.js' %}"></script>
+    <script src="{% static 'js/bootstrap-bundle.js' %}"></script>
+    <script src="{% static 'js/swiper-bundle.js' %}"></script>
+    <script src="{% static 'js/slick.js' %}"></script>
+    <script src="{% static 'js/range-slider.js' %}"></script>
+    <script src="{% static 'js/magnific-popup.js' %}"></script>
+    <script src="{% static 'js/nice-select.js' %}"></script>
+    <script src="{% static 'js/purecounter.js' %}"></script>
+    <script src="{% static 'js/wow.js' %}"></script>
+    <script src="{% static 'js/isotope-pkgd.js' %}"></script>
+    <script src="{% static 'js/jarallax.js' %}"></script>
+    <script src="{% static 'js/imagesloaded-pkgd.js' %}"></script>
+    <script src="{% static 'js/ajax-form.js' %}"></script>
+    <script src="{% static 'js/main.js' %}"></script>
   </body>
 </html>
+{% endblock %}

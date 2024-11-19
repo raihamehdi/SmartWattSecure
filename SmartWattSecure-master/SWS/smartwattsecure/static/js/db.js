@@ -1,47 +1,3 @@
-document.addEventListener("DOMContentLoaded", function () {
-    const dashboardLink = document.getElementById("dashboard-link");
-    const analyticsLink = document.getElementById("analytics-link");
-    const contactLink = document.getElementById("contact-link");
-
-    // Remove 'active' class from all links
-    function clearActive() {
-        dashboardLink.classList.remove("active");
-        analyticsLink.classList.remove("active");
-        contactLink.classList.remove("active");
-    }
-
-    // Set 'active' class for the dashboard link
-    clearActive();
-    dashboardLink.classList.add("active");
-
-    // Add event listeners to ensure correct active class when clicked
-    dashboardLink.addEventListener("click", function () {
-        clearActive();
-        dashboardLink.classList.add("active");
-    });
-
-    analyticsLink.addEventListener("click", function () {
-        clearActive();
-        analyticsLink.classList.add("active");
-    });
-
-    contactLink.addEventListener("click", function () {
-        clearActive();
-        contactLink.classList.add("active");
-    });
-});
-
-window.onload = function () {
-    // Remove active class from all buttons (just in case)
-    document.querySelectorAll('.sidebar-nav a').forEach(function (link) {
-        link.classList.remove('active');
-    });
-
-    // Add active class to the Dashboard button
-    document.getElementById('dashboard-link').classList.add('active');
-};
-
-
 // Fetch the latest data using AJAX
 function fetchData() {
     fetch("/api/energy_data/")
@@ -171,3 +127,56 @@ document.getElementById("download-pdf").addEventListener("click", () => {
     pdf.addImage(canvas.toDataURL("image/png"), "PNG", 10, 20, 180, 100);
     pdf.save("units_consumed_chart.pdf");
 });
+
+// Function to fetch data from the backend
+async function fetchData() {
+    try {
+      const response = await fetch('/api/data'); // Replace with your actual API endpoint
+      const data = await response.json();
+
+      // Update text data in the boxes
+      document.getElementById('unitsData').innerText = `${data.units} Units`;
+      document.getElementById('currentData').innerText = `${data.current} A`;
+      document.getElementById('voltageData').innerText = `${data.voltage} V`;
+
+      // Update graph data
+      updateGraph(data.voltageHistory);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  }
+
+  // Initialize Chart.js for the voltage graph
+  const ctx = document.getElementById('voltageGraph').getContext('2d');
+  const voltageChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: Array(10).fill(''), // Empty labels for now
+      datasets: [{
+        label: 'Voltage',
+        data: [], // Empty data initially
+        borderColor: '#FF5733',
+        backgroundColor: 'rgba(255, 87, 51, 0.2)',
+        fill: true,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        x: { display: false },
+        y: { beginAtZero: true }
+      }
+    }
+  });
+
+  // Function to update the voltage graph with new data
+  function updateGraph(voltageHistory) {
+    voltageChart.data.labels = voltageHistory.map(() => '');
+    voltageChart.data.datasets[0].data = voltageHistory;
+    voltageChart.update();
+  }
+
+  // Fetch data initially and then every 5 seconds
+  fetchData();
+  setInterval(fetchData, 5000);

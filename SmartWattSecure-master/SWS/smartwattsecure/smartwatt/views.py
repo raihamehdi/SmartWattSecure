@@ -45,8 +45,8 @@ def dashboard(request):
     else:
         return render(request, 'dashboard.html')
 
-def analytics(request):
-    return render(request, 'analytics.html')
+def help(request):
+    return render(request, 'help.html')
 
 def contact(request):
     return render(request, 'contact.html')

@@ -13901,7 +13901,7 @@ body .ui-tooltip {
 /*----------------------------------------*/
 .tp-faq-thumb {
   position: absolute;
-  top: -120px;
+  top: 60px;
   right: 0;
   z-index: 2;
   height: 100%;
@@ -13910,6 +13910,7 @@ body .ui-tooltip {
   background-size: cover;
   background-position: center;
   overflow: hidden;
+  height: 80%;
 }
 .tp-faq-thumb:hover::before {
   -webkit-animation: shine 1s;

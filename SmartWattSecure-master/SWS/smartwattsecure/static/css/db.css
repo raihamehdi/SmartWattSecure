@@ -1,134 +1,7 @@
-/* Main Header Styling */
-#dashboard-header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  width: 100%;
-  background-color: #ffffff;
-  border-bottom: 1px solid #000000;
-  z-index: 999;
-  height: 82px;
-  display: flex;
-  align-items: center;
-  padding: 0 15px;
-}
-
-/* Flex container to align columns */
-.header-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  flex-wrap: wrap; /* Enables wrapping for smaller screens */
-}
-
-/* Column Styling */
-.logo-section {
-  flex: 1;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-}
-
-.nav-section {
-  flex: 3;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 15px; /* Space between navigation links */
-}
-
-.icons-section {
-  flex: 1;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-}
-
-/* Responsive Styling */
-@media (max-width: 768px) {
-  .header-container {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
-
-  .nav-section {
-    gap: 10px;
-    margin-top: 10px;
-  }
-
-  .icons-section {
-    margin-top: 10px;
-    justify-content: center;
-  }
-}
-
-/* Navigation Menu Styling */
-.tp-header-main-menu ul {
-  list-style: none;
+html, body {
   margin: 0;
   padding: 0;
-  display: flex;
-  gap: 40px; /* Reduced gap for smaller screens */
-}
-
-.tp-header-main-menu ul li a {
-  color: #000000;
-  font-size: 18px;
-  font-family: Arial, Helvetica, sans-serif;
-  font-weight: 600;
-  text-decoration: none;
-  position: relative;
-  padding: 5px 0;
-  transition: color 0.3s ease; 
-}
-
-.tp-header-main-menu ul li a:hover {
-  color: #DD0733;
-}
-
-.tp-header-main-menu ul li a::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  bottom: -2px;
-  width: 0;
-  height: 2px;
-  background-color: #DD0733;
-  transition: width 0.7s ease;
-}
-
-.tp-header-main-menu ul li a:hover::after {
-  width: 100%;
-}
-
-/* Icon styling */
-.icon-link {
-  font-size: 20px;
-  color: #000000;
-  margin-left: 15px;
-  text-decoration: none;
-  transition: color 0.3s ease;
-}
-
-.icon-link:hover {
-  color: #DD0733;
-}
-
-.icon-link svg {
-  fill: #000000;
-  stroke: #000000;
-  stroke-width: 1;
-  transition: fill 0.3s ease, stroke 0.3s ease;
-}
-
-.icon-link:hover svg {
-  fill: #DD0733;
-  stroke: #DD0733;
+  box-sizing: border-box; /* Ensures consistent box model across all elements */
 }
 
 /* Light Image Styling */
@@ -174,11 +47,11 @@
 /* Main Header Message Styling */
 .main-header {
   position: absolute;
-  top: 120px;
+  top: 130px;
   left: 70px;
   font-size: 1.2rem;
   font-family: Arial, Helvetica, sans-serif;
-  font-weight: 700;
+  font-weight: 800 !important;
   color: #333333;
 }
 
@@ -207,28 +80,136 @@
   }
 }
 
-/* General Layout Adjustments */
 .container-fluid {
-  max-width: 93%;
-  padding-top: 10.5%;
+  padding-top: 10%;
 }
 
-/* Wrapper to control the alignment and width of the chart container */
-.chart-wrapper {
+.left-section {
+  padding-right: 30px !important;
+  padding-left: 40px !important;
+  padding-top: 50px !important;
+}
+
+.d-flex {
   display: flex;
-  justify-content: flex-start; /* Aligns the chart to the left */
-  padding-left: 3%; /* Adds space on the left */
+  flex-wrap: wrap;
+  gap: 15px; /* Space between the divs */
 }
 
-/* Chart Container for Controlling Size and Position */
-.chart-container {
-  width: 100%; /* Full width within the wrapper */
-  max-width: 800px; /* Restricts maximum width for larger screens */
-  height: 400px; /* Controls height of the chart */
+.info-box {
+  position: relative;
+  background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent background for readability */
+  padding-top: 40px; /* Space for label */
+  padding-left: 20px;
+  width: 48%; /* Adjust width as needed */
+  height: 210px;
+  background-color: #f8f9fa;
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  text-align: left;
+}
+
+.background-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 73vh; /* Full viewport height */
+  background-size: 70%; /* Adjust the width of the image */
+  background-position: left; /* Position it to the left */
+  background-repeat: no-repeat;
+  opacity: 0.9; /* Adjust opacity if you want it lighter */
+  z-index: 0;
+  animation: backgroundZoom 15s ease-in-out infinite;
+}
+
+/* Keyframes for zoom and subtle movement */
+@keyframes backgroundZoom {
+  0% {
+    transform: scale(1); /* Start at original size */
+  }
+  50% {
+    transform: scale(1.05); /* Slightly zoom in */
+  }
+  100% {
+    transform: scale(1); /* Return to original size */
+  }
+}
+
+.content {
+  position: relative;
+  z-index: 1 !important; /* Make sure content appears above background */
+}
+
+/* Label Styling Inside the Box */
+.info-box .label {
+  position: absolute;
+  top: 10px;
+  left: 15px;
+  font-weight: bold;
+  font-size: 25px;
+  margin: 0;
+}
+
+.label {
+  font-weight: bold;
+  position: relative;
+  align-self: flex-start;
+  margin-bottom: 10px;
+}
+
+/* Content styling */
+.info-box p, .info-box div {
+  font-size: 18px;
+  margin: 0;
+}
+
+/* Bottom Div */
+.info-box:last-child {
+  width: 48%; /* Keep width consistent */
+  height: 210px; /* Keep height consistent */
+  margin: 20px auto 0 auto; /* Center horizontally by default */
+  margin-top: 20px; /* Space above the bottom div */
+  margin-right: 1px !important; /* Adjust this value to move slightly right */
+}
+
+.info-box h5 {
+  text-align: left;
+  margin-bottom: 10px;
+}
+
+.info-box p, .info-box div {
+  font-size: 18px;
+}
+
+/* Right Section Styling (Graph Container) */
+.right-section {
+  padding-left: 20px !important;
+  padding-right: 40px !important;
+  padding-top: 40px !important;
+}
+
+/* Card and Chart Styling */
+.card {
+  border-radius: 8px;
   overflow: hidden;
 }
 
-/* Chart Canvas Adjustment */
+.chart-wrapper {
+  display: flex;
+  justify-content: center; /* Centers the chart within the card */
+}
+
+.chart-container {
+  width: 100%;
+  max-width: 600px; /* Controls the width of the chart */
+  height: 370px; /* Controls the height of the chart */
+}
+
 #unitsConsumedChart {
   width: 100%;
   height: 100%;
@@ -246,7 +227,6 @@
   transition: background-color 0.3s ease;
 }
 
-/* Hover effect on PDF Button */
 #download-pdf:hover {
   color: #ffffff; /* Ensure text stays white on hover */
 }
@@ -274,8 +254,11 @@
 
 /* Responsive Adjustments */
 @media (max-width: 768px) {
+  .custom-div {
+      height: auto; /* Adjust height dynamically for small screens */
+  }
   .chart-container {
-    max-width: 100%; /* Full width on smaller screens */
-    height: 300px; /* Adjust height for smaller screens */
+      max-width: 100%;
+      height: 300px; /* Adjust height for smaller screens */
   }
 }
