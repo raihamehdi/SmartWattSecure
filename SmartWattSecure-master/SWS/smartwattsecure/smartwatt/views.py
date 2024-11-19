@@ -133,22 +133,3 @@ def energy_data_api(request):
 
 
 
-from .models import EnergyData
-from datetime import timedelta
-
-def units_consumed_view(request):
-    filter_type = request.GET.get('filter', 'daily')  # Default to daily if no filter provided
-    
-    if filter_type == 'monthly':
-        start_date = timezone.now() - timedelta(days=30)
-    elif filter_type == 'weekly':
-        start_date = timezone.now() - timedelta(days=7)
-    else:  # Daily
-        start_date = timezone.now() - timedelta(days=1)
-    
-    data = EnergyData.objects.all().values('timestamp', 'total_units_consumed')  # For testing all data
-    
-    response_data = [{"date": d["timestamp"].date(), "units": d["total_units_consumed"]} for d in data]
-    return JsonResponse(response_data, safe=False)
-
-
