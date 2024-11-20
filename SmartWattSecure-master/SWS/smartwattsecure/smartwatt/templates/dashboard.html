@@ -68,14 +68,10 @@
         <!-- Graph Section -->
         <div class="col-md-6 right-section">
           <div class="card shadow-sm">
-            <div
-              class="card-header d-flex justify-content-between align-items-center"
-            >
+            <div class="card-header d-flex justify-content-between align-items-center">
               <h5>Units Consumption Chart</h5>
               <div>
-                <label for="time-filter" class="form-label me-2"
-                  >View by:</label
-                >
+                <label for="time-filter" class="form-label me-2">View by:</label>
                 <select
                   id="time-filter"
                   class="form-select form-select-sm d-inline-block"
@@ -103,7 +99,93 @@
       </div>
     </div>
 
+      
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
+      async function getWeeklyData() {
+        try {
+          const response = await fetch("/api/weekly_data/");
+          if (!response.ok) {
+            throw new Error("Failed to fetch weekly data");
+          }
+          const data = await response.json(); // The backend should return data in the correct format
+      
+          // Format the labels to show as human-readable dates (optional, based on your need)
+          const formattedLabels = data.labels.map(date => {
+            return new Date(date).toLocaleDateString();  // Format the date as string
+          });
+      
+          // Prepare chart data with formatted labels and units consumed
+          const chartData = {
+            labels: formattedLabels,  // Display formatted dates
+            datasets: [
+              {
+                label: "Weekly Units Consumed",
+                data: data["units consumed"],  // Use the actual data for units consumed
+                backgroundColor: "rgba(54, 162, 235, 0.2)",
+                borderColor: "rgba(54, 162, 235, 1)",
+                borderWidth: 2,
+                fill: true,
+              },
+            ],
+          };
+      
+          return chartData;
+      
+        } catch (error) {
+          console.error("Error fetching weekly data:", error);
+          // Fallback data in case of an error
+          const fallbackData = {
+            labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+            datasets: [
+              {
+                label: "Weekly Units Consumed",
+                data: [0, 0, 0, 0, 0, 0, 0],
+                backgroundColor: "rgba(54, 162, 235, 0.2)",
+                borderColor: "rgba(54, 162, 235, 1)",
+                borderWidth: 2,
+                fill: true,
+              },
+            ],
+          };
+          return fallbackData;  // Return fallback data
+        }
+      }
+      
+      async function renderChart() {
+        const chartData = await getWeeklyData();
+      
+        // Create the chart
+        const ctx = document.getElementById("unitsConsumedChart").getContext("2d");
+        new Chart(ctx, {
+          type: "line",  // Area chart (Line chart with fill)
+          data: {
+            labels: chartData.labels,
+            datasets: chartData.datasets,
+          },
+          options: {
+            responsive: true,
+            scales: {
+              y: {
+                beginAtZero: true, // Ensure the y-axis starts from zero
+                min: 0,            // Set the minimum value for the y-axis to 0
+                max: 20,           // Set the maximum value for the y-axis to 20
+                ticks: {
+                  stepSize: 4,     // Set the interval between ticks to 4
+                },
+                title: {
+                  display: true,
+                  text: "Units Consumed", // Label for the y-axis
+                },
+              },
+            },
+          },
+        });
+      }
+      
+      // Call renderChart to display the chart when the page is loaded
+      window.onload = renderChart;
+
       // Fetch the latest data using AJAX
       function fetchData() {
         fetch("/api/energy_data/")
@@ -126,6 +208,8 @@
 
 
       setInterval(fetchData, 2000);
+      
+      
     </script>
   </body>
 </html>

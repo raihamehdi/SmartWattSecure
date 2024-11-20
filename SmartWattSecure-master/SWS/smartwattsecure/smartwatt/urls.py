@@ -11,6 +11,7 @@ path('dashboard/help/', views.help, name='help'),
 path('update/', views.update_energy_data, name='update_energy_data'),
 path('api/energy_data/', views.energy_data_api, name='energy_data_api'),
 
+path('api/weekly_data/', views.weekly_data, name='weekly_data'),
 
 
 ]

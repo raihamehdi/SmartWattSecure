@@ -132,4 +132,41 @@ def energy_data_api(request):
     return JsonResponse({'error': 'User not authenticated'}, status=403)
 
 
+from datetime import datetime, timedelta
+from django.db.models import Sum
+from django.http import JsonResponse
+from django.utils.timezone import localdate
+from django.utils import timezone
 
+def weekly_data(request):
+    if request.user.is_authenticated:
+        # Define the date range (last 7 days)
+        today = timezone.localdate()  # Get the current date only
+        start_date = today - timedelta(days=6)
+
+        # Get the current datetime, including hours, minutes, and seconds
+        now = timezone.now()
+
+        # Query the database for the last 7 days, but include today's data up to the current time
+        energy_data = EnergyData.objects.filter(
+            user=request.user,
+            timestamp__gte=start_date,  # Query the raw timestamp without timezone conversion
+            timestamp__lte=now          # Use the current timestamp instead of just today
+        ).extra(
+            select={'timestamp_date': 'DATE(timestamp)'}  # Group by date only
+        ).values('timestamp_date').annotate(total_units=Sum('total_units_consumed')).order_by('timestamp_date')
+
+        # Prepare daily totals, ensuring all 7 days are covered
+        time_labels = [(start_date + timedelta(days=i)) for i in range(7)]
+        daily_totals = {entry['timestamp_date']: entry['total_units'] for entry in energy_data}
+        units_consumed = [round(daily_totals.get(day, 0), 2) for day in time_labels]
+
+        # Prepare response data
+        response_data = {
+            "labels": time_labels,  # Chart.js expects this
+            "units consumed": units_consumed
+        }
+
+        return JsonResponse(response_data, safe=False)
+
+    return JsonResponse({'error': 'User not authenticated'}, status=403)
