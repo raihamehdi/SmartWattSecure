@@ -99,29 +99,56 @@
       </div>
     </div>
 
-      
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+  
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
+    
+      document.getElementById("download-pdf").addEventListener("click", async () => {
+        const { jsPDF } = window.jspdf;
+    
+        // Select the chart element to capture
+        const chartElement = document.getElementById("unitsConsumedChart");
+    
+        // Capture the chart as a canvas using html2canvas
+        const canvas = await html2canvas(chartElement);
+        const imgData = canvas.toDataURL("image/png");
+    
+        // Initialize jsPDF
+        const pdf = new jsPDF("landscape");
+    
+        // Add the image of the chart to the PDF
+        pdf.addImage(imgData, "PNG", 10, 10, 270, 150); // Position and size of the image in the PDF
+    
+        // Download the PDF with a custom filename
+        pdf.save("Units_Consumption_Chart.pdf");
+      });
+
+
+
+
+      let chart; // Declare chart globally
+
+      // Function to fetch weekly data from the API
       async function getWeeklyData() {
         try {
           const response = await fetch("/api/weekly_data/");
           if (!response.ok) {
             throw new Error("Failed to fetch weekly data");
           }
-          const data = await response.json(); // The backend should return data in the correct format
-      
-          // Format the labels to show as human-readable dates (optional, based on your need)
-          const formattedLabels = data.labels.map(date => {
-            return new Date(date).toLocaleDateString();  // Format the date as string
-          });
-      
-          // Prepare chart data with formatted labels and units consumed
-          const chartData = {
-            labels: formattedLabels,  // Display formatted dates
+          const data = await response.json();
+          
+          const formattedLabels = data.labels.map((date) => 
+            new Date(date).toLocaleDateString() // Format the date
+          );
+
+          return {
+            labels: formattedLabels,
             datasets: [
               {
                 label: "Weekly Units Consumed",
-                data: data["units consumed"],  // Use the actual data for units consumed
+                data: data["units consumed"],
                 backgroundColor: "rgba(54, 162, 235, 0.2)",
                 borderColor: "rgba(54, 162, 235, 1)",
                 borderWidth: 2,
@@ -129,13 +156,9 @@
               },
             ],
           };
-      
-          return chartData;
-      
         } catch (error) {
           console.error("Error fetching weekly data:", error);
-          // Fallback data in case of an error
-          const fallbackData = {
+          return {
             labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
             datasets: [
               {
@@ -148,44 +171,60 @@
               },
             ],
           };
-          return fallbackData;  // Return fallback data
         }
       }
-      
+
+      // Function to render the chart
       async function renderChart() {
         const chartData = await getWeeklyData();
-      
-        // Create the chart
+
+        // Initialize the chart
         const ctx = document.getElementById("unitsConsumedChart").getContext("2d");
-        new Chart(ctx, {
-          type: "line",  // Area chart (Line chart with fill)
-          data: {
-            labels: chartData.labels,
-            datasets: chartData.datasets,
-          },
+        chart = new Chart(ctx, {
+          type: "line", // Area chart (Line chart with fill)
+          data: chartData,
           options: {
             responsive: true,
             scales: {
               y: {
-                beginAtZero: true, // Ensure the y-axis starts from zero
-                min: 0,            // Set the minimum value for the y-axis to 0
-                max: 20,           // Set the maximum value for the y-axis to 20
+                beginAtZero: true,
+                min: 0,
+                max: 20,
                 ticks: {
-                  stepSize: 4,     // Set the interval between ticks to 4
+                  stepSize: 4,
                 },
                 title: {
                   display: true,
-                  text: "Units Consumed", // Label for the y-axis
+                  text: "Units Consumed",
                 },
               },
             },
           },
         });
+
+        startChartUpdates(); // Start updates after chart is initialized
       }
-      
-      // Call renderChart to display the chart when the page is loaded
+
+      // Function to start periodic updates
+      function startChartUpdates() {
+        if (!chart) {
+          console.error("Chart is not initialized. Cannot start updates.");
+          return;
+        }
+
+        setInterval(async () => {
+          const updatedData = await getWeeklyData();
+          chart.data.labels = updatedData.labels;
+          chart.data.datasets[0].data = updatedData.datasets[0].data;
+          chart.update(); // Redraw the chart with new data
+        }, 2000);
+      }
+
+      // Render the chart when the page is loaded
       window.onload = renderChart;
 
+      
+      
       // Fetch the latest data using AJAX
       function fetchData() {
         fetch("/api/energy_data/")
