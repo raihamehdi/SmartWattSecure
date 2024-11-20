@@ -33,6 +33,14 @@
                 </li>
                 <li>
                   <a
+                    href="{% url 'analytics' %}"
+                    class="{% if request.resolver_match.url_name == 'analytics' %}active{% endif %}"
+                  >
+                    Analytics
+                  </a>
+                </li>
+                <li>
+                  <a
                     href="{% url 'contact' %}"
                     class="{% if request.resolver_match.url_name == 'contact' %}active{% endif %}"
                   >
