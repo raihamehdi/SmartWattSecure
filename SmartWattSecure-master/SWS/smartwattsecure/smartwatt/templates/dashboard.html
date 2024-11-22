@@ -8,12 +8,13 @@
     <link rel="stylesheet" href="{% static 'css/db.css' %}" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="{% static 'js/db.js' %}"></script>
+
     <link
       href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css"
       rel="stylesheet"
     />
   </head>
-  <body>
+  <body class="dashboard-page">
     <!-- Main Content Section -->
     <section class="main-content">
       <div class="main-header">
@@ -36,31 +37,32 @@
 
     <div class="container-fluid mt-4">
       <div class="row">
-        <!-- Left Side Divs -->
         <div
           class="col-md-6 left-section background-image content"
           style="background-image: url('{% static 'img/bg/lines.png' %}')"
         >
-          <div class="d-flex flex-wrap align-items-start">
+          <div class="row">
             <!-- Units Box -->
-            <div class="info-box custom-div me-3 mb-3">
+            <div class="col-md-6 info-box custom-div">
               <div class="label">Units</div>
-              <p><span id="total-units"></span>kWh</p>
-              
+              <p><span id="total-units"></span> kWh</p>
             </div>
             <!-- Current Box -->
-            <div class="info-box custom-div mb-3">
+            <div class="col-md-6 info-box custom-div">
               <div class="label">Current</div>
-              <p><span id="current"></span>A</p>
+              <p><span id="current"></span> A</p>
             </div>
+          </div>
+          <div class="row mt-3">
             <!-- Voltage Box -->
-            <div class="info-box custom-div mt-3">
+            <div class="col-md-6 info-box custom-div">
               <div class="label">Voltage</div>
-              <p><span id="voltage"></span>V</p>
-              <canvas
-                id="voltageGraph"
-                style="width: 100%; height: 70px"
-              ></canvas>
+              <p><span id="voltage"></span> V</p>
+            </div>
+            <!-- Frequency Box -->
+            <div class="col-md-6 info-box custom-div">
+              <div class="label">Anomalies</div>
+              <p><span id="frequency"></span> --</p>
             </div>
           </div>
         </div>
@@ -68,10 +70,14 @@
         <!-- Graph Section -->
         <div class="col-md-6 right-section">
           <div class="card shadow-sm">
-            <div class="card-header d-flex justify-content-between align-items-center">
+            <div
+              class="card-header d-flex justify-content-between align-items-center"
+            >
               <h5>Units Consumption Chart</h5>
               <div>
-                <label for="time-filter" class="form-label me-2">View by:</label>
+                <label for="time-filter" class="form-label me-2"
+                  >View by:</label
+                >
                 <select
                   id="time-filter"
                   class="form-select form-select-sm d-inline-block"
@@ -79,6 +85,7 @@
                 >
                   <option value="weekly">Weekly</option>
                   <option value="monthly">Monthly</option>
+                  <option value="monthly">Yearly</option>
                 </select>
               </div>
             </div>
@@ -101,32 +108,30 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
-  
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-    
-      document.getElementById("download-pdf").addEventListener("click", async () => {
-        const { jsPDF } = window.jspdf;
-    
-        // Select the chart element to capture
-        const chartElement = document.getElementById("unitsConsumedChart");
-    
-        // Capture the chart as a canvas using html2canvas
-        const canvas = await html2canvas(chartElement);
-        const imgData = canvas.toDataURL("image/png");
-    
-        // Initialize jsPDF
-        const pdf = new jsPDF("landscape");
-    
-        // Add the image of the chart to the PDF
-        pdf.addImage(imgData, "PNG", 10, 10, 270, 150); // Position and size of the image in the PDF
-    
-        // Download the PDF with a custom filename
-        pdf.save("Units_Consumption_Chart.pdf");
-      });
+      document
+        .getElementById("download-pdf")
+        .addEventListener("click", async () => {
+          const { jsPDF } = window.jspdf;
 
+          // Select the chart element to capture
+          const chartElement = document.getElementById("unitsConsumedChart");
 
+          // Capture the chart as a canvas using html2canvas
+          const canvas = await html2canvas(chartElement);
+          const imgData = canvas.toDataURL("image/png");
 
+          // Initialize jsPDF
+          const pdf = new jsPDF("landscape");
+
+          // Add the image of the chart to the PDF
+          pdf.addImage(imgData, "PNG", 10, 10, 270, 150); // Position and size of the image in the PDF
+
+          // Download the PDF with a custom filename
+          pdf.save("Units_Consumption_Chart.pdf");
+        });
 
       let chart; // Declare chart globally
 
@@ -138,9 +143,9 @@
             throw new Error("Failed to fetch weekly data");
           }
           const data = await response.json();
-          
-          const formattedLabels = data.labels.map((date) => 
-            new Date(date).toLocaleDateString() // Format the date
+
+          const formattedLabels = data.labels.map(
+            (date) => new Date(date).toLocaleDateString() // Format the date
           );
 
           return {
@@ -149,8 +154,8 @@
               {
                 label: "Weekly Units Consumed",
                 data: data["units consumed"],
-                backgroundColor: "rgba(54, 162, 235, 0.2)",
-                borderColor: "rgba(54, 162, 235, 1)",
+                borderColor: "#DD0733", // Line color
+                backgroundColor: "rgba(221, 7, 51, 0.2)", // Transparent fill under the line
                 borderWidth: 2,
                 fill: true,
               },
@@ -179,7 +184,9 @@
         const chartData = await getWeeklyData();
 
         // Initialize the chart
-        const ctx = document.getElementById("unitsConsumedChart").getContext("2d");
+        const ctx = document
+          .getElementById("unitsConsumedChart")
+          .getContext("2d");
         chart = new Chart(ctx, {
           type: "line", // Area chart (Line chart with fill)
           data: chartData,
@@ -223,8 +230,6 @@
       // Render the chart when the page is loaded
       window.onload = renderChart;
 
-      
-      
       // Fetch the latest data using AJAX
       function fetchData() {
         fetch("/api/energy_data/")
@@ -235,20 +240,23 @@
             return response.json();
           })
           .then((data) => {
-                // Update UI elements
-                document.getElementById("voltage").innerText = `${data.voltage || 0}`;
-                document.getElementById("current").innerText = `${data.current || 0}`;
-                document.getElementById("total-units").innerText = `${data.total_units_since_midnight || 0}`;
+            // Update UI elements
+            document.getElementById("voltage").innerText = `${
+              data.voltage || 0
+            }`;
+            document.getElementById("current").innerText = `${
+              data.current || 0
+            }`;
+            document.getElementById("total-units").innerText = `${
+              data.total_units_since_midnight || 0
+            }`;
           })
           .catch((error) => {
-                console.error("Fetch error:", error);
+            console.error("Fetch error:", error);
           });
       }
 
-
       setInterval(fetchData, 2000);
-      
-      
     </script>
   </body>
 </html>

@@ -4,6 +4,11 @@ html, body {
   box-sizing: border-box; /* Ensures consistent box model across all elements */
 }
 
+html {
+  overflow-y: scroll;
+}
+
+
 /* Light Image Styling */
 .light-image-container {
   position: absolute;
@@ -85,15 +90,34 @@ html, body {
 }
 
 .left-section {
+  padding: 20px;
   padding-right: 30px !important;
   padding-left: 40px !important;
-  padding-top: 50px !important;
+  padding-top: 60px !important;
 }
 
 .d-flex {
   display: flex;
   flex-wrap: wrap;
-  gap: 15px; /* Space between the divs */
+  gap: 15px !important; /* Space between the divs */
+}
+
+.custom-div {
+  background: #fff;
+  border-radius: 18px !important;
+  padding: 10px !important;
+  text-align: center;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 5px; /* Adds space below each div */
+  margin-left: 20px;
+}
+
+.row {
+  margin: 0;
+}
+
+.col-md-6 {
+  padding: 10px; /* Prevent overlapping of divs */
 }
 
 .info-box {
@@ -101,8 +125,8 @@ html, body {
   background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent background for readability */
   padding-top: 40px; /* Space for label */
   padding-left: 20px;
-  width: 48%; /* Adjust width as needed */
-  height: 210px;
+  width: 46% !important; /* Adjust width as needed */
+  height: 200px;
   background-color: #f8f9fa;
   border-radius: 12px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -118,27 +142,27 @@ html, body {
   top: 0;
   left: 0;
   width: 100%;
-  height: 73vh; /* Full viewport height */
+  height: 75vh; /* Full viewport height */
   background-size: 70%; /* Adjust the width of the image */
   background-position: left; /* Position it to the left */
   background-repeat: no-repeat;
   opacity: 0.9; /* Adjust opacity if you want it lighter */
   z-index: 0;
-  animation: backgroundZoom 15s ease-in-out infinite;
+  /* animation: backgroundZoom 15s ease-in-out infinite; */
 }
 
 /* Keyframes for zoom and subtle movement */
-@keyframes backgroundZoom {
+/* @keyframes backgroundZoom {
   0% {
-    transform: scale(1); /* Start at original size */
+    transform: scale(1); 
   }
   50% {
-    transform: scale(1.05); /* Slightly zoom in */
+    transform: scale(1.05); 
   }
   100% {
-    transform: scale(1); /* Return to original size */
+    transform: scale(1); 
   }
-}
+} */
 
 .content {
   position: relative;
@@ -148,33 +172,20 @@ html, body {
 /* Label Styling Inside the Box */
 .info-box .label {
   position: absolute;
-  top: 10px;
+  top: 20px;
   left: 15px;
-  font-weight: bold;
-  font-size: 25px;
+  font-weight: 500;
+  font-size: 30px;
   margin: 0;
-}
-
-.label {
-  font-weight: bold;
-  position: relative;
-  align-self: flex-start;
-  margin-bottom: 10px;
 }
 
 /* Content styling */
-.info-box p, .info-box div {
-  font-size: 18px;
+.info-box p{
+  padding-top: 60px !important;
+  font-size: 3rem !important;
   margin: 0;
-}
-
-/* Bottom Div */
-.info-box:last-child {
-  width: 48%; /* Keep width consistent */
-  height: 210px; /* Keep height consistent */
-  margin: 20px auto 0 auto; /* Center horizontally by default */
-  margin-top: 20px; /* Space above the bottom div */
-  margin-right: 1px !important; /* Adjust this value to move slightly right */
+  font-weight: 700;
+  padding-left: 5px;
 }
 
 .info-box h5 {
@@ -182,15 +193,11 @@ html, body {
   margin-bottom: 10px;
 }
 
-.info-box p, .info-box div {
-  font-size: 18px;
-}
-
 /* Right Section Styling (Graph Container) */
 .right-section {
   padding-left: 20px !important;
   padding-right: 40px !important;
-  padding-top: 40px !important;
+  padding-top: 60px !important;
 }
 
 /* Card and Chart Styling */
@@ -207,12 +214,13 @@ html, body {
 .chart-container {
   width: 100%;
   max-width: 600px; /* Controls the width of the chart */
-  height: 370px; /* Controls the height of the chart */
+  height: 310px; /* Controls the height of the chart */
 }
 
 #unitsConsumedChart {
   width: 100%;
   height: 100%;
+  color: #DD0733;
 }
 
 /* PDF Button Styling */
@@ -260,5 +268,43 @@ html, body {
   .chart-container {
       max-width: 100%;
       height: 300px; /* Adjust height for smaller screens */
+  }
+}
+
+/* Apply specific styles for the dashboard page */
+body.dashboard-page {
+  margin: 0; /* Reset any default body margin */
+  padding: 0;
+}
+
+.navbar {
+  margin-bottom: 20px; /* Space below the navbar */
+  position: relative; /* Ensure it does not overlap with the content */
+  z-index: 1000;
+}
+
+.container-fluid {
+  margin-top: 80px; /* Adjust space below the navbar */
+}
+
+/* Adjust dashboard-specific content spacing */
+.dashboard-content {
+  padding: 20px 40px; /* Inner padding for dashboard content */
+  margin-top: 20px; /* Space between the navbar and the main content */
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 768px) {
+  .navbar {
+    margin-bottom: 15px;
+  }
+
+  .container-fluid {
+    margin-top: 60px;
+  }
+
+  .dashboard-content {
+    padding: 15px 20px;
+    margin-top: 10px;
   }
 }
