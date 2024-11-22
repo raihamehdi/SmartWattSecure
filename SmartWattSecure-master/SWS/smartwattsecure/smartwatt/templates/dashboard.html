@@ -1,224 +1,260 @@
-{% extends "base.html" %}
-{% load static %}
-{% block content %}
+{% extends "base.html" %} {% load static %} {% block content %}
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dashboard - Smart Watt Secure</title>
-  <link rel="stylesheet" href="{% static 'css/db.css' %}" />
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="{% static 'js/db.js' %}"></script>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
-</head>
-<body>
-  <!-- Main Header -->
-  <section class="main-content">
-    <div class="main-header">
-      {% if user.is_authenticated %}
-      <h1>Welcome, {{ user.username }}!</h1>
-      {% else %}
-      <p>You are not logged in.</p>
-      {% endif %}
-    </div>
-  </section>
-
-  <!-- Decorative Light Image -->
-  <div class="light-image-container">
-    <img src="{% static 'img/bg/shape-1-4.png' %}" alt="Hanging Light" class="light-image" />
-  </div>
-
-  <!-- Dashboard Content -->
-  <div class="container-fluid mt-4">
-    <div class="row">
-      <!-- Left Section: Energy Metrics -->
-      <div class="col-md-6 left-section background-image content" style="background-image: url('{% static 'img/bg/lines.png' %}')">
-        <div class="d-flex flex-wrap align-items-start">
-          <!-- Units -->
-          <div class="info-box custom-div me-3 mb-3">
-            <div class="label">Units</div>
-            <p><span id="total-units"></span> kWh</p>
-          </div>
-          <!-- Current -->
-          <div class="info-box custom-div mb-3">
-            <div class="label">Current</div>
-            <p><span id="current"></span> A</p>
-          </div>
-          <!-- Voltage -->
-          <div class="info-box custom-div mt-3">
-            <div class="label">Voltage</div>
-            <p><span id="voltage"></span> V</p>
-            <canvas id="voltageGraph" style="width: 100%; height: 70px"></canvas>
-          </div>
-        </div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard - Smart Watt Secure</title>
+    <link rel="stylesheet" href="{% static 'css/db.css' %}" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{% static 'js/db.js' %}"></script>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+  </head>
+  <body class="dashboard-page">
+    <!-- Main Content Section -->
+    <section class="main-content">
+      <div class="main-header">
+        {% if user.is_authenticated %}
+        <h1>Welcome, {{ user.username }}!</h1>
+        {% else %}
+        <p>You are not logged in.</p>
+        {% endif %}
       </div>
+    </section>
 
-      <!-- Right Section: Units Consumption Chart -->
-      <div class="col-md-6 right-section">
-        <div class="card shadow-sm">
-          <div class="card-header d-flex justify-content-between align-items-center">
-            <h5>Units Consumption Chart</h5>
-            <div>
-              <label for="time-filter" class="form-label me-2">View by:</label>
-              <select id="time-filter" class="form-select form-select-sm d-inline-block" style="width: auto">
-                <option value="weekly">Weekly</option>
-                <option value="monthly">Monthly</option>
-              </select>
+    <!-- Light Image Below Header -->
+    <div class="light-image-container">
+      <img
+        src="{% static 'img/bg/shape-1-4.png' %}"
+        alt="Hanging Light"
+        class="light-image"
+      />
+    </div>
+
+    <div class="container-fluid mt-4">
+      <div class="row">
+        <div
+          class="col-md-6 left-section background-image content"
+          style="background-image: url('{% static 'img/bg/shape-3-1.png' %}')"
+        >
+          <div class="row">
+            <!-- Units Box -->
+            <div class="col-md-6 info-box custom-div">
+              <div class="label">Units</div>
+              <p><span id="total-units"></span> kWh</p>
+            </div>
+            <!-- Current Box -->
+            <div class="col-md-6 info-box custom-div">
+              <div class="label">Current</div>
+              <p><span id="current"></span> A</p>
             </div>
           </div>
-          <div class="card-body">
-            <div class="chart-wrapper">
-              <div class="chart-container">
-                <canvas id="unitsConsumedChart"></canvas>
+          <div class="row mt-3">
+            <!-- Voltage Box -->
+            <div class="col-md-6 info-box custom-div">
+              <div class="label">Voltage</div>
+              <p><span id="voltage"></span> V</p>
+            </div>
+            <!-- Frequency Box -->
+            <div class="col-md-6 info-box custom-div">
+              <div class="label">Anomalies</div>
+              <p><span id="frequency"></span> --</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Graph Section -->
+        <div class="col-md-6 right-section">
+          <div class="card shadow-sm">
+            <div
+              class="card-header d-flex justify-content-between align-items-center"
+            >
+              <h5>Units Consumption Chart</h5>
+              <div>
+                <label for="time-filter" class="form-label me-2"
+                  >View by:</label
+                >
+                <select
+                  id="time-filter"
+                  class="form-select form-select-sm d-inline-block"
+                  style="width: auto"
+                >
+                  <option value="weekly">Weekly</option>
+                  <option value="monthly">Monthly</option>
+                  <option value="yearly">Yearly</option>
+                </select>
               </div>
             </div>
-          </div>
-          <div class="card-footer text-end">
-            <button id="download-pdf" class="btn btn-danger">
-              <span>Download PDF</span>
-            </button>
+            <div class="card-body">
+              <div class="chart-wrapper">
+                <div class="chart-container">
+                  <canvas id="unitsConsumedChart"></canvas>
+                </div>
+              </div>
+            </div>
+            <div class="card-footer text-end">
+              <button id="download-pdf" class="btn btn-danger">
+                <span>Download PDF</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- JavaScript Section -->
-  <script>
-    // Download chart as PDF
-    document.getElementById("download-pdf").addEventListener("click", async () => {
-      const { jsPDF } = window.jspdf;
-      const chartElement = document.getElementById("unitsConsumedChart");
-      const canvas = await html2canvas(chartElement);
-      const imgData = canvas.toDataURL("image/png");
-      const pdf = new jsPDF("landscape");
-      pdf.addImage(imgData, "PNG", 10, 10, 270, 150);
-      pdf.save("Units_Consumption_Chart.pdf");
-    });
+    <!-- JavaScript Section -->
+    <script>
+      // Download chart as PDF
+      document
+        .getElementById("download-pdf")
+        .addEventListener("click", async () => {
+          const { jsPDF } = window.jspdf;
+          const chartElement = document.getElementById("unitsConsumedChart");
+          const canvas = await html2canvas(chartElement);
+          const imgData = canvas.toDataURL("image/png");
+          const pdf = new jsPDF("landscape");
+          pdf.addImage(imgData, "PNG", 10, 10, 270, 150);
+          pdf.save("Units_Consumption_Chart.pdf");
+        });
 
-    let chart;
+      let chart;
 
-    // Fetch weekly data
-    async function fetchWeeklyData() {
-      try {
-        const response = await fetch("/api/weekly_data/");
-        if (!response.ok) throw new Error("Failed to fetch weekly data");
-        const data = await response.json();
-        const formattedLabels = data.labels.map(date => new Date(date).toLocaleDateString());
-        return {
-          labels: formattedLabels,
-          datasets: [{
-            label: "Weekly Units Consumed",
-            data: data["units consumed"],
-            backgroundColor: "rgba(54, 162, 235, 0.2)",
-            borderColor: "rgba(54, 162, 235, 1)",
-            borderWidth: 2,
-            fill: true
-          }]
-        };
-      } catch (error) {
-        console.error("Error fetching weekly data:", error);
-        return { labels: [], datasets: [] };
+      // Fetch weekly data
+      async function fetchWeeklyData() {
+        try {
+          const response = await fetch("/api/weekly_data/");
+          if (!response.ok) throw new Error("Failed to fetch weekly data");
+          const data = await response.json();
+          const formattedLabels = data.labels.map((date) =>
+            new Date(date).toLocaleDateString()
+          );
+          return {
+            labels: formattedLabels,
+            datasets: [
+              {
+                label: "Weekly Units Consumed",
+                data: data["units consumed"],
+                borderColor: "#DD0733", // Line color
+                backgroundColor: "rgba(221, 7, 51, 0.2)", // Transparent fill under the line
+                borderWidth: 2,
+                fill: true,
+              },
+            ],
+          };
+        } catch (error) {
+          console.error("Error fetching weekly data:", error);
+          return { labels: [], datasets: [] };
+        }
       }
-    }
 
-    // Fetch monthly data
-    async function fetchMonthlyData() {
-      try {
-        const response = await fetch("/api/monthly_data/");
-        if (!response.ok) throw new Error("Failed to fetch monthly data");
-        const data = await response.json();
-        const formattedLabels = data.labels.map(date => {
-          return new Date(date).getDate(); // Fetch only the day (dd)
-      });
-        return {
-          labels: formattedLabels,
-          datasets: [{
-            label: "Monthly Units Consumed",
-            data: data["units consumed"],
-            backgroundColor: "rgba(75, 192, 192, 0.2)",
-            borderColor: "rgba(75, 192, 192, 1)",
-            borderWidth: 2,
-            fill: true
-          }]
-        };
-      } catch (error) {
-        console.error("Error fetching monthly data:", error);
-        return { labels: [], datasets: [] };
+      // Fetch monthly data
+      async function fetchMonthlyData() {
+        try {
+          const response = await fetch("/api/monthly_data/");
+          if (!response.ok) throw new Error("Failed to fetch monthly data");
+          const data = await response.json();
+          const formattedLabels = data.labels.map((date) => {
+            return new Date(date).getDate(); // Fetch only the day (dd)
+          });
+          return {
+            labels: formattedLabels,
+            datasets: [
+              {
+                label: "Monthly Units Consumed",
+                data: data["units consumed"],
+                backgroundColor: "rgba(75, 192, 192, 0.2)",
+                borderColor: "rgba(75, 192, 192, 1)",
+                borderWidth: 2,
+                fill: true,
+              },
+            ],
+          };
+        } catch (error) {
+          console.error("Error fetching monthly data:", error);
+          return { labels: [], datasets: [] };
+        }
       }
-    }
 
-    // Initialize chart
-    async function initializeChart() {
-      const weeklyData = await fetchWeeklyData();
-      const ctx = document.getElementById("unitsConsumedChart").getContext("2d");
-      chart = new Chart(ctx, {
-        type: "line",
-        data: weeklyData,
-        options: {
-          responsive: true,
-          scales: {
-            x: {
-              ticks: {
+      // Initialize chart
+      async function initializeChart() {
+        const weeklyData = await fetchWeeklyData();
+        const ctx = document
+          .getElementById("unitsConsumedChart")
+          .getContext("2d");
+        chart = new Chart(ctx, {
+          type: "line",
+          data: weeklyData,
+          options: {
+            responsive: true,
+            scales: {
+              x: {
+                ticks: {
                   stepSize: 1, // Show every day
                   maxRotation: 0, // Prevent label tilting
                   minRotation: 0, // Ensure horizontal labels
-              },
-              title: {
+                },
+                title: {
                   display: true,
                   text: "Days",
+                },
               },
+              y: {
+                beginAtZero: true, // Ensures the y-axis starts at 0
+                title: {
+                  display: true, // Shows a label for the y-axis
+                  text: "Units Consumed", // The label text
+                },
+                ticks: {
+                  stepSize: 4, // Sets the interval between tick marks
+                },
+                min: 0, // Minimum value of the y-axis
+                max: 20, // Maximum value of the y-axis
+              },
+            },
           },
-            y: {
-              beginAtZero: true, // Ensures the y-axis starts at 0
-              title: {
-                display: true,   // Shows a label for the y-axis
-                text: "Units Consumed" // The label text
-              },
-              ticks: {
-                stepSize: 4,    // Sets the interval between tick marks
-              },
-              min: 0,           // Minimum value of the y-axis
-              max: 20           // Maximum value of the y-axis
-            }
-          }
-        }
-        
-      });
-    }
-
-    // Update chart based on selected timeframe
-    document.getElementById("time-filter").addEventListener("change", async (event) => {
-      const timeframe = event.target.value;
-      const data = timeframe === "weekly" ? await fetchWeeklyData() : await fetchMonthlyData();
-      chart.data.labels = data.labels;
-      chart.data.datasets = data.datasets;
-      chart.update();
-    });
-
-    // Periodic data updates
-    async function updateMetrics() {
-      try {
-        const response = await fetch("/api/energy_data/");
-        if (!response.ok) throw new Error("Failed to fetch metrics data");
-        const data = await response.json();
-        document.getElementById("voltage").innerText = data.voltage || 0;
-        document.getElementById("current").innerText = data.current || 0;
-        document.getElementById("total-units").innerText = data.total_units_since_midnight || 0;
-      } catch (error) {
-        console.error("Error fetching metrics data:", error);
+        });
       }
-    }
 
-    // Initialize the dashboard
-    window.onload = () => {
-      initializeChart();
-      setInterval(updateMetrics, 2000);
-    };
-  </script>
-</body>
+      // Update chart based on selected timeframe
+      document
+        .getElementById("time-filter")
+        .addEventListener("change", async (event) => {
+          const timeframe = event.target.value;
+          const data =
+            timeframe === "weekly"
+              ? await fetchWeeklyData()
+              : await fetchMonthlyData();
+          chart.data.labels = data.labels;
+          chart.data.datasets = data.datasets;
+          chart.update();
+        });
+
+      // Periodic data updates
+      async function updateMetrics() {
+        try {
+          const response = await fetch("/api/energy_data/");
+          if (!response.ok) throw new Error("Failed to fetch metrics data");
+          const data = await response.json();
+          document.getElementById("voltage").innerText = data.voltage || 0;
+          document.getElementById("current").innerText = data.current || 0;
+          document.getElementById("total-units").innerText =
+            data.total_units_since_midnight || 0;
+        } catch (error) {
+          console.error("Error fetching metrics data:", error);
+        }
+      }
+
+      // Initialize the dashboard
+      window.onload = () => {
+        initializeChart();
+        setInterval(updateMetrics, 2000);
+      };
+    </script>
+  </body>
 </html>
 {% endblock %}

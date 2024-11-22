@@ -1,5 +1,151 @@
-html, body {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box; /* Ensures consistent box model across all elements */
-  }
+/* Reset & Base Styling */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f9f9f9;
+  box-sizing: border-box;
+}
+
+/* Layout Styling */
+.analytics-container {
+  margin: 20px;
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-top: 10% !important;
+}
+
+
+/* Graph Section Styling */
+.graph-section {
+  width: 53% !important; /* Set width of graph box */
+  height: 400px; /* Set height of the graph box */
+  padding: 20px; /* Set padding inside the graph box */
+  padding-left: 5% !important;
+  padding-right: 2% !important;
+  background-color: #ffffff; /* Optional: Background color */
+}
+
+/* Notification Section Styling */
+.notification-section {
+  width: 33% !important; /* Set width of notifications box */
+  height: 400px; /* Set height of the notifications box */
+  padding: 20px; /* Set padding inside the notifications box */
+  border-radius: 8px; /* Optional: Add rounded corners */
+  background-color: #f9f9f9 !important; /* Background color */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: Shadow for depth */
+  overflow-y: auto; /* Allow scrolling if content overflows vertically */
+  overflow-x: hidden; /* Hide horizontal scroll */
+}
+
+/* Card Styling */
+.card {
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #ffffff; /* Ensure card background is not causing issues */
+  z-index: 1; /* Keep it above any other elements */
+}
+
+/* Card Header Styling */
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+
+.card-body {
+  padding: 15px;
+}
+
+.card-footer {
+  padding: 10px;
+  background-color: #f9f9f9;
+  border-top: 1px solid #ddd;
+}
+
+/* Chart Styling */
+.chart-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.chart-container {
+  width: 100%;
+  max-width: 600px;
+  height: 310px;
+}
+
+#unitsConsumedChart {
+  width: 100%;
+  height: 100%;
+  color: #DD0733;
+}
+
+/* PDF Button with Hover Effect */
+#download-pdf {
+  background-color: #DD0733;
+  color: #ffffff;
+  border: none;
+  padding: 6px 12px;
+  font-size: 14px;
+  position: relative;
+  overflow: hidden;
+  transition: background-color 0.3s ease;
+}
+
+#download-pdf:hover {
+  color: #ffffff; /* Keep text white on hover */
+}
+
+/* Hover Effect Animation */
+#download-pdf::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%; /* Start outside the button */
+  width: 100%;
+  height: 100%;
+  background-color: #000;
+  transition: left 0.8s ease; /* Smooth slide-in effect */
+  z-index: 0;
+}
+
+#download-pdf:hover::before {
+  left: 0; /* Slide in */
+}
+
+#download-pdf span {
+  position: relative;
+  z-index: 1; /* Ensure text stays above the background effect */
+}
+
+/* Notification Box Styling */
+.notification-box {
+  height: 100%; /* Fill available height */
+  overflow-y: auto; /* Enable vertical scrolling */
+  overflow-x: hidden; /* Prevent horizontal scrolling */
+  padding: 15px; /* Add some padding for better spacing */
+  background-color: #f9f9f9; /* Optional: Add background for distinction */
+  border: 1px solid #ddd; /* Optional: Add border for clear definition */
+  border-radius: 8px; /* Rounded corners for a polished look */
+}
+
+/* Styling for Scrollbar */
+.notification-box::-webkit-scrollbar {
+  width: 8px; /* Width of the scrollbar */
+}
+
+.notification-box::-webkit-scrollbar-thumb {
+  background-color: #DD0733; /* Color of the scrollbar thumb */
+  border-radius: 4px; /* Rounded edges for the scrollbar */
+}
+
+.notification-box::-webkit-scrollbar-thumb:hover {
+  background-color: #c00; /* Darker color on hover */
+}
+
+.notification-box::-webkit-scrollbar-track {
+  background-color: #f0f0f0; /* Background track of the scrollbar */
+}
