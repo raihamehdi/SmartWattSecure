@@ -170,3 +170,35 @@ def weekly_data(request):
         return JsonResponse(response_data, safe=False)
 
     return JsonResponse({'error': 'User not authenticated'}, status=403)
+
+
+def monthly_data(request):
+    if request.user.is_authenticated:
+        # Define the date range (last 30 days)
+        today = timezone.localdate()
+        start_date = today - timedelta(days=29)
+        now=timezone.now()
+
+        # Query the database for the last 30 days
+        energy_data = EnergyData.objects.filter(
+            user=request.user,
+            timestamp__gte=start_date,
+            timestamp__lte=now
+        ).extra(
+            select={'timestamp_date': 'DATE(timestamp)'}
+        ).values('timestamp_date').annotate(total_units=Sum('total_units_consumed')).order_by('timestamp_date')
+
+        # Prepare daily totals, ensuring all 30 days are covered
+        time_labels = [(start_date + timedelta(days=i)) for i in range(30)]
+        daily_totals = {entry['timestamp_date']: entry['total_units'] for entry in energy_data}
+        units_consumed = [round(daily_totals.get(day, 0), 2) for day in time_labels]
+
+        # Prepare response data
+        response_data = {
+            "labels": time_labels,  # Chart.js expects this
+            "units consumed": units_consumed
+        }
+
+        return JsonResponse(response_data, safe=False)
+
+    return JsonResponse({'error': 'User not authenticated'}, status=403)
