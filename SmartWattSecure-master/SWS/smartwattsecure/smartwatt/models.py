@@ -22,3 +22,14 @@ class EnergyData(models.Model):
 
     def __str__(self):
         return f"UserID: {self.user.username}, Time recorded: {self.timestamp}, Prediction: {self.prediction} Voltage: {self.voltage}V, Current: {self.current}A, Power: {self.power}W, Total units Consumed:{self.total_units_consumed}"
+    
+class Anomaly(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    start_time = models.DateTimeField()
+    end_time = models.DateTimeField()
+    count = models.IntegerField()  # Number of consecutive suspicious predictions
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Anomaly for {self.user.username} from {self.start_time} to {self.end_time}"
+

@@ -3,12 +3,14 @@ from django.views.generic import CreateView
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from .arduino import data, predict
-from .models import EnergyData, CustomUser
-from datetime import datetime, time
-from django.utils.timezone import localtime
+from .models import EnergyData, CustomUser, Anomaly
+from datetime import datetime, time, timedelta
+from django.utils.timezone import localtime, localdate
 from django.utils import timezone
 from django.contrib.auth import authenticate,login as auth_login
 from django.contrib import messages
+from django.db.models import Sum
+
 
 ##-----SIGNUP VIEW-----##
 def signup(request):
@@ -55,6 +57,8 @@ def help(request):
 def contact(request):
     return render(request, 'contact.html')
 
+##-----UPDATE ENERGYDATA VIEW-----##
+
 def update_energy_data(request):
     """Fetches new energy data from Arduino, saves it, and returns response."""
     arduino_data = data()
@@ -87,11 +91,35 @@ def update_energy_data(request):
         )
 
         energy_data.save()
+        
+        if predictions[0] == 2:  # "suspicious" prediction
+        # Retrieve recent energy data
+            recent_predictions = list(
+                EnergyData.objects.filter(
+                    user=request.user, 
+                    prediction="suspicious"
+                ).order_by('-timestamp')[:10]
+            )
+
+        if len(recent_predictions) == 10:
+            start_time = recent_predictions[-1].timestamp  # Get the earliest of the last 10 entries
+            end_time = recent_predictions[0].timestamp     # Get the latest entry
+
+        
+            
+            # Log the anomaly
+            Anomaly.objects.create(
+                user=request.user,
+                start_time=start_time,
+                end_time=end_time,
+                count=len(recent_predictions)
+            )
         return JsonResponse({'status': 'success'}, status=200)
     else:
         return JsonResponse({'error': 'Failed to fetch data from Arduino'}, status=500)
 
 
+##-----ENERGYDATA VIEW-----##
 def energy_data_api(request):
     if request.user.is_authenticated:
         update_response = update_energy_data(request)
@@ -134,13 +162,7 @@ def energy_data_api(request):
         return JsonResponse({'error': 'Failed to update data'}, status=500)
     return JsonResponse({'error': 'User not authenticated'}, status=403)
 
-
-from datetime import datetime, timedelta
-from django.db.models import Sum
-from django.http import JsonResponse
-from django.utils.timezone import localdate
-from django.utils import timezone
-
+##-----WEEKLY VIEW-----##
 def weekly_data(request):
     if request.user.is_authenticated:
         # Define the date range (last 7 days)
@@ -174,7 +196,7 @@ def weekly_data(request):
 
     return JsonResponse({'error': 'User not authenticated'}, status=403)
 
-
+##-----MONTHLY VIEW-----##
 def monthly_data(request):
     if request.user.is_authenticated:
         # Define the date range (last 30 days)
