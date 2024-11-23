@@ -4,16 +4,116 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dashboard - Smart Watt Secure</title>
+    <title>Analytics - Smart Watt Secure</title>
     <link rel="stylesheet" href="{% static 'css/ana.css' %}" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="{% static 'js/ana.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <link
       href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css"
       rel="stylesheet"
     />
   </head>
-  <body></body>
+  <body>
+    <div class="analytics-container row">
+      <div
+        class="col-md-6 left-section background-image content"
+        style="background-image: url('{% static 'img/bg/shape-2-1.png' %}')"
+      ></div>
+      <!-- Graph Section -->
+      <div class="graph-section">
+        <div class="card shadow-sm">
+          <div
+            class="card-header d-flex justify-content-between align-items-center"
+          >
+            <h5>Anomalies Chart</h5>
+            <div>
+              <label for="time-filter" class="form-label me-2">View by:</label>
+              <select
+                id="time-filter"
+                class="form-select form-select-sm d-inline-block"
+                style="width: auto"
+              >
+                <option value="weekly">Weekly</option>
+                <option value="monthly">Monthly</option>
+                <option value="yearly">Yearly</option>
+              </select>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="chart-wrapper">
+              <div class="chart-container">
+                <canvas id="unitsConsumedChart"></canvas>
+              </div>
+            </div>
+          </div>
+          <div class="card-footer text-end">
+            <button id="download-pdf" class="btn btn-danger">
+              <span>Download PDF</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Notifications Section -->
+      <div class="notification-section">
+        <div class="card shadow-sm">
+          <div class="card-header">
+            <h5>Notifications</h5>
+          </div>
+          <div class="card-body notification-content">
+            <p>11/22/2024 - Energy consumption is normal.</p>
+            <p>11/21/2024 - Power anomaly detected.</p>
+            <p>11/20/2024 - Voltage fluctuations observed.</p>
+            <p>11/19/2024 - Energy consumption is normal.</p>
+            <p>11/18/2024 - High current usage detected.</p>
+            <p>11/17/2024 - Energy consumption is normal.</p>
+            <p>11/16/2024 - System initialized successfully.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Chart.js for rendering the graph
+      const ctx = document
+        .getElementById("unitsConsumedChart")
+        .getContext("2d");
+      const consumptionChart = new Chart(ctx, {
+        type: "line",
+        data: {
+          labels: [
+            "11/16/2024",
+            "11/17/2024",
+            "11/18/2024",
+            "11/19/2024",
+            "11/20/2024",
+            "11/21/2024",
+            "11/22/2024",
+          ],
+          datasets: [
+            {
+              label: "Units Consumed",
+              data: [5, 10, 15, 10, 12, 18, 20],
+              borderColor: "#DD0733",
+              backgroundColor: "rgba(255, 99, 132, 0.2)",
+              fill: true,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { display: true, position: "top" },
+          },
+          scales: {
+            x: { title: { display: true, text: "Days" } },
+            y: { title: { display: true, text: "Units Consumed" } },
+          },
+        },
+      });
+    </script>
+  </body>
 </html>
 {% endblock %}
