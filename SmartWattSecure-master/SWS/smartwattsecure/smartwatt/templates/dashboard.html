@@ -121,9 +121,9 @@
           pdf.addImage(imgData, "PNG", 10, 10, 270, 150);
           pdf.save("Units_Consumption_Chart.pdf");
         });
-
+    
       let chart;
-
+    
       // Fetch weekly data
       async function fetchWeeklyData() {
         try {
@@ -151,7 +151,7 @@
           return { labels: [], datasets: [] };
         }
       }
-
+    
       // Fetch monthly data
       async function fetchMonthlyData() {
         try {
@@ -179,7 +179,7 @@
           return { labels: [], datasets: [] };
         }
       }
-
+    
       // Initialize chart
       async function initializeChart() {
         const weeklyData = await fetchWeeklyData();
@@ -219,7 +219,7 @@
           },
         });
       }
-
+    
       // Update chart based on selected timeframe
       document
         .getElementById("time-filter")
@@ -233,8 +233,20 @@
           chart.data.datasets = data.datasets;
           chart.update();
         });
-
-      // Periodic data updates
+    
+      // Periodic data updates for weekly/monthly charts
+      async function updateChart() {
+        const currentFilter = document.getElementById("time-filter").value;
+        const data =
+          currentFilter === "weekly"
+            ? await fetchWeeklyData()
+            : await fetchMonthlyData();
+        chart.data.labels = data.labels;
+        chart.data.datasets = data.datasets;
+        chart.update("none"); // Smooth chart update without re-layout
+      }
+    
+      // Periodic data updates (for energy metrics like voltage, current)
       async function updateMetrics() {
         try {
           const response = await fetch("/api/energy_data/");
@@ -248,13 +260,16 @@
           console.error("Error fetching metrics data:", error);
         }
       }
-
+    
       // Initialize the dashboard
       window.onload = () => {
         initializeChart();
-        setInterval(updateMetrics, 2000);
+        setInterval(updateChart, 2000); // Update chart every minute
+        setInterval(updateMetrics, 2000); // Update metrics every 2 seconds
       };
     </script>
+    
+    
   </body>
 </html>
 {% endblock %}

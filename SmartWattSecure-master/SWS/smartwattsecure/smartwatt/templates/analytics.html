@@ -44,7 +44,7 @@
           <div class="card-body">
             <div class="chart-wrapper">
               <div class="chart-container">
-                <canvas id="unitsConsumedChart"></canvas>
+                <canvas id="anomaliesChart"></canvas>
               </div>
             </div>
           </div>
@@ -63,57 +63,107 @@
             <h5>Notifications</h5>
           </div>
           <div class="card-body notification-content">
-            <p>11/22/2024 - Energy consumption is normal.</p>
-            <p>11/21/2024 - Power anomaly detected.</p>
-            <p>11/20/2024 - Voltage fluctuations observed.</p>
-            <p>11/19/2024 - Energy consumption is normal.</p>
-            <p>11/18/2024 - High current usage detected.</p>
-            <p>11/17/2024 - Energy consumption is normal.</p>
-            <p>11/16/2024 - System initialized successfully.</p>
+
           </div>
         </div>
       </div>
     </div>
 
     <script>
-      // Chart.js for rendering the graph
-      const ctx = document
-        .getElementById("unitsConsumedChart")
-        .getContext("2d");
-      const consumptionChart = new Chart(ctx, {
-        type: "line",
-        data: {
-          labels: [
-            "11/16/2024",
-            "11/17/2024",
-            "11/18/2024",
-            "11/19/2024",
-            "11/20/2024",
-            "11/21/2024",
-            "11/22/2024",
-          ],
-          datasets: [
-            {
-              label: "Units Consumed",
-              data: [5, 10, 15, 10, 12, 18, 20],
-              borderColor: "#DD0733",
-              backgroundColor: "rgba(255, 99, 132, 0.2)",
-              fill: true,
-            },
-          ],
-        },
-        options: {
-          responsive: true,
-          plugins: {
-            legend: { display: true, position: "top" },
-          },
-          scales: {
-            x: { title: { display: true, text: "Days" } },
-            y: { title: { display: true, text: "Units Consumed" } },
-          },
-        },
+
+      document.addEventListener("DOMContentLoaded", () => {
+        const notificationContent = document.querySelector(".notification-content");
+      
+        // Fetch notifications from the server
+        fetch("/get_notifications/")
+          .then((response) => response.json())
+          .then((data) => {
+            // Clear existing notifications
+            notificationContent.innerHTML = "";
+      
+            // Populate notifications dynamically
+            data.forEach((notification) => {
+              const notificationItem = document.createElement("p");
+              notificationItem.textContent = `${notification.date} - ${notification.message}`;
+              notificationContent.appendChild(notificationItem);
+            });
+          })
+          .catch((error) => {
+            console.error("Error fetching notifications:", error);
+          });
       });
+      
+
+
+      async function fetchAndUpdateAnomalies(chart) {
+        try {
+            const response = await fetch('/get_latest_anomalies/');
+            if (!response.ok) throw new Error('Failed to fetch anomalies');
+            const data = await response.json();
+    
+            // Update chart data
+            chart.data.labels = data.labels;
+            chart.data.datasets[0].data = data.anomalies;
+    
+            // Re-render the chart
+            chart.update();
+        } catch (error) {
+            console.error('Error fetching anomalies:', error);
+        }
+    }
+    
+
+      const ctx = document.getElementById("anomaliesChart").getContext("2d");
+    
+      // Fetch anomaly data and render chart
+      fetch('/get_anomalies/')  // API endpoint to fetch anomalies
+        .then(response => response.json())
+        .then(data => {
+          // Format labels (dates) for the x-axis
+          const formattedLabels = data.labels.map(date =>
+            new Date(date).toLocaleDateString()
+          );
+    
+          // Map anomaly dates to counts for each day
+          const anomalyCounts = data.anomalies;    
+          // Create the chart
+          const anomaliesChart = new Chart(ctx, {
+            type: "line",
+            data: {
+              labels: formattedLabels, // Last 7 days
+              datasets: [
+                {
+                  label: "Weekly Anomalies",
+                  data: anomalyCounts,  // Anomaly counts for each day
+                  borderColor: "#DD0733",
+                  backgroundColor: "rgba(255, 99, 132, 0.2)",
+                  fill: true,
+                },
+              ],
+            },
+            options: {
+              responsive: true,
+              plugins: {
+                legend: { display: true, position: "top" },
+              },
+              scales: {
+                x: { 
+                  title: { display: true, text: "Days" },
+                },
+                y: { 
+                  title: { display: true, text: "Anomalies Detected" },
+                  min: 0,
+                  max: 25,
+                },
+              },
+            },
+          });
+        })
+        .catch(error => {
+          console.error('Error fetching anomalies:', error);
+        });
     </script>
+    
   </body>
 </html>
 {% endblock %}

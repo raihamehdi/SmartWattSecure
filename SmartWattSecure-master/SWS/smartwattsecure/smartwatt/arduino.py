@@ -31,7 +31,7 @@ def compute_features(power):
 
     return lag_1, rolling_avg_60, lag_1440, rolling_avg_1440
 
-MODEL_PATH = os.path.join(os.path.dirname(__file__), 'logreg_model.pkl')
+MODEL_PATH = os.path.join(os.path.dirname(__file__), 'logreg_modelf.pkl')
 SCALER_PATH = os.path.join(os.path.dirname(__file__), 'scaler.pkl')
 ARDUINO_PORT = 'COM5'  
 BAUD_RATE = 9600

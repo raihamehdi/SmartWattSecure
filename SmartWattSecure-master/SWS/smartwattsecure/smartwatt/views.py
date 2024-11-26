@@ -3,13 +3,17 @@ from django.views.generic import CreateView
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from .arduino import data, predict
-from .models import EnergyData, CustomUser, Anomaly
+from .models import EnergyData, CustomUser, Anomaly, Notification
 from datetime import datetime, time, timedelta
 from django.utils.timezone import localtime, localdate
 from django.utils import timezone
 from django.contrib.auth import authenticate,login as auth_login
 from django.contrib import messages
 from django.db.models import Sum
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from collections import Counter
+
 
 
 ##-----SIGNUP VIEW-----##
@@ -64,11 +68,12 @@ def update_energy_data(request):
     arduino_data = data()
     if arduino_data:
         voltage, current, power, total_units_consumed, lag_1, rolling_avg_60, lag_1440, rolling_avg_1440 = arduino_data
-        now = datetime.now()
+        now = timezone.now()
+        
         hour = now.hour
         day_of_week = now.weekday()
         month = now.month
-
+        
         # Prepare data for prediction
         X_test = [[power, voltage, hour, day_of_week, month, lag_1, rolling_avg_60, lag_1440, rolling_avg_1440]]
         predictions = predict(X_test)
@@ -91,29 +96,6 @@ def update_energy_data(request):
         )
 
         energy_data.save()
-        
-        if predictions[0] == 2:  # "suspicious" prediction
-        # Retrieve recent energy data
-            recent_predictions = list(
-                EnergyData.objects.filter(
-                    user=request.user, 
-                    prediction="suspicious"
-                ).order_by('-timestamp')[:10]
-            )
-
-        if len(recent_predictions) == 10:
-            start_time = recent_predictions[-1].timestamp  # Get the earliest of the last 10 entries
-            end_time = recent_predictions[0].timestamp     # Get the latest entry
-
-        
-            
-            # Log the anomaly
-            Anomaly.objects.create(
-                user=request.user,
-                start_time=start_time,
-                end_time=end_time,
-                count=len(recent_predictions)
-            )
         return JsonResponse({'status': 'success'}, status=200)
     else:
         return JsonResponse({'error': 'Failed to fetch data from Arduino'}, status=500)
@@ -227,3 +209,109 @@ def monthly_data(request):
         return JsonResponse(response_data, safe=False)
 
     return JsonResponse({'error': 'User not authenticated'}, status=403)
+
+
+
+##-----ANOMALIES VIEW-----##
+@receiver(post_save, sender=EnergyData)
+def check_anomaly_every_ten_entries(sender, instance, **kwargs):
+    user = instance.user  # Get the user associated with this energy data
+
+    # Count total entries for the user
+    total_entries = EnergyData.objects.filter(user=user).count()
+
+    # Check only after every 10 entries
+    if total_entries % 10 == 0:  # Trigger anomaly check
+        check_and_log_anomaly(user)
+
+def check_and_log_anomaly(user):
+    # Retrieve the last 10 predictions marked as "suspicious"
+    recent_predictions = list(
+        EnergyData.objects.filter(
+            user=user,
+            prediction="suspicious"
+        ).order_by('-timestamp')[:10]
+    )
+
+    # Check if there are exactly 10 predictions
+    if len(recent_predictions) < 10:
+        return  # Exit if not enough data
+
+    # Extract start and end timestamps for the anomaly
+    start_time = recent_predictions[-1].timestamp  # Earliest of the 10
+    end_time = recent_predictions[0].timestamp  # Latest of the 10
+
+    # Log the anomaly
+    Anomaly.objects.create(
+        user=user,
+        start_time=start_time,
+        end_time=end_time,
+        count=len(recent_predictions)
+    )
+    
+
+##-----ANOMALY CHART VIEW-----##
+def get_anomalies(request):
+    if request.user.is_authenticated:
+        # Define the date range (last 7 days)
+        today = timezone.localdate()  # Get the current date only
+        start_date = today - timedelta(days=6)
+        now = timezone.now()
+        
+        # Fetch anomalies that occurred in the last 7 days
+        anomalies = Anomaly.objects.filter(
+            user=request.user,
+            start_time__gte=start_date,
+            end_time__lte=now
+        ).values('start_time', 'end_time')
+
+        # Count anomalies per day
+        anomaly_counts = Counter()  # Dictionary to store anomaly counts per day
+        for anomaly in anomalies:
+            anomaly_date = anomaly['start_time'].date()
+            anomaly_counts[anomaly_date] += 1
+
+        # Prepare the count for each of the last 7 days
+        time_labels = [start_date + timedelta(days=i) for i in range(7)]
+        anomaly_data = [anomaly_counts.get(day, 0) for day in time_labels]  # Default to 0 if no anomalies
+
+        # Prepare response data
+        response_data = {
+            "labels": [str(day) for day in time_labels],  # Date labels for the last 7 days
+            "anomalies": anomaly_data  # Total count of anomalies per day
+        }
+
+        return JsonResponse(response_data, safe=False)
+
+    return JsonResponse({'error': 'User not authenticated'}, status=403)
+
+##-----NOTIFICATIONS VIEW-----##
+def get_notifications(request):
+    if request.user.is_authenticated:
+        notifications = Notification.objects.filter(user=request.user).order_by('-timestamp')
+        response_data = [
+            {
+                "date": notification.timestamp.strftime("%m/%d/%Y"),
+                "message": notification.message,
+            }
+            for notification in notifications
+        ]
+        return JsonResponse(response_data, safe=False)
+
+    return JsonResponse({'error': 'User not authenticated'}, status=403)
+
+@receiver(post_save, sender=Anomaly)
+def create_notification_for_anomaly(sender, instance, created, **kwargs):
+    if created:
+        message = f"Power anomaly detected from {instance.start_time.strftime('%H:%M')} to {instance.end_time.strftime('%H:%M')}."
+        Notification.objects.create(user=instance.user, message=message)
+
+
+
+
+
+
+
+
+
+

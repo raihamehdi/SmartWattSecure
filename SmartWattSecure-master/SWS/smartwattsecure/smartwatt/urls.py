@@ -13,6 +13,7 @@ path('update/', views.update_energy_data, name='update_energy_data'),
 path('api/energy_data/', views.energy_data_api, name='energy_data_api'),
 path('api/monthly_data/', views.monthly_data, name='monthly_data'),
 path('api/weekly_data/', views.weekly_data, name='weekly_data'),
-
+path('get_anomalies/', views.get_anomalies, name='get_anomalies'),
+path('get_notifications/', views.get_notifications, name='get_notifications'),
 
 ]
