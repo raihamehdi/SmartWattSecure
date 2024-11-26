@@ -7,6 +7,10 @@ body {
   box-sizing: border-box;
 }
 
+html {
+  overflow-y: scroll;
+}
+
 /* Layout Styling */
 .analytics-container {
   margin: 20px;

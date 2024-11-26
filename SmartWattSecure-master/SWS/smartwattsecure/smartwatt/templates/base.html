@@ -87,7 +87,12 @@
                 </g>
               </svg>
             </a>
-            <a href="#profile" class="icon-link">
+            <a
+              href="javascript:void(0);"
+              class="icon-link"
+              onclick="openPopup()"
+              role="button"
+            >
               <!-- Inline SVG for user profile icon -->
               <svg
                 width="40px"
@@ -121,6 +126,98 @@
         </div>
       </div>
     </header>
+    {% if messages %}
+    <ul class="messages">
+      {% for message in messages %}
+      <li class="{{ message.tags }}">{{ message }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+    <!-- Popup container -->
+    <div class="popup" id="popup">
+      <div class="popup-content">
+        <!-- Close button for the popup -->
+        <span class="close-btn" onclick="closePopup()">×</span>
+
+        <h2>User Settings</h2>
+
+        <!-- Form for updating user settings -->
+        <form method="POST" action="{% url 'update_user' %}">
+          {% csrf_token %}
+          <!-- Django CSRF token for security -->
+
+          <div class="field">
+            <label for="username">Username</label>
+            <input
+              type="text"
+              id="username"
+              name="username"
+              placeholder="Enter new username (optional)"
+            />
+          </div>
+
+          <div class="field">
+            <label for="email">Email</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="Enter new email (optional)"
+            />
+          </div>
+
+          <div class="field">
+            <label for="password">Password</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              placeholder="Enter new password (optional)"
+            />
+          </div>
+
+          <!-- Save button for updating details -->
+          <button type="submit" class="save-btn">Update</button>
+        </form>
+
+        <!-- Logout button -->
+        <button type="button" class="logout-btn" onclick="logout()">
+          Logout
+        </button>
+
+        <!-- Success message for update -->
+        <div id="success-message" class="success-message" style="display: none">
+          Your information has been updated successfully!
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Open popup function
+      function openPopup() {
+        document.getElementById("popup").style.display = "flex"; // Use flex to center
+      }
+
+      // Close popup function
+      function closePopup() {
+        document.getElementById("popup").style.display = "none";
+      }
+
+      // Logout function
+      function logout() {
+        window.location.href = "{% url 'logout' %}"; // Redirect to Django's logout URL
+      }
+
+      // Simulate successful update and show message
+      function updateUserSettings() {
+        document.getElementById("success-message").style.display = "block";
+        setTimeout(() => {
+          document.getElementById("success-message").style.display = "none";
+          closePopup(); // Close the popup after showing the success message
+        }, 3000); // Hide the success message after 3 seconds
+      }
+    </script>
+
     <main>{% block content %} {% endblock content %}</main>
   </body>
 </html>
