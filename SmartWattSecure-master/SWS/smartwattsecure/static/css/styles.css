@@ -1,3 +1,9 @@
+main {
+  margin: 0;
+  padding: 0;
+  display: block;
+}
+
 /* Main Header Styling */
 #dashboard-header {
     position: fixed;
@@ -143,4 +149,100 @@
 
   *, *::before, *::after {
     box-sizing: border-box;
+}
+
+/* Popup container */
+.popup {
+  display: none; /* Hidden by default */
+  position: fixed; /* Fixed position relative to the viewport */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* Dark overlay */
+  justify-content: center; /* Center content horizontally */
+  align-items: center; /* Center content vertically */
+  z-index: 1000; /* Ensures it's above other content */
+}
+
+/* Popup content */
+.popup-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 500px; /* Adjusted size for a compact design */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for better visibility */
+  position: relative; /* Allows absolute positioning of the close button */
+}
+
+/* Close button */
+.close-btn {
+  position: absolute; /* Position it in the top-right corner */
+  top: 10px;
+  right: 10px;
+  font-size: 25px;
+  font-weight: bold;
+  color: #333;
+  cursor: pointer;
+}
+
+/* Form field styles */
+.field {
+  margin-bottom: 15px;
+}
+
+.field label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.field input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+/* Button styles */
+.save-btn, .logout-btn {
+  display: inline-block;
+  padding: 10px 20px;
+  font-size: 16px;
+  margin-top: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 100%; /* Make the button full-width */
+}
+
+.save-btn {
+  background-color: #28a745;
+  color: white;
+  border: none;
+}
+
+.save-btn:hover {
+  background-color: #218838;
+}
+
+.logout-btn {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  margin-top: 20px;
+}
+
+.logout-btn:hover {
+  background-color: #c82333;
+}
+
+/* Success message */
+.success-message {
+  color: green;
+  font-weight: bold;
+  margin-top: 10px;
+  text-align: center;
 }

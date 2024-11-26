@@ -9,6 +9,9 @@ from django.utils.timezone import localtime
 from django.utils import timezone
 from django.contrib.auth import authenticate,login as auth_login
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from .forms import UserUpdateForm
+from django.contrib.auth import logout
 
 ##-----SIGNUP VIEW-----##
 def signup(request):
@@ -33,6 +36,30 @@ def login(request):
         else:
             messages.error(request, 'signup')
     return render(request, 'registration/login.html')
+
+# User Settings
+def update_user(request):
+    if request.method == 'POST':
+        form = UserUpdateForm(request.POST, instance=request.user)
+        if form.is_valid():
+            user = form.save(commit=False)
+            
+            # Update password only if provided
+            if form.cleaned_data['password']:
+                user.set_password(form.cleaned_data['password'])
+
+            user.save()
+            messages.success(request, "Your profile was updated successfully!")
+        else:
+            messages.error(request, "Form submission failed: {}".format(form.errors))
+
+        # Redirect to the same page
+        return redirect(request.META.get('HTTP_REFERER', '/'))
+
+# Logout
+def logout_view(request):
+    logout(request)
+    return redirect('login')  # Redirect to login page after logout
 
 ##-----DASHBOARD VIEW-----##
 def dashboard(request):
