@@ -4,11 +4,14 @@ from django.conf import settings
 
 
 class CustomUser(AbstractUser):
-    email = models.EmailField(unique=True)
-    # Ensure you set USERNAME_FIELD to 'email'
+    email = models.EmailField(unique=True)  # Ensure email is unique
+    
+    # Use email as the primary identifier for authentication
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = []
+    REQUIRED_FIELDS = ['username']  # username is still required for other users
 
+    def __str__(self):
+        return self.email
 
 class EnergyData(models.Model):
     
@@ -22,3 +25,25 @@ class EnergyData(models.Model):
 
     def __str__(self):
         return f"UserID: {self.user.username}, Time recorded: {self.timestamp}, Prediction: {self.prediction} Voltage: {self.voltage}V, Current: {self.current}A, Power: {self.power}W, Total units Consumed:{self.total_units_consumed}"
+    
+class Anomaly(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    start_time = models.DateTimeField(auto_now_add=True)
+    end_time = models.DateTimeField(auto_now_add=True)
+    count = models.IntegerField()  # Number of consecutive suspicious predictions
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Anomaly for {self.user.username} from {self.start_time} to {self.end_time}"
+    
+
+class Notification(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="notifications")
+    message = models.TextField()
+    is_read = models.BooleanField(default=False)  # To track if the notification is read
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Notification for {self.user.username}: {self.message[:100]}"
+
+
