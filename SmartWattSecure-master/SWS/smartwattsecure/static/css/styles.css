@@ -18,7 +18,7 @@ main {
     display: flex;
     align-items: center;
     padding: 0 15px;
-    outline: 1px solid red; 
+    outline: 1px solid #DD0733; 
   }
   
   /* Flex container to align columns */
@@ -109,7 +109,7 @@ main {
     width: 0;
     height: 2px;
     background-color: #DD0733;
-    transition: width 0.7s ease;
+    transition: width 0.7s ease !important;
   }
 
   .tp-header-main-menu ul li a:hover,
@@ -151,6 +151,12 @@ main {
     box-sizing: border-box;
 }
 
+h2{
+  text-align: center;
+  padding-top: 35px;
+  padding-bottom: 20px;
+}
+
 /* Popup container */
 .popup {
   display: none; /* Hidden by default */
@@ -171,7 +177,7 @@ main {
   padding: 20px;
   border-radius: 8px;
   width: 90%;
-  max-width: 500px; /* Adjusted size for a compact design */
+  max-width: 400px; /* Adjusted size for a compact design */
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for better visibility */
   position: relative; /* Allows absolute positioning of the close button */
 }
@@ -180,63 +186,83 @@ main {
 .close-btn {
   position: absolute; /* Position it in the top-right corner */
   top: 10px;
-  right: 10px;
-  font-size: 25px;
-  font-weight: bold;
+  right: 20px;
+  font-size: 30px;
+  font-weight: 500;
   color: #333;
   cursor: pointer;
 }
 
 /* Form field styles */
 .field {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 15px;
 }
 
 .field label {
-  display: block;
   font-weight: bold;
-  margin-bottom: 5px;
 }
 
-.field input {
-  width: 100%;
-  padding: 10px;
-  margin-top: 5px;
-  font-size: 16px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
+.edit-icon {
+  cursor: pointer;
+  font-size: 18px;
+  color: gray;
+}
+
+.edit-icon:hover {
+  color: black !important;
 }
 
 /* Button styles */
-.save-btn, .logout-btn {
-  display: inline-block;
-  padding: 10px 20px;
-  font-size: 16px;
-  margin-top: 10px;
-  border-radius: 5px;
-  cursor: pointer;
-  width: 100%; /* Make the button full-width */
-}
-
-.save-btn {
-  background-color: #28a745;
-  color: white;
-  border: none;
-}
-
-.save-btn:hover {
-  background-color: #218838;
-}
-
 .logout-btn {
-  background-color: #dc3545;
+  display: block; /* Block-level element to center */
+  font-size: 18px; /* Slightly larger font */
+  font-weight: 600;
+  margin: 20px auto; /* Center the button horizontally */
+  top: 15px !important;
+  border-radius: 8px; /* Rounded edges for better UI */
+  cursor: pointer;
+  height: 50px;
+  width: 130px; /* Set specific button width */
+  background-color: #DD0733;
   color: white;
   border: none;
-  margin-top: 20px;
+  position: relative;
+  overflow: hidden;
+  text-align: center; /* Ensure text is centered */
 }
 
-.logout-btn:hover {
-  background-color: #c82333;
+/* Hover effect */
+.logout-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background-color: black;
+  transition: left 0.8s; /* Smooth transition */
+  z-index: 0; /* Place behind the button text */
+}
+
+/* Move hover background */
+.logout-btn:hover::before {
+  left: 0; /* Slide the black background into view */
+}
+
+/* Ensure text remains visible during hover */
+.logout-btn span {
+  position: relative;
+  z-index: 1; /* Keep text on top of hover effect */
+  color: white; /* Always keep text white */
+}
+
+/* Optional: Slight text animation on hover */
+.logout-btn:hover span {
+  transition: color 0.3s;
+  color: white; /* Ensure text color stays white */
 }
 
 /* Success message */

@@ -142,47 +142,30 @@
         <h2>User Settings</h2>
 
         <!-- Form for updating user settings -->
-        <form method="POST" action="{% url 'update_user' %}">
-          {% csrf_token %}
-          <!-- Django CSRF token for security -->
+        <div class="field">
+          <label for="username">Username</label>
+          <span class="edit-icon" onclick="redirectToEditPage('username')"
+            >✏️</span
+          >
+        </div>
 
-          <div class="field">
-            <label for="username">Username</label>
-            <input
-              type="text"
-              id="username"
-              name="username"
-              placeholder="Enter new username (optional)"
-            />
-          </div>
+        <div class="field">
+          <label for="email">Email</label>
+          <span class="edit-icon" onclick="redirectToEditPage('email')"
+            >✏️</span
+          >
+        </div>
 
-          <div class="field">
-            <label for="email">Email</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              placeholder="Enter new email (optional)"
-            />
-          </div>
-
-          <div class="field">
-            <label for="password">Password</label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              placeholder="Enter new password (optional)"
-            />
-          </div>
-
-          <!-- Save button for updating details -->
-          <button type="submit" class="save-btn">Update</button>
-        </form>
+        <div class="field">
+          <label for="password">Password</label>
+          <span class="edit-icon" onclick="redirectToEditPage('password')"
+            >✏️</span
+          >
+        </div>
 
         <!-- Logout button -->
         <button type="button" class="logout-btn" onclick="logout()">
-          Logout
+          <span>Logout</span>
         </button>
 
         <!-- Success message for update -->
@@ -203,9 +186,29 @@
         document.getElementById("popup").style.display = "none";
       }
 
+      // Redirect function for editing specific fields
+      function redirectToEditPage(field) {
+        // Redirect to a new page for editing the specific field
+        window.location.href = `/edit/${field}`;
+      }
+
       // Logout function
       function logout() {
         window.location.href = "{% url 'logout' %}"; // Redirect to Django's logout URL
+      }
+
+      function redirectToEditPage(field) {
+        const urls = {
+          username: "{% url 'edit_username' %}",
+          email: "{% url 'edit_email' %}",
+          password: "{% url 'edit_password' %}",
+        };
+
+        if (urls[field]) {
+          window.location.href = urls[field];
+        } else {
+          console.error("Invalid field:", field);
+        }
       }
 
       // Simulate successful update and show message

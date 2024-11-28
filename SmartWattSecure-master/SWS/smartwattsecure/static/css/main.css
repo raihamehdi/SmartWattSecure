@@ -5620,7 +5620,7 @@ body .ui-tooltip {
   margin: 0 15px; /* Margin between buttons */
   position: relative; /* Required for the hover effect */
   display: inline-block;
-  line-height: 1.2; /* Adjust line-height to reduce gap */
+  line-height: 1.4; /* Adjust line-height to reduce gap */
   border: none; /* Remove any borders */
 }
 
@@ -5634,11 +5634,11 @@ body .ui-tooltip {
   content: '';
   position: absolute;
   width: 0;
-  height: 2px; /* Thin underline */
-  background-color: red; /* Red underline */
+  height: 1px; /* Thin underline */
+  background-color: #dd0733; /* Red underline */
   left: 0;
   bottom: 0; /* Ensure the line is directly under the text */
-  transition: width 0.3s ease;
+  transition: width 0.6s ease;
 }
 
 .tp-header-right-action a:hover::after {
@@ -8171,7 +8171,7 @@ body .ui-tooltip {
   position: absolute;
   top: 0;
   left: 0;
-  height: 100%;
+  height: 100%; /* Adjust this value for the desired hero section height */
   width: 100%;
   background-repeat: no-repeat;
   background-size: cover;

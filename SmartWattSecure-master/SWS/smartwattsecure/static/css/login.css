@@ -1,89 +1,180 @@
-/* Modal Overlay */
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
+/* Container to center the modal */
+.modal-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: white;
+}
+
+/* Modal styling */
+.modal {
+    display: flex;
+    width: 60%;
+    max-width: 900px;
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+    padding: 20px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Close button styling */
+.close-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 30px;
+    font-weight: 500;
+    color: black;
+    cursor: pointer;
+    padding: 12px;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    background-color: transparent;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.close-btn:hover {
+    color: white;
+    background-color: lightgray;
+    transform: scale(1.1);
+}
+
+/* Modal content area: Left and Right sections */
+.modal-content {
+    display: flex;
+    width: 100%;
+}
+
+/* Left side image */
+.modal-left {
+    width: 50%;
+    height: 100%;
+}
+
+.modal-left img {
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.7); /* Slightly transparent background */
+    object-fit: cover;
+}
+
+/* Right side form */
+.modal-right {
+    width: 50%;
+    padding: 30px;
+    padding-right: 100px;
+    font-family: Arial, Helvetica, sans-serif;
+    box-sizing: border-box;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
 }
 
-/* Modal Styling */
-.modal {
-    background-color: #000000;
-    width: 40%; 
-    height: 45%;
-    max-width: 450px;
-    padding-left: 30px;
-    padding-right: 45px;
-    padding-top: 50px;
-    border-radius: 10px;
-    color: #fbfbfb;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
-    position: relative;
-}
-
+/* Title styling */
 h2 {
-    color: red;
+    color: #DD0733;
+    font-size: 33px;
+    padding-left: 70px;
     text-align: center;
+    margin-bottom: 30px;
 }
 
-label {
-    display: block;
-    margin-bottom: 5px;
+/* Adjust width of email and password fields */
+input[type="email"],
+input[type="password"] {
+    width: 120%;
+    padding: 12px;
+    margin-top: 2px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: #f5f5f5;
+    color: #333;
 }
 
-input[type="email"], input[type="password"], input[type="text"] {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #444;
-    border-radius: 5px;
-    background-color: #333;
-    color: white;
-}
-
-input[type="email"]:focus, input[type="password"]:focus, input[type="text"]:focus {
-    border-color: red;
+/* Focus effect for email and password fields */
+input[type="email"]:focus,
+input[type="password"]:focus {
+    border-color: #DD0733;
     outline: none;
 }
 
-.buttons {
-    display: flex;
-    justify-content: space-between;
+/* Eye icon and password container */
+.password-container {
+    position: relative;
+    width: 100%;
 }
 
-button {
-    padding: 10px 20px;
-    background-color: red;
-    border: none;
-    border-radius: 5px;
-    color: white;
+.eye-icon {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
     cursor: pointer;
+    font-size: 20px;
+    color: #333;
 }
 
-button:hover {
-    background-color: #ff3333;
-}
-
-.cancel-button {
-    background-color: gray;
-}
-
-.cancel-button:hover {
-    background-color: darkgray;
-}
-
-p {
-    text-align: center;
+/* Button styling */
+button {
+    position: relative;
+    align-items: center;
+    padding: 12px 30px;
+    font-size: 16px;
+    color: white;
+    background-color: #DD0733;
+    border: 2px solid #DD0733;
+    border-radius: 5px;
+    cursor: pointer;
+    overflow: hidden;
+    transition: color 0.3s ease, border-color 0.3s ease;
     margin-top: 20px;
+    margin-left: 140px;
+    display: inline-block;
 }
 
+/* Button Hover Transition Effect */
+button::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background-color: white;
+    transition: left 0.5s ease;
+    z-index: -1;
+    border-radius: 5px;
+}
+
+button:hover::before {
+    left: 0;
+}
+
+/* Button text color change on hover */
+button:hover {
+    border-color: white;
+    color: white;
+}
+
+/* Center the <p> text */
+p {
+    text-align: center !important;
+    margin-top: 20px;
+    margin-left: 10%;
+    width: 100%;
+}
+
+/* Styling for <a> inside <p> tag */
 a {
-    color: red;
+    color: #DD0733;
     text-decoration: none;
 }
 

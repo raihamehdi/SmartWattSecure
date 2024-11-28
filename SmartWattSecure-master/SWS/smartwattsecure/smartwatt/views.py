@@ -16,6 +16,8 @@ from collections import Counter
 from django.contrib.auth.decorators import login_required
 from .forms import UserUpdateForm
 from django.contrib.auth import logout
+from django.contrib.auth.models import User
+
 
 ##-----SIGNUP VIEW-----##
 def signup(request):
@@ -41,24 +43,36 @@ def login(request):
             messages.error(request, 'signup')
     return render(request, 'registration/login.html')
 
-# User Settings
-def update_user(request):
+# User Updation
+@login_required
+def edit_username(request):
     if request.method == 'POST':
-        form = UserUpdateForm(request.POST, instance=request.user)
-        if form.is_valid():
-            user = form.save(commit=False)
-            
-            # Update password only if provided
-            if form.cleaned_data['password']:
-                user.set_password(form.cleaned_data['password'])
+        new_username = request.POST.get('username')
+        if new_username:
+            request.user.username = new_username
+            request.user.save()
+            return redirect('dashboard')  # Redirect to the dashboard after saving
+    return render(request, 'edit_username.html')
 
-            user.save()
-            messages.success(request, "Your profile was updated successfully!")
-        else:
-            messages.error(request, "Form submission failed: {}".format(form.errors))
+@login_required
+def edit_email(request):
+    if request.method == 'POST':
+        new_email = request.POST.get('email')
+        if new_email:
+            request.user.email = new_email
+            request.user.save()
+            return redirect('dashboard')
+    return render(request, 'edit_email.html')
 
-        # Redirect to the same page
-        return redirect(request.META.get('HTTP_REFERER', '/'))
+@login_required
+def edit_password(request):
+    if request.method == 'POST':
+        new_password = request.POST.get('password')
+        if new_password:
+            request.user.set_password(new_password)
+            request.user.save()
+            return redirect('dashboard')
+    return render(request, 'edit_password.html')
 
 # Logout
 def logout_view(request):
