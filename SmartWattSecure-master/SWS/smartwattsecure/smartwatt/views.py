@@ -9,18 +9,13 @@ from django.utils.timezone import localtime, localdate
 from django.utils import timezone
 from django.contrib.auth import authenticate,login as auth_login
 from django.contrib import messages
-<<<<<<< HEAD
 from django.db.models import Sum
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from collections import Counter
-
-
-=======
 from django.contrib.auth.decorators import login_required
 from .forms import UserUpdateForm
 from django.contrib.auth import logout
->>>>>>> f61534a6dfe5d08f9429f0bc9964a6bf4efbb09d
 
 ##-----SIGNUP VIEW-----##
 def signup(request):
@@ -99,11 +94,11 @@ def update_energy_data(request):
     if arduino_data:
         voltage, current, power, total_units_consumed, lag_1, rolling_avg_60, lag_1440, rolling_avg_1440 = arduino_data
         now = timezone.now()
-        
-        hour = now.hour
-        day_of_week = now.weekday()
-        month = now.month
-        
+        now_local=localtime(now)
+        hour = now_local.hour
+        day_of_week = now_local.weekday()
+        month = now_local.month
+
         # Prepare data for prediction
         X_test = [[power, voltage, hour, day_of_week, month, lag_1, rolling_avg_60, lag_1440, rolling_avg_1440]]
         predictions = predict(X_test)
@@ -117,7 +112,7 @@ def update_energy_data(request):
         # Create a new EnergyData object for the user
         energy_data = EnergyData.objects.create(
             user=request.user,
-            timestamp=now,
+            timestamp=now_local,
             voltage=voltage,
             current=current,
             power=power,
@@ -137,7 +132,7 @@ def energy_data_api(request):
         update_response = update_energy_data(request)
         if update_response.status_code == 200:
             # Get the current time and start of the day (12 AM)
-            now = datetime.now()
+            now = timezone.now()
             start_of_day = datetime.combine(now.date(), time.min)  # Midnight
 
             # Filter energy data for the authenticated user since 12 AM
