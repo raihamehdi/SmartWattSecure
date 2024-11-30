@@ -62,25 +62,24 @@
           <div class="card-header">
             <h5>Notifications</h5>
           </div>
-          <div class="card-body notification-content">
-
-          </div>
+          <div class="card-body notification-content"></div>
         </div>
       </div>
     </div>
 
     <script>
-
       document.addEventListener("DOMContentLoaded", () => {
-        const notificationContent = document.querySelector(".notification-content");
-      
+        const notificationContent = document.querySelector(
+          ".notification-content"
+        );
+
         // Fetch notifications from the server
         fetch("/get_notifications/")
           .then((response) => response.json())
           .then((data) => {
             // Clear existing notifications
             notificationContent.innerHTML = "";
-      
+
             // Populate notifications dynamically
             data.forEach((notification) => {
               const notificationItem = document.createElement("p");
@@ -92,40 +91,37 @@
             console.error("Error fetching notifications:", error);
           });
       });
-      
-
 
       async function fetchAndUpdateAnomalies(chart) {
         try {
-            const response = await fetch('/get_latest_anomalies/');
-            if (!response.ok) throw new Error('Failed to fetch anomalies');
-            const data = await response.json();
-    
-            // Update chart data
-            chart.data.labels = data.labels;
-            chart.data.datasets[0].data = data.anomalies;
-    
-            // Re-render the chart
-            chart.update();
+          const response = await fetch("/get_latest_anomalies/");
+          if (!response.ok) throw new Error("Failed to fetch anomalies");
+          const data = await response.json();
+
+          // Update chart data
+          chart.data.labels = data.labels;
+          chart.data.datasets[0].data = data.anomalies;
+
+          // Re-render the chart
+          chart.update();
         } catch (error) {
-            console.error('Error fetching anomalies:', error);
+          console.error("Error fetching anomalies:", error);
         }
-    }
-    
+      }
 
       const ctx = document.getElementById("anomaliesChart").getContext("2d");
-    
+
       // Fetch anomaly data and render chart
-      fetch('/get_anomalies/')  // API endpoint to fetch anomalies
-        .then(response => response.json())
-        .then(data => {
+      fetch("/get_anomalies/") // API endpoint to fetch anomalies
+        .then((response) => response.json())
+        .then((data) => {
           // Format labels (dates) for the x-axis
-          const formattedLabels = data.labels.map(date =>
+          const formattedLabels = data.labels.map((date) =>
             new Date(date).toLocaleDateString()
           );
-    
+
           // Map anomaly dates to counts for each day
-          const anomalyCounts = data.anomalies;    
+          const anomalyCounts = data.anomalies;
           // Create the chart
           const anomaliesChart = new Chart(ctx, {
             type: "line",
@@ -134,7 +130,7 @@
               datasets: [
                 {
                   label: "Weekly Anomalies",
-                  data: anomalyCounts,  // Anomaly counts for each day
+                  data: anomalyCounts, // Anomaly counts for each day
                   borderColor: "#DD0733",
                   backgroundColor: "rgba(255, 99, 132, 0.2)",
                   fill: true,
@@ -147,10 +143,10 @@
                 legend: { display: true, position: "top" },
               },
               scales: {
-                x: { 
+                x: {
                   title: { display: true, text: "Days" },
                 },
-                y: { 
+                y: {
                   title: { display: true, text: "Anomalies Detected" },
                   min: 0,
                   max: 25,
@@ -159,11 +155,10 @@
             },
           });
         })
-        .catch(error => {
-          console.error('Error fetching anomalies:', error);
+        .catch((error) => {
+          console.error("Error fetching anomalies:", error);
         });
     </script>
-    
   </body>
 </html>
 {% endblock %}

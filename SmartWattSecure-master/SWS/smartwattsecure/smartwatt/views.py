@@ -9,23 +9,14 @@ from django.utils.timezone import localtime, localdate
 from django.utils import timezone
 from django.contrib.auth import authenticate,login as auth_login
 from django.contrib import messages
-<<<<<<< HEAD
 from django.db.models import Sum
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from collections import Counter
-
-
-=======
 from django.contrib.auth.decorators import login_required
 from .forms import UserUpdateForm
 from django.contrib.auth import logout
-<<<<<<< HEAD
 from django.contrib.auth.models import User
-
-=======
->>>>>>> f61534a6dfe5d08f9429f0bc9964a6bf4efbb09d
->>>>>>> 8a81ca1f60673258f6c3e960eb473d7fe031b614
 
 ##-----SIGNUP VIEW-----##
 def signup(request):
