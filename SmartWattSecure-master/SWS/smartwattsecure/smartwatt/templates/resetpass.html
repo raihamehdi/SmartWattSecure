@@ -1,0 +1,22 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password Reset</title>
+</head>
+<body>
+    <button onclick="window.history.back()">Back</button>
+    <h1>Reset Password</h1>
+    <p>Set the new password of your account so you can login and access all the features.</p>
+    <form action="{% url 'resetpass' %}" method="POST">
+        {% csrf_token %}
+        <label for="new_password">New Password:</label><br>
+        <input type="password" id="new_password" name="new_password" placeholder="Password" required><br>
+        <label for="confirmpassword">Confirm Password:</label><br>
+        <input type="password" id="confirmpassword" name="confirmpassword" placeholder="Confirm Password" required><br>
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>

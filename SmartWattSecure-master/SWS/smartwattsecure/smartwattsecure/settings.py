@@ -113,7 +113,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'Asia/Karachi'
+TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
@@ -140,4 +140,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'smartwatt.CustomUser'
 LOGIN_REDIRECT_URL ='dashboard'
 LOGOUT_REDIRECT_URL='login'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'  # SMTP server address
+EMAIL_PORT = 587  # SMTP server port (587 for TLS, 465 for SSL)
+EMAIL_USE_TLS = True  # Set it to True if your SMTP server requires TLS
+EMAIL_HOST_USER = 'smartwattsecure@gmail.com'  # Your email address
+EMAIL_HOST_PASSWORD = 'gywn xkzu ccpd hqoh'  # Your email password
+DEFAULT_FROM_EMAIL = 'smartwattsecure@gmail.com'
 

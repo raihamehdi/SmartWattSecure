@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect
 from .arduino import data, predict
 from .models import EnergyData, CustomUser, Anomaly, Notification
 from datetime import datetime, time, timedelta
-from django.utils.timezone import localtime, localdate
+from django.utils.timezone import localtime, localdate, now, make_aware
 from django.utils import timezone
 from django.contrib.auth import authenticate,login as auth_login
 from django.contrib import messages
@@ -16,7 +16,12 @@ from collections import Counter
 from django.contrib.auth.decorators import login_required
 from .forms import UserUpdateForm
 from django.contrib.auth import logout
+import threading
 from django.contrib.auth.models import User
+from django.contrib.auth.hashers import make_password
+from django.core.mail import send_mail
+import random
+from django.conf import settings
 
 
 ##-----SIGNUP VIEW-----##
@@ -25,10 +30,29 @@ def signup(request):
         username = request.POST.get('username')
         email = request.POST.get('email')
         password = request.POST.get('password')
-        user = CustomUser.objects.create_user(username=username, email=email, password=password)
+        city = request.POST.get('city')  # Get city from the form
+        region = request.POST.get('region')  # Get region from the form
+
+        # Create the user with the additional city and region fields
+        user = CustomUser.objects.create_user(
+            username=username,
+            email=email,
+            password=password,
+            city=city,
+            region=region
+        )
+        
+        # Automatically log in the user after signup
         auth_login(request, user)
         return redirect('login') 
-    return render(request, 'signup.html')   
+
+    return render(request, 'signup.html')
+
+def adminview(request):
+    return render(request, 'admin.html')
+
+def adminview(request):
+    return render(request, 'admin.html')
 
 ##-----LOGIN VIEW-----##
 def login(request):
@@ -36,11 +60,17 @@ def login(request):
         email = request.POST.get('email')
         password = request.POST.get('password')
         user = authenticate(request, username=email, password=password)
+        
         if user is not None:
             auth_login(request, user)
-            return redirect('dashboard') 
+            # Check the role and redirect accordingly
+            if user.role == 'User':
+                return redirect('dashboard')  # Redirect to the user dashboard
+            elif user.role == 'Admin':
+                return redirect('adminview')  # Redirect to admin.html (set the correct view name)
         else:
-            messages.error(request, 'signup')
+            messages.error(request, 'Invalid email or password')  # Improve the error message
+            
     return render(request, 'registration/login.html')
 
 # User Updation
@@ -100,15 +130,16 @@ def help(request):
 def contact(request):
     return render(request, 'contact.html')
 
-##-----UPDATE ENERGYDATA VIEW-----##
-
-def update_energy_data(request):
-    """Fetches new energy data from Arduino, saves it, and returns response."""
+def energy_data_api(request):
+    if not request.user.is_authenticated:
+        return JsonResponse({'error': 'User not authenticated'}, status=403)
+    
+    # Fetch new energy data from Arduino
     arduino_data = data()
     if arduino_data:
         voltage, current, power, total_units_consumed, lag_1, rolling_avg_60, lag_1440, rolling_avg_1440 = arduino_data
         now = timezone.now()
-        now_local=localtime(now)
+        now_local = localtime(now)
         hour = now_local.hour
         day_of_week = now_local.weekday()
         month = now_local.month
@@ -116,15 +147,14 @@ def update_energy_data(request):
         # Prepare data for prediction
         X_test = [[power, voltage, hour, day_of_week, month, lag_1, rolling_avg_60, lag_1440, rolling_avg_1440]]
         predictions = predict(X_test)
-        if predictions[0] == 0:  
-            prediction_result = "normal"
-        elif predictions[0] == 1:  
-            prediction_result = "high"
-        else:  
-            prediction_result = "suspicious"
-        
-        # Create a new EnergyData object for the user
-        energy_data = EnergyData.objects.create(
+        prediction_result = (
+            "normal" if predictions[0] == 0 
+            else "high" if predictions[0] == 1 
+            else "suspicious"
+        )
+
+        # Save the data to the database
+        EnergyData.objects.create(
             user=request.user,
             timestamp=now_local,
             voltage=voltage,
@@ -133,83 +163,60 @@ def update_energy_data(request):
             total_units_consumed=total_units_consumed,
             prediction=prediction_result
         )
-
-        energy_data.save()
-        return JsonResponse({'status': 'success'}, status=200)
     else:
         return JsonResponse({'error': 'Failed to fetch data from Arduino'}, status=500)
 
+    # Retrieve data since midnight
+    start_of_day = datetime.combine(now_local.date(), time.min)  # Midnight
+    user_data = EnergyData.objects.filter(
+        user=request.user,
+        timestamp__gte=start_of_day
+    ).order_by('-timestamp')
 
-##-----ENERGYDATA VIEW-----##
-def energy_data_api(request):
-    if request.user.is_authenticated:
-        update_response = update_energy_data(request)
-        if update_response.status_code == 200:
-            # Get the current time and start of the day (12 AM)
-            now = timezone.now()
-            start_of_day = datetime.combine(now.date(), time.min)  # Midnight
+    # Calculate total units consumed since 12 AM
+    total_units_since_midnight = sum(item.total_units_consumed for item in user_data)
 
-            # Filter energy data for the authenticated user since 12 AM
-            user_data = EnergyData.objects.filter(
-                user=request.user,
-                timestamp__gte=start_of_day
-            ).order_by('-timestamp')
+    # Prepare the latest data for the response
+    latest_data = user_data.first()
+    if latest_data:
+        local_timestamp = localtime(latest_data.timestamp)
+        formatted_timestamp = local_timestamp.strftime('%I:%M %p')
+        response_data = {
+            'timestamp': formatted_timestamp,
+            'voltage': latest_data.voltage,
+            'current': latest_data.current,
+            'power': latest_data.power,
+            'total_units_since_midnight': round(total_units_since_midnight, 2),
+            'total_units_consumed': latest_data.total_units_consumed,
+            'prediction': latest_data.prediction,
+        }
+    else:
+        response_data = {
+            'total_units_since_midnight': 0,
+            'message': 'No data available since midnight.'
+        }
 
-            # Calculate total units consumed since 12 AM
-            total_units_since_midnight = sum(item.total_units_consumed for item in user_data)
+    return JsonResponse(response_data, safe=False)
 
-            # Prepare data for the latest record
-            latest_data = user_data.first()
-            local_timestamp = localtime(latest_data.timestamp)
-            formatted_timestamp = local_timestamp.strftime('%I:%M %p')
-            if latest_data:
-                response_data = {
-                    
-                    'timestamp': formatted_timestamp, 
-                    'voltage': latest_data.voltage,
-                    'current': latest_data.current,
-                    'power': latest_data.power,
-                    'total_units_since_midnight': round(total_units_since_midnight, 2),
-                    'total_units_consumed': latest_data.total_units_consumed,
-                    'prediction': latest_data.prediction,
-                }
-            else:
-                response_data = {
-                    'total_units_since_midnight': 0,
-                    'message': 'No data available since midnight.'
-                }
-
-            return JsonResponse(response_data, safe=False)
-        return JsonResponse({'error': 'Failed to update data'}, status=500)
-    return JsonResponse({'error': 'User not authenticated'}, status=403)
 
 ##-----WEEKLY VIEW-----##
 def weekly_data(request):
     if request.user.is_authenticated:
-        # Define the date range (last 7 days)
-        today = timezone.localdate()  # Get the current date only
+        today = timezone.localdate()  
         start_date = today - timedelta(days=6)
-
-        # Get the current datetime, including hours, minutes, and seconds
         now = timezone.now()
-
-        # Query the database for the last 7 days, but include today's data up to the current time
         energy_data = EnergyData.objects.filter(
             user=request.user,
-            timestamp__gte=start_date,  # Query the raw timestamp without timezone conversion
-            timestamp__lte=now          # Use the current timestamp instead of just today
+            timestamp__gte=start_date,  
+            timestamp__lte=now          
         ).extra(
-            select={'timestamp_date': 'DATE(timestamp)'}  # Group by date only
+            select={'timestamp_date': 'DATE(timestamp)'}  
         ).values('timestamp_date').annotate(total_units=Sum('total_units_consumed')).order_by('timestamp_date')
-
-        # Prepare daily totals, ensuring all 7 days are covered
         time_labels = [(start_date + timedelta(days=i)) for i in range(7)]
         daily_totals = {entry['timestamp_date']: entry['total_units'] for entry in energy_data}
         units_consumed = [round(daily_totals.get(day, 0), 2) for day in time_labels]
-
-        # Prepare response data
         response_data = {
-            "labels": time_labels,  # Chart.js expects this
+            "labels": time_labels,  
             "units consumed": units_consumed
         }
 
@@ -220,12 +227,12 @@ def weekly_data(request):
 ##-----MONTHLY VIEW-----##
 def monthly_data(request):
     if request.user.is_authenticated:
-        # Define the date range (last 30 days)
+        # Define the date range from the 1st of the current month to today
         today = timezone.localdate()
-        start_date = today - timedelta(days=29)
-        now=timezone.now()
+        start_date = today.replace(day=1)
+        now = timezone.now()
 
-        # Query the database for the last 30 days
+        # Query the database from the start of the month to today
         energy_data = EnergyData.objects.filter(
             user=request.user,
             timestamp__gte=start_date,
@@ -234,14 +241,15 @@ def monthly_data(request):
             select={'timestamp_date': 'DATE(timestamp)'}
         ).values('timestamp_date').annotate(total_units=Sum('total_units_consumed')).order_by('timestamp_date')
 
-        # Prepare daily totals, ensuring all 30 days are covered
-        time_labels = [(start_date + timedelta(days=i)) for i in range(30)]
+        # Prepare daily totals, ensuring all days from the start of the month to today are covered
+        num_days = (today - start_date).days + 1  # Number of days from start_date to today
+        time_labels = [(start_date + timedelta(days=i)) for i in range(num_days)]
         daily_totals = {entry['timestamp_date']: entry['total_units'] for entry in energy_data}
         units_consumed = [round(daily_totals.get(day, 0), 2) for day in time_labels]
 
         # Prepare response data
         response_data = {
-            "labels": time_labels,  # Chart.js expects this
+            "labels": [day.strftime('%b %d') for day in time_labels],  # Format dates for Chart.js
             "units consumed": units_consumed
         }
 
@@ -249,80 +257,188 @@ def monthly_data(request):
 
     return JsonResponse({'error': 'User not authenticated'}, status=403)
 
-
-
-##-----ANOMALIES VIEW-----##
-@receiver(post_save, sender=EnergyData)
-def check_anomaly_every_ten_entries(sender, instance, **kwargs):
-    user = instance.user  # Get the user associated with this energy data
-
-    # Count total entries for the user
-    total_entries = EnergyData.objects.filter(user=user).count()
-
-    # Check only after every 10 entries
-    if total_entries % 10 == 0:  # Trigger anomaly check
-        check_and_log_anomaly(user)
-
-def check_and_log_anomaly(user):
-    # Retrieve the last 10 predictions marked as "suspicious"
-    recent_predictions = list(
-        EnergyData.objects.filter(
-            user=user,
-            prediction="suspicious"
-        ).order_by('-timestamp')[:10]
-    )
-
-    # Check if there are exactly 10 predictions
-    if len(recent_predictions) < 10:
-        return  # Exit if not enough data
-
-    # Extract start and end timestamps for the anomaly
-    start_time = recent_predictions[-1].timestamp  # Earliest of the 10
-    end_time = recent_predictions[0].timestamp  # Latest of the 10
-
-    # Log the anomaly
-    Anomaly.objects.create(
-        user=user,
-        start_time=start_time,
-        end_time=end_time,
-        count=len(recent_predictions)
-    )
-    
-
-##-----ANOMALY CHART VIEW-----##
-def get_anomalies(request):
+##-----YEARLY VIEW-----##
+def yearly_data(request):
     if request.user.is_authenticated:
-        # Define the date range (last 7 days)
-        today = timezone.localdate()  # Get the current date only
-        start_date = today - timedelta(days=6)
+        # Define the date range (last 12 months)
+        today = timezone.localdate()
+        start_date = today.replace(month=1, day=1)  # Start from the first day of the year
         now = timezone.now()
-        
-        # Fetch anomalies that occurred in the last 7 days
-        anomalies = Anomaly.objects.filter(
+
+        # Query the database for the whole year (12 months)
+        energy_data = EnergyData.objects.filter(
             user=request.user,
-            start_time__gte=start_date,
-            end_time__lte=now
-        ).values('start_time', 'end_time')
+            timestamp__gte=start_date,
+            timestamp__lte=now
+        ).extra(
+            select={'timestamp_month': 'EXTRACT(MONTH FROM timestamp)'}  # Extract month from timestamp
+        ).values('timestamp_month').annotate(total_units=Sum('total_units_consumed')).order_by('timestamp_month')
 
-        # Count anomalies per day
-        anomaly_counts = Counter()  # Dictionary to store anomaly counts per day
-        for anomaly in anomalies:
-            anomaly_date = anomaly['start_time'].date()
-            anomaly_counts[anomaly_date] += 1
-
-        # Prepare the count for each of the last 7 days
-        time_labels = [start_date + timedelta(days=i) for i in range(7)]
-        anomaly_data = [anomaly_counts.get(day, 0) for day in time_labels]  # Default to 0 if no anomalies
+        # Prepare monthly totals, ensuring all 12 months are covered
+        time_labels = [start_date.replace(month=i) for i in range(1, 13)]  # List of months
+        monthly_totals = {entry['timestamp_month']: entry['total_units'] for entry in energy_data}
+        units_consumed = [round(monthly_totals.get(i, 0), 2) for i in range(1, 13)]  # Default 0 for missing months
 
         # Prepare response data
         response_data = {
-            "labels": [str(day) for day in time_labels],  # Date labels for the last 7 days
-            "anomalies": anomaly_data  # Total count of anomalies per day
+            "labels": [month.strftime('%b') for month in time_labels],  # Month names (e.g., Jan, Feb)
+            "units consumed": units_consumed
         }
 
         return JsonResponse(response_data, safe=False)
 
     return JsonResponse({'error': 'User not authenticated'}, status=403)
+
+##-----ANOMALIES VIEW-----##
+@login_required
+def check_and_create_anomaly(request):
+    user = request.user  # Get the current authenticated user
+
+    # Retrieve the last 15 predictions marked as "suspicious"
+    recent_predictions = list(
+        EnergyData.objects.filter(
+            user=user,
+            prediction__icontains="suspicious"  # Adjust filter for partial matches
+        ).order_by('-timestamp')[:15]
+    )
+    print("Filtered Predictions:", recent_predictions)
+
+    # Check if there are enough valid "suspicious" predictions
+    if len(recent_predictions) < 15 or not all(
+        pred.prediction.lower().startswith("suspicious") for pred in recent_predictions
+    ):
+        return JsonResponse({"message": "Not enough valid suspicious predictions."}, status=400)
+
+    # Extract the start and end timestamps for the anomaly
+    start_time = recent_predictions[-1].timestamp  # Earliest of the 15
+    end_time = recent_predictions[0].timestamp  # Latest of the 15
+
+    # Check if an anomaly with the same time range already exists
+    existing_anomaly = Anomaly.objects.filter(
+        user=user,
+        start_time__lte=end_time,
+        end_time__gte=start_time
+    ).exists()
+
+    if existing_anomaly:
+        return JsonResponse({"message": "Anomaly already exists for this time range."}, status=400)
+
+    # Create an anomaly entry
+    anomaly = Anomaly.objects.create(
+        user=user,
+        start_time=start_time,
+        end_time=end_time,
+        count=len(recent_predictions)
+    )
+
+    # Send email notification to the user
+    subject = "Suspicious Energy Consumption Detected"
+    message = (
+        f"Dear {user.username},\n\n"
+        f"An anomaly in your energy consumption was detected.\n"
+        f"Details:\n"
+        f"Start Time: {start_time.strftime('%Y-%m-%d %H:%M:%S')}\n"
+        f"End Time: {end_time.strftime('%Y-%m-%d %H:%M:%S')}\n"
+        f"Data entries are showing suspicious behaviour. Please review your energy consumption."
+    )
+    recipient_list = [user.email]
+
+    try:
+        send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, recipient_list)
+        print("Email sent successfully.")
+    except Exception as e:
+        print(f"Error sending email: {e}")
+
+    return JsonResponse({"message": "Anomaly created successfully.", "start_time": start_time, "end_time": end_time, "count": len(recent_predictions)})
+
+
+from django.utils.timezone import make_aware, now  # Import `now` from Django
+from pytz import timezone as pytz_timezone  # Rename `timezone` from `pytz` to avoid conflicts
+
+@login_required
+def get_today_anomalies(request):
+    user = request.user
+
+    # Define the timezone explicitly using pytz_timezone
+    karachi_tz = pytz_timezone("Asia/Karachi")
+
+    # Define the start and end of today in Asia/Karachi timezone
+    today_start = make_aware(datetime.combine(now().astimezone(karachi_tz), datetime.min.time()), karachi_tz)
+    today_end = make_aware(datetime.combine(now().astimezone(karachi_tz), datetime.max.time()), karachi_tz)
+
+    print(f"Today Start (Asia/Karachi): {today_start}, Today End (Asia/Karachi): {today_end}")  # Debugging log
+
+    # Fetch anomalies for the user within the time range
+    anomalies_count = Anomaly.objects.filter(
+        user=user,
+        start_time__range=(today_start, today_end)
+    ).count()
+
+    return JsonResponse({"today_anomalies": anomalies_count})
+
+
+
+
+def get_anomalies_data(request, timeframe):
+    if not request.user.is_authenticated:
+        return JsonResponse({'error': 'User not authenticated'}, status=403)
+
+    today = timezone.localdate()
+    now = timezone.now()
+
+    if timeframe == 'weekly':
+        start_date = today - timedelta(days=6)
+        time_labels = [start_date + timedelta(days=i) for i in range(7)]  # 7 days
+        label_format = "%Y-%m-%d"  # Date labels (e.g., '2024-11-23')
+    elif timeframe == 'monthly':
+        start_date = today.replace(day=1)  # Start of the current month
+        days_in_month = (today - start_date).days + 1
+        time_labels = [start_date + timedelta(days=i) for i in range(days_in_month)]
+        label_format = "%d"
+    elif timeframe == 'yearly':
+        start_date = today.replace(month=1, day=1)  # Start from the first day of the year
+        time_labels = [start_date.replace(month=i) for i in range(1, 13)]  # Months in the year
+        label_format = "%b"  # Month labels (e.g., 'Jan', 'Feb')
+    else:
+        return JsonResponse({'error': 'Invalid timeframe'}, status=400)
+
+    # Fetch anomalies within the timeframe
+    anomalies = Anomaly.objects.filter(
+        user=request.user,
+        start_time__gte=start_date,
+        end_time__lte=now
+    ).values('start_time')
+
+    # Count anomalies based on timeframe granularity
+    anomaly_counts = Counter()
+    for anomaly in anomalies:
+        if timeframe == 'yearly':
+            anomaly_date = anomaly['start_time'].date().replace(day=1)  # Group by month
+        else:
+            anomaly_date = anomaly['start_time'].date()  # Group by day
+        anomaly_counts[anomaly_date] += 1
+
+    # Prepare anomaly counts for each label
+    anomaly_data = [anomaly_counts.get(label, 0) for label in time_labels]
+
+    # Prepare response data
+    response_data = {
+        "labels": [label.strftime(label_format) for label in time_labels],
+        "anomalies": anomaly_data
+    }
+    return JsonResponse(response_data, safe=False)
+
+# Individual Views
+def get_weekly_anomalies(request):
+    return get_anomalies_data(request, timeframe='weekly')
+
+def get_monthly_anomalies(request):
+    return get_anomalies_data(request, timeframe='monthly')
+
+def get_yearly_anomalies(request):
+    return get_anomalies_data(request, timeframe='yearly')
+
+
 
 ##-----NOTIFICATIONS VIEW-----##
 def get_notifications(request):
@@ -342,15 +458,71 @@ def get_notifications(request):
 @receiver(post_save, sender=Anomaly)
 def create_notification_for_anomaly(sender, instance, created, **kwargs):
     if created:
-        message = f"Power anomaly detected from {instance.start_time.strftime('%H:%M')} to {instance.end_time.strftime('%H:%M')}."
+        message = f"Power anomaly detected at {instance.start_time.strftime('%H:%M')}."
         Notification.objects.create(user=instance.user, message=message)
 
 
 
+def sendotp(request):
+    if request.method == 'POST':
+        email = request.POST.get("email")
+        print("email:", email)
+        user = CustomUser.objects.filter(email=email).first()
+        if user:
+            reset_code = ''.join(random.choices('0123456789', k=4))
+            send_mail(
+                'Password Reset Code',
+                f'Your password reset code is: {reset_code}',
+                settings.EMAIL_HOST_USER,
+                [email],
+                fail_silently=False,
+            )
+            request.session['reset_code'] = reset_code
+            request.session['reset_email'] = email
+            return render(request, 'enterotp.html')
+        else:
+            error_message = "Email not found. Please enter a registered email address."
+            return render(request, 'error.html', {'error_message': error_message})
+    return render(request, 'forgetpass.html')
 
 
+def verifyotp(request):
+    if request.method == 'POST':
+        entered_otp = request.POST.get('otp')
+        saved_otp = request.session.get('reset_code')
+        email = request.session.get('reset_email')
+        user_id = request.session.get('reset_user_id')  # Get user_id from session
 
+        if entered_otp == saved_otp:
+            
+            request.session['reset_code'] = saved_otp
+            request.session['reset_email'] = email
+            return render(request, 'resetpass.html')
+        # else:
+        #     error_message = "You have entered incorrect OTP."
+        #     return render(request, 'error.html', {'error_message': error_message})
 
+    return render(request, 'forgetpass.html')
+
+def resetpass(request):
+    if request.method == 'POST':
+        new_password = request.POST.get('new_password')
+        confirmpassword = request.POST.get('confirmpassword')
+        if(new_password == confirmpassword):
+            email= request.session.get('reset_email')
+            user = CustomUser.objects.filter(email=email).first()
+            if user:
+                user.password = make_password(new_password)
+                user.save()
+                del request.session['reset_code']
+                del request.session['reset_email']
+                return redirect('login')
+        else:
+            error_message = "passwords doesnt match"
+            return render(request, 'error.html', {'error_message': error_message})      
+
+    else:
+        return render(request, 'resetpass.html')
 
 
 
