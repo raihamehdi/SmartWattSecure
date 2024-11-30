@@ -35,6 +35,22 @@
               <label for="password">Password:</label>
               <input type="password" id="password" name="password" required />
 
+              <!-- City Dropdown -->
+              <label for="city">City:</label>
+              <select id="city" name="city" required>
+                <option value="Sahiwal" selected>Sahiwal</option>
+                <option value="Lahore">Lahore</option>
+                <option value="Islamabad">Islamabad</option>
+              </select>
+
+              <!-- Region Dropdown -->
+              <label for="region">Region:</label>
+              <select id="region" name="region" required>
+                <option value="Farid Town" selected>Farid Town</option>
+                <option value="People’s Colony">People’s Colony</option>
+                <option value="Jogi Chowk">Jogi Chowk</option>
+              </select>
+
               <div class="buttons">
                 <button type="submit">Sign Up</button>
               </div>
@@ -46,6 +62,53 @@
       </div>
     </div>
 
+    <script>
+      // JavaScript for dynamic region dropdown
+      const citySelect = document.getElementById("city");
+      const regionSelect = document.getElementById("region");
+
+      // City-to-region mapping
+      const regions = {
+        Sahiwal: [
+          { value: "Farid Town", text: "Farid Town" },
+          { value: "People’s Colony", text: "People’s Colony" },
+          { value: "Jogi Chowk", text: "Jogi Chowk" },
+        ],
+        Lahore: [
+          { value: "Gulberg", text: "Gulberg" },
+          { value: "Johar Town", text: "Johar Town" },
+          { value: "DHA", text: "DHA" },
+        ],
+        Islamabad: [
+          { value: "F-7", text: "F-7" },
+          { value: "G-10", text: "G-10" },
+          { value: "Blue Area", text: "Blue Area" },
+        ],
+      };
+
+      // Function to update the region dropdown
+      function updateRegionOptions(city) {
+        // Clear current region options
+        regionSelect.innerHTML = "";
+
+        // Populate region options for the selected city
+        regions[city].forEach((region) => {
+          const option = document.createElement("option");
+          option.value = region.value;
+          option.textContent = region.text;
+          regionSelect.appendChild(option);
+        });
+      }
+
+      // Event listener for city change
+      citySelect.addEventListener("change", function () {
+        const selectedCity = citySelect.value;
+        updateRegionOptions(selectedCity);
+      });
+
+      // Initialize region dropdown with default city (Sahiwal)
+      updateRegionOptions(citySelect.value);
+    </script>
     <script src="{% static 'js/script.js' %}"></script>
   </body>
 </html>

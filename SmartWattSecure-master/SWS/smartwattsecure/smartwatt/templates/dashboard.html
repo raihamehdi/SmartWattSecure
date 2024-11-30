@@ -63,7 +63,7 @@
             <!-- Frequency Box -->
             <div class="col-md-6 info-box custom-div">
               <div class="label">Anomalies</div>
-              <p><span id="frequency"></span> --</p>
+              <p><span id="anomalies-count"></span> </p>
             </div>
           </div>
         </div>
@@ -109,6 +109,51 @@
 
     <!-- JavaScript Section -->
     <script>
+
+      function checkAndCreateAnomaly() {
+        fetch('/check/', {
+            method: 'GET', // Use POST if necessary and include CSRF token
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest', // Optional: Indicates it's an AJAX request
+            },
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error(`Error: ${response.status} ${response.statusText}`);
+            }
+        })
+        .then(data => {
+            console.log(data.message);
+            if (data.start_time && data.end_time) {
+                console.log(`Anomaly created: Start - ${data.start_time}, End - ${data.end_time}`);
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+
+    // Call the function every 20 seconds
+    setInterval(checkAndCreateAnomaly, 20000);
+
+
+      async function fetchTodayAnomalies() {
+        try {
+            const response = await fetch('/today_anomaly/');
+            if (response.ok) {
+                const data = await response.json();
+                document.getElementById('anomalies-count').textContent = data.today_anomalies;
+            } else {
+                console.error("Failed to fetch anomalies count");
+            }
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    }
+    fetchTodayAnomalies();
+    setInterval(fetchTodayAnomalies, 20000); 
+
+
       // Download chart as PDF
       document
         .getElementById("download-pdf")
@@ -179,6 +224,30 @@
           return { labels: [], datasets: [] };
         }
       }
+
+      async function fetchYearlyData() {
+        try {
+          const response = await fetch("/api/yearly_data/");
+          if (!response.ok) throw new Error("Failed to fetch yearly data");
+          const data = await response.json();
+          return {
+            labels: data.labels, // Months (e.g., Jan, Feb)
+            datasets: [
+              {
+                label: "Yearly Units Consumed",
+                data: data["units consumed"],
+                backgroundColor: "rgba(54, 162, 235, 0.2)",
+                borderColor: "rgba(54, 162, 235, 1)",
+                borderWidth: 2,
+                fill: true,
+              },
+            ],
+          };
+        } catch (error) {
+          console.error("Error fetching yearly data:", error);
+          return { labels: [], datasets: [] };
+        }
+      }
     
       // Initialize chart
       async function initializeChart() {
@@ -210,40 +279,54 @@
                   text: "Units Consumed", // The label text
                 },
                 ticks: {
-                  stepSize: 4, // Sets the interval between tick marks
+                  stepSize: 5, // Sets the interval between tick marks
                 },
                 min: 0, // Minimum value of the y-axis
-                max: 20, // Maximum value of the y-axis
+                max: 30, // Maximum value of the y-axis
               },
             },
           },
         });
       }
-    
+
       // Update chart based on selected timeframe
-      document
-        .getElementById("time-filter")
-        .addEventListener("change", async (event) => {
-          const timeframe = event.target.value;
-          const data =
-            timeframe === "weekly"
-              ? await fetchWeeklyData()
-              : await fetchMonthlyData();
+      document.getElementById("time-filter").addEventListener("change", async (event) => {
+        const timeframe = event.target.value;
+        let data;
+
+        if (timeframe === "weekly") {
+          data = await fetchWeeklyData();
+        } else if (timeframe === "monthly") {
+          data = await fetchMonthlyData();
+        } else if (timeframe === "yearly") {
+          data = await fetchYearlyData();
+        }
+
+        if (data) {
           chart.data.labels = data.labels;
           chart.data.datasets = data.datasets;
           chart.update();
-        });
-    
+        }
+      });
+
       // Periodic data updates for weekly/monthly charts
       async function updateChart() {
         const currentFilter = document.getElementById("time-filter").value;
-        const data =
-          currentFilter === "weekly"
-            ? await fetchWeeklyData()
-            : await fetchMonthlyData();
-        chart.data.labels = data.labels;
-        chart.data.datasets = data.datasets;
-        chart.update("none"); // Smooth chart update without re-layout
+        let data;
+      
+        if (currentFilter === "weekly") {
+          data = await fetchWeeklyData();
+        } else if (currentFilter === "monthly") {
+          data = await fetchMonthlyData();
+        } else if (currentFilter === "yearly") {
+          data = await fetchYearlyData();
+        }
+      
+        if (data) {
+          chart.data.labels = data.labels;
+          chart.data.datasets = data.datasets;
+          chart.update("none"); // Smooth chart update without re-layout
+        }
       }
     
       // Periodic data updates (for energy metrics like voltage, current)
@@ -256,6 +339,7 @@
           document.getElementById("current").innerText = data.current || 0;
           document.getElementById("total-units").innerText =
             data.total_units_since_midnight || 0;
+          
         } catch (error) {
           console.error("Error fetching metrics data:", error);
         }
@@ -264,8 +348,14 @@
       // Initialize the dashboard
       window.onload = () => {
         initializeChart();
-        setInterval(updateChart, 2000); // Update chart every minute
-        setInterval(updateMetrics, 2000); // Update metrics every 2 seconds
+            // Initial load
+        
+        setInterval(updateChart, 20000); // Update chart every minute
+        setInterval(updateMetrics, 20000); // Update metrics every 2 seconds
+            // Update every 10 seconds
+        
+    
+
       };
     </script>
     

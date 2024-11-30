@@ -1,4 +1,6 @@
-{% extends "base.html" %} {% load static %} {% block content %}
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -9,7 +11,8 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="{% static 'js/ana.js' %}"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
     <link
       href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css"
       rel="stylesheet"
@@ -62,12 +65,19 @@
           <div class="card-header">
             <h5>Notifications</h5>
           </div>
+<<<<<<< HEAD
           <div class="card-body notification-content"></div>
+=======
+          <div class="card-body notification-content">
+            <!-- Notifications will be displayed here -->
+          </div>
+>>>>>>> 1083d61651b2e95a5235028e57632e001fb00b66
         </div>
       </div>
     </div>
 
     <script>
+<<<<<<< HEAD
       document.addEventListener("DOMContentLoaded", () => {
         const notificationContent = document.querySelector(
           ".notification-content"
@@ -150,15 +160,135 @@
                   title: { display: true, text: "Anomalies Detected" },
                   min: 0,
                   max: 25,
-                },
-              },
+=======
+
+      // Download chart as PDF
+      document
+        .getElementById("download-pdf")
+        .addEventListener("click", async () => {
+          const { jsPDF } = window.jspdf;
+          const chartElement = document.getElementById("anomaliesChart");
+          const canvas = await html2canvas(chartElement);
+          const imgData = canvas.toDataURL("image/png");
+          const pdf = new jsPDF("landscape");
+          pdf.addImage(imgData, "PNG", 10, 10, 270, 150);
+          pdf.save("AnomaliesChart.pdf");
+        });
+
+      document.addEventListener("DOMContentLoaded", () => {
+        const ctx = document.getElementById("anomaliesChart").getContext("2d");
+        const timeFilter = document.getElementById("time-filter");
+        let selectedTimeframe = "weekly"; // Default timeframe
+    
+        // Initialize chart with default data (weekly anomalies)
+        let anomaliesChart = new Chart(ctx, {
+            type: "line",
+            data: {
+                labels: [], // Placeholder for x-axis labels
+                datasets: [
+                    {
+                        label: "Anomalies Detected",
+                        data: [], // Placeholder for y-axis data
+                        borderColor: "#DD0733",
+                        backgroundColor: "rgba(255, 99, 132, 0.2)",
+                        fill: true,
+                    },
+                ],
             },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: true, position: "top" },
+                },
+                scales: {
+                    x: {
+                      title: { display: true, text: "Time" },
+                      ticks: {
+                          // Rotate x-axis labels
+                          maxRotation: 0,   // Maximum rotation of 90 degrees
+                          minRotation: 0  // Minimum rotation of 45 degrees
+                      },
+                    },
+                    y: {
+                        title: { display: true, text: "Anomalies Detected" },
+                        min: 0,
+                        max: 25,
+                    },
+>>>>>>> 1083d61651b2e95a5235028e57632e001fb00b66
+                },
+            },
+<<<<<<< HEAD
           });
         })
         .catch((error) => {
           console.error("Error fetching anomalies:", error);
         });
     </script>
+=======
+        });
+    
+        // Function to fetch anomalies data based on timeframe
+        async function fetchAnomalies(timeframe) {
+            try {
+                const response = await fetch(`/get_anomalies_data/${timeframe}/`);
+                if (!response.ok) throw new Error("Failed to fetch anomalies");
+                const data = await response.json();
+    
+                // Update chart with fetched data
+                anomaliesChart.data.labels = data.labels; // Update x-axis labels
+                anomaliesChart.data.datasets[0].data = data.anomalies; // Update y-axis data
+                anomaliesChart.update(); // Re-render the chart
+            } catch (error) {
+                console.error("Error fetching anomalies:", error);
+            }
+        }
+    
+        // Fetch default data (weekly) on load
+        fetchAnomalies("weekly");
+    
+        // Change chart data based on time filter selection
+        timeFilter.addEventListener("change", (e) => {
+            selectedTimeframe = e.target.value; // Update selected timeframe
+            fetchAnomalies(selectedTimeframe); // Fetch data for selected timeframe
+        });
+    
+        // Function to fetch notifications
+        async function fetchNotifications() {
+            try {
+                const response = await fetch("/get_notifications/");
+                if (!response.ok) throw new Error("Failed to fetch notifications");
+                const notifications = await response.json();
+    
+                // Display notifications
+                const notificationContent = document.querySelector(".notification-content");
+                notificationContent.innerHTML = ""; // Clear any existing notifications
+    
+                notifications.forEach((notification) => {
+                    const notificationItem = document.createElement("div");
+                    notificationItem.classList.add("notification-item");
+                    notificationItem.innerHTML = `
+                        <p><strong>${notification.date}</strong>: ${notification.message}</p>
+                    `;
+                    notificationContent.appendChild(notificationItem);
+                });
+            } catch (error) {
+                console.error("Error fetching notifications:", error);
+            }
+        }
+    
+        // Fetch notifications on page load
+        fetchNotifications();
+    
+        // Set interval to fetch anomalies and notifications every 5 seconds
+        setInterval(() => {
+            fetchAnomalies(selectedTimeframe); // Use the selected timeframe for fetching data
+            fetchNotifications();               // Fetch the latest notifications
+        }, 5000); // Update every 5000ms (5 seconds)
+    });
+    
+    </script>
+        
+>>>>>>> 1083d61651b2e95a5235028e57632e001fb00b66
   </body>
 </html>
 {% endblock %}

@@ -5,13 +5,42 @@ from django.conf import settings
 
 class CustomUser(AbstractUser):
     email = models.EmailField(unique=True)  # Ensure email is unique
-    
-    # Use email as the primary identifier for authentication
+    ROLE_CHOICES = [
+        ('Admin', 'Admin'),
+        ('User', 'User'),
+    ]
+    CITY_CHOICES = [
+        ('Sahiwal', 'Sahiwal'),
+        ('Lahore', 'Lahore'),
+        ('Islamabad', 'Islamabad'),
+    ]
+    REGION_CHOICES = {
+        'Sahiwal': [
+            ('Farid Town', 'Farid Town'),
+            ('People’s Colony', 'People’s Colony'),
+            ('Jogi Chowk', 'Jogi Chowk'),
+        ],
+        'Lahore': [
+            ('Gulberg', 'Gulberg'),
+            ('Johar Town', 'Johar Town'),
+            ('DHA', 'DHA'),
+        ],
+        'Islamabad': [
+            ('F-7', 'F-7'),
+            ('G-10', 'G-10'),
+            ('Blue Area', 'Blue Area'),
+        ],
+    }
+
+    role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='User')  # Default role is 'User'
+    city = models.CharField(max_length=15, choices=CITY_CHOICES, default='Sahiwal')  # Default city
+    region = models.CharField(max_length=50, default='Farid Town')  # Default region
+
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']  # username is still required for other users
 
     def __str__(self):
-        return self.email
+        return f"{self.email} ({self.city}, {self.region})"
 
 class EnergyData(models.Model):
     
