@@ -1,9 +1,9 @@
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
 from django.http import JsonResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
 from .arduino import data, predict
-from .models import EnergyData, CustomUser, Anomaly, Notification
+from .models import EnergyData, CustomUser, Anomaly, Notification, ContactMessage
 from datetime import datetime, time, timedelta
 from django.utils.timezone import localtime, localdate, now, make_aware
 from django.utils import timezone
@@ -14,15 +14,19 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from collections import Counter
 from django.contrib.auth.decorators import login_required
-from .forms import UserUpdateForm
 from django.contrib.auth import logout
-import threading
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
 from django.core.mail import send_mail
 import random
 from django.conf import settings
-
+from django.utils.timezone import make_aware, now 
+from pytz import timezone as pytz_timezone 
+from django.contrib.auth import login
+from django.views.decorators.csrf import csrf_exempt
+from .models import *
+from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
+import json
 
 ##-----SIGNUP VIEW-----##
 def signup(request):
@@ -129,6 +133,7 @@ def help(request):
 
 def contact(request):
     return render(request, 'contact.html')
+
 
 def energy_data_api(request):
     if not request.user.is_authenticated:
@@ -352,8 +357,6 @@ def check_and_create_anomaly(request):
     return JsonResponse({"message": "Anomaly created successfully.", "start_time": start_time, "end_time": end_time, "count": len(recent_predictions)})
 
 
-from django.utils.timezone import make_aware, now  # Import `now` from Django
-from pytz import timezone as pytz_timezone  # Rename `timezone` from `pytz` to avoid conflicts
 
 @login_required
 def get_today_anomalies(request):
@@ -523,6 +526,80 @@ def resetpass(request):
 
     else:
         return render(request, 'resetpass.html')
+    
+    
+
+
+#changes are started here
+
+def inquiry_view(request):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        message = request.POST.get('message')
+        user_type = 'user' if request.user.is_authenticated else 'visitor'
+        ContactMessage.objects.create(name=name, email=email, message=message, user_type=user_type)
+        return JsonResponse({'message': 'Message sent successfully!'})    
+    return HttpResponse(status=405) 
+
+
+def city_regions_view(request):
+    if request.method == "POST":
+        city = request.POST.get("city")
+        if city:
+            # Get the regions for the selected city
+            regions = CustomUser.REGION_CHOICES.get(city, [])
+            data = []
+
+            # Get the total units consumed for each region
+            for region_code, region_name in regions:
+                total_units = EnergyData.objects.filter(user__region=region_code).aggregate(total_units=models.Sum("total_units_consumed"))
+                data.append({
+                    "region": region_name,
+                    "total_units": total_units["total_units"] or 0,
+                })
+
+            return JsonResponse({"regions": data})
+
+        return JsonResponse({"error": "City not provided."}, status=400)
+
+    # If it's a GET request, you can either handle it as a default case or just return a simple response.
+    return JsonResponse({"error": "Invalid request method. Please use POST."}, status=405)
+
+def delete_user_ajax(request, user_id):
+    if request.method == "POST":  # Ensure it's an AJAX POST request
+        user = get_object_or_404(CustomUser, id=user_id)
+        user.delete()
+        return JsonResponse({'status': 'success', 'message': 'User deleted successfully'})
+    return JsonResponse({'status': 'error', 'message': 'Failed to delete user'})
+
+def admin_login(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            email = data.get("email")
+            password = data.get("password")
+            user = authenticate(request, username=email, password=password)
+            if user is not None and user.is_staff:
+                auth_login(request, user)
+                return JsonResponse({"status": "success", "redirect_url": "/adminpanel/"})
+            return JsonResponse({"status": "error", "message": "Invalid email or password!"})
+        except Exception as e:
+            return JsonResponse({"status": "error", "message": str(e)})
+    return render(request, "admin-login.html")
+
+@csrf_exempt
+def restrict_user(request, user_id):
+    if request.method == "POST":
+        try:
+            user = get_object_or_404(CustomUser, id=user_id)
+            print(user)
+            user.is_restricted = True 
+            user.save()
+            return JsonResponse({"success": True, "message": f"User {user.username} restricted successfully."})
+        except Exception as e:
+            return JsonResponse({"success": False, "message": f"An error occurred: {str(e)}"})
+    return JsonResponse({"success": False, "message": "Invalid request method."})
 
 
 

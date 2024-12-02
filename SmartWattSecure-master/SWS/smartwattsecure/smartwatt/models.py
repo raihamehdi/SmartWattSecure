@@ -76,3 +76,17 @@ class Notification(models.Model):
         return f"Notification for {self.user.username}: {self.message[:100]}"
 
 
+class ContactMessage(models.Model):
+    USER_TYPE_CHOICES = [
+        ('visitor', 'Visitor'),
+        ('user', 'User'),
+    ]
+    
+    name = models.CharField(max_length=100)
+    email = models.EmailField()
+    message = models.TextField()
+    user_type = models.CharField(max_length=10, choices=USER_TYPE_CHOICES, default='visitor')
+    def __str__(self):
+        return f"Message from {self.name} ({self.email}) - {self.user_type}"
+    
+
