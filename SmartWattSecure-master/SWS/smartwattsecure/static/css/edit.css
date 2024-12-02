@@ -19,6 +19,25 @@ body {
   border-radius: 15px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   text-align: center;
+  position: relative; /* Make it relative so we can position the back button inside */
+}
+
+/* Back button inside the div */
+.back-btn {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  background-color: transparent;
+  border: none;
+  font-size: 20px;
+  font-weight: 600 !important;
+  color: black;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.back-btn:hover {
+  color: #DD0733;
 }
 
 /* Title styling */
@@ -45,7 +64,7 @@ body {
 }
 
 .field input {
-  width: 100%;
+  width: 92%;
   padding: 12px;
   font-size: 16px;
   border: 1px solid #ccc;
@@ -55,11 +74,12 @@ body {
 
 /* Save button */
 .save-btn {
-  display: block;
-  width: 100%;
+  display: inline-block; /* Center the button */
+  margin: 10px auto 0; /* Center the button horizontally */
+  width: 20%;
   padding: 12px;
   font-size: 16px;
-  background-color: #007bff;
+  background-color: #DD0733;
   color: white;
   border: none;
   border-radius: 10px;
@@ -67,7 +87,7 @@ body {
 }
 
 .save-btn:hover {
-  background-color: #0056b3;
+  background-color: #a30721;
 }
 
 .save-btn:active {

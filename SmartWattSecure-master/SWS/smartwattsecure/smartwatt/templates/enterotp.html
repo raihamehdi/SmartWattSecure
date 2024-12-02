@@ -1,21 +1,56 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>OTP Verification</title>
-</head>
-<body>
-    <button onclick="window.history.back()">Back</button>
-    <h2>Enter 4 Digits Code</h2>
-    <form method="POST" action="{% url 'verifyotp' %}">
+    <link rel="stylesheet" href="{% static 'css/otp.css' %}" />
+    <!-- Ensure the correct path -->
+  </head>
+  <body>
+    <div class="container">
+      <button class="back-btn" onclick="window.history.back()">←</button>
+      <h2>Enter 4 Digits Code</h2>
+      <form method="POST" action="{% url 'verifyotp' %}">
         {% csrf_token %}
-        <label for="otp">Enter OTP:</label><br>
-        <input type="text" id="otp" name="otp" required><br>
+        <label for="otp">Enter OTP:</label>
+        <input type="text" id="otp" name="otp" required />
         <button type="submit">Verify OTP</button>
-    </form>
-    <p>Enter the 4-digit code that you received on your email.</p>
-    <p>Didn't receive a code? <a href="#">Resend code</a></p>
-</body>
+      </form>
+      <p>Enter the 4-digit code that you received on your email.</p>
+      <!-- Resend OTP link -->
+      <p>
+        Didn't receive a code?
+        <a href="javascript:void(0);" id="resend-otp">Resend code</a>
+      </p>
+    </div>
+
+    <script>
+      // Resend OTP link functionality
+      document
+        .getElementById("resend-otp")
+        .addEventListener("click", function () {
+          // Send an AJAX request to the backend to resend OTP
+          fetch("{% url 'resend-otp' %}", {
+            method: "POST",
+            headers: {
+              "X-CSRFToken": "{{ csrf_token }}",
+              "Content-Type": "application/json",
+            },
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              if (data.success) {
+                // No need for an alert, just silently resend OTP
+                console.log("OTP has been resent successfully.");
+              } else {
+                // Handle errors (if any)
+                console.error("Error in resending OTP:", data.error);
+              }
+            })
+            .catch((error) => console.error("Error:", error));
+        });
+    </script>
+  </body>
 </html>

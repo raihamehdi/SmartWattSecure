@@ -108,6 +108,13 @@ def edit_password(request):
             return redirect('dashboard')
     return render(request, 'edit_password.html')
 
+# View for Forget Password Page
+def forgot_password_view(request):
+    return render(request, 'forgetpass.html')  # Render the forget password page template
+
+def verifyotp(request):
+    return render(request, 'enterotp.html')
+
 # Logout
 def logout_view(request):
     logout(request)
@@ -444,25 +451,37 @@ def get_yearly_anomalies(request):
 
 
 ##-----NOTIFICATIONS VIEW-----##
+from django.http import JsonResponse
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from .models import Notification, Anomaly
+
+# View to fetch notifications
 def get_notifications(request):
     if request.user.is_authenticated:
         notifications = Notification.objects.filter(user=request.user).order_by('-timestamp')
+        
         response_data = [
             {
+                "id": notification.id,  # Add the ID for each notification
                 "date": notification.timestamp.strftime("%m/%d/%Y"),
                 "message": notification.message,
+                "is_read": notification.is_read  # Include the is_read field
             }
             for notification in notifications
         ]
+        
         return JsonResponse(response_data, safe=False)
 
     return JsonResponse({'error': 'User not authenticated'}, status=403)
 
+# Signal to create a notification when an anomaly is detected
 @receiver(post_save, sender=Anomaly)
 def create_notification_for_anomaly(sender, instance, created, **kwargs):
     if created:
         message = f"Power anomaly detected at {instance.start_time.strftime('%H:%M')}."
         Notification.objects.create(user=instance.user, message=message)
+
 
 
 
@@ -601,5 +620,30 @@ def restrict_user(request, user_id):
             return JsonResponse({"success": False, "message": f"An error occurred: {str(e)}"})
     return JsonResponse({"success": False, "message": "Invalid request method."})
 
+def resend_otp(request):
+    if request.method == 'POST':
+        email = request.session.get('reset_email')  # Get email from session
+        
+        if not email:
+            return JsonResponse({"success": False, "error": "No email found in session."})
+        
+        # Generate a new OTP
+        otp = str(random.randint(1000, 9999))  # Generate a new 4-digit OTP
+        
+        # Send the OTP to the email
+        send_mail(
+            'Your OTP Code',
+            f'Your OTP code is: {otp}',
+            settings.DEFAULT_FROM_EMAIL,
+            [email],
+        )
+        
+        # Store new OTP in session
+        request.session['reset_code'] = otp
+        
+        # Respond with success, no need for messages
+        return JsonResponse({"success": True})
+    
+    return JsonResponse({"success": False, "error": "Invalid request method."})
 
 

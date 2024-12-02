@@ -11,6 +11,11 @@ html {
   overflow-y: scroll;
 }
 
+/* Change the outline to light red when focused */
+#time-filter:focus {
+  outline: 2px solid #DD0733 !important; /* Light red color for the outline */
+  box-shadow: none !important; /* Remove any shadow */
+}
 
 /* Light Image Styling */
 .light-image-container {
