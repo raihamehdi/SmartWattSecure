@@ -11,13 +11,20 @@ html {
   overflow-y: scroll;
 }
 
+/* Change the outline to light red when focused */
+#time-filter:focus {
+  outline: 2px solid #DD0733 !important; /* Light red color for the outline */
+  box-shadow: none !important; /* Remove any shadow */
+}
+
+
 /* Layout Styling */
 .analytics-container {
   margin: 20px;
   display: flex;
   gap: 20px;
   flex-wrap: wrap;
-  margin-top: 10% !important;
+  margin-top: 8% !important;
 }
 
 
@@ -34,13 +41,96 @@ html {
 /* Notification Section Styling */
 .notification-section {
   width: 33% !important; /* Set width of notifications box */
-  height: 400px; /* Set height of the notifications box */
-  padding: 20px; /* Set padding inside the notifications box */
+  height: 500px; /* Set height of the notifications box */
+  padding: 0;
   border-radius: 8px; /* Optional: Add rounded corners */
   background-color: #f9f9f9 !important; /* Background color */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: Shadow for depth */
-  overflow-y: auto; /* Allow scrolling if content overflows vertically */
-  overflow-x: hidden; /* Hide horizontal scroll */
+  display: flex; /* Ensure flex layout */
+  flex-direction: column; /* Arrange content vertically */
+}
+
+/* Notification Content Styling - Scrollable */
+.notification-content {
+  flex-grow: 1; /* Make content take the remaining space */
+  overflow-y: auto; /* Enable vertical scrolling */
+  padding: 15px; /* Padding for content */
+  background-color: #fff; /* Background color inside the box */
+  border: 1px solid #ddd; /* Border for definition */
+  border-radius: 8px; /* Rounded corners */
+}
+
+/* Scrollbar Styling */
+.notification-content::-webkit-scrollbar {
+  width: 12px; /* Width of the scrollbar */
+}
+
+.notification-content::-webkit-scrollbar-thumb {
+  background-color: #aaa; /* Default color of scrollbar thumb */
+  border-radius: 6px; /* Rounded edges for the scrollbar */
+}
+
+.notification-content::-webkit-scrollbar-track {
+  background-color: #f1f1f1; /* Track color */
+}
+
+/* Styling for Notification Item */
+.notification-item {
+  margin-bottom: 15px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #fff;
+}
+
+.notification-item.unread {
+  background-color: #ffebee;  /* Light red background for unread notifications */
+}
+
+/* Styling for Mark as Read button */
+.mark-read-btn {
+  background-color: #DD0733;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.mark-read-btn:hover {
+  background-color: #c00;
+}
+
+/* Styling for the Notification Box */
+.notification-box {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+/* Notification Item Box Styling */
+.notification-item {
+  background-color: #fafafa; /* Light background for each notification box */
+  border: 1px solid #ddd; /* Light border around each notification */
+  margin-bottom: 10px; /* Space between notifications */
+  padding: 10px; /* Padding inside each notification box */
+  border-radius: 8px; /* Rounded corners */
+}
+
+.notification-item p {
+  margin: 0; /* Remove margin from paragraphs */
+}
+
+/* Add this to your existing CSS file */
+
+.unread-notification {
+  background-color: #fddede; /* Light red color for unread notifications */
+  border-left: 5px solid #DD0733; /* Optional: Border to highlight the unread state */
+  margin-bottom: 10px; /* Space between notifications */
+  padding: 10px;
+  border-radius: 8px;
 }
 
 /* Card Styling */
@@ -48,7 +138,6 @@ html {
   border-radius: 8px;
   overflow: hidden;
   background-color: #ffffff; /* Ensure card background is not causing issues */
-  z-index: 1; /* Keep it above any other elements */
 }
 
 /* Card Header Styling */
@@ -59,8 +148,13 @@ html {
 }
 
 
+/* Card Body Styling for Notifications */
 .card-body {
-  padding: 15px;
+  padding: 0; /* Remove padding to make it align with the content */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Ensures header and scrollable content are spaced */
+  height: 100%; /* Take full height of the notification section */
 }
 
 .card-footer {
@@ -123,33 +217,4 @@ html {
 #download-pdf span {
   position: relative;
   z-index: 1; /* Ensure text stays above the background effect */
-}
-
-/* Notification Box Styling */
-.notification-box {
-  height: 100%; /* Fill available height */
-  overflow-y: auto; /* Enable vertical scrolling */
-  overflow-x: hidden; /* Prevent horizontal scrolling */
-  padding: 15px; /* Add some padding for better spacing */
-  background-color: #f9f9f9; /* Optional: Add background for distinction */
-  border: 1px solid #ddd; /* Optional: Add border for clear definition */
-  border-radius: 8px; /* Rounded corners for a polished look */
-}
-
-/* Styling for Scrollbar */
-.notification-box::-webkit-scrollbar {
-  width: 8px; /* Width of the scrollbar */
-}
-
-.notification-box::-webkit-scrollbar-thumb {
-  background-color: #DD0733; /* Color of the scrollbar thumb */
-  border-radius: 4px; /* Rounded edges for the scrollbar */
-}
-
-.notification-box::-webkit-scrollbar-thumb:hover {
-  background-color: #c00; /* Darker color on hover */
-}
-
-.notification-box::-webkit-scrollbar-track {
-  background-color: #f0f0f0; /* Background track of the scrollbar */
 }

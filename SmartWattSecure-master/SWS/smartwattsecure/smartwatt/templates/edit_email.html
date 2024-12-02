@@ -1,21 +1,33 @@
+{% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Edit Email</title>
+    <link rel="stylesheet" href="{% static 'css/edit.css' %}" />
   </head>
   <body>
-    <h2>Edit Email</h2>
-    <form method="POST">
-      {% csrf_token %}
-      <label for="email">New Email:</label>
-      <input
-        type="email"
-        id="email"
-        name="email"
-        placeholder="Enter new email"
-        required
-      />
-      <button type="submit">Save</button>
-    </form>
+    <div class="edit-page">
+      <div class="edit-content">
+        <!-- Back Button inside the div -->
+        <button class="back-btn" onclick="window.history.back()">←</button>
+        <h2>Edit Email</h2>
+        <form method="POST">
+          {% csrf_token %}
+          <div class="field">
+            <label for="email">New Email:</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="Enter new email"
+              required
+            />
+          </div>
+          <button type="submit" class="save-btn">Save</button>
+        </form>
+      </div>
+    </div>
   </body>
 </html>

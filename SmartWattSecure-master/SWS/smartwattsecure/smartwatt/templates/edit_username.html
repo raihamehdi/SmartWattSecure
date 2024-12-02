@@ -5,11 +5,13 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Edit Username</title>
-    <link rel="stylesheet" href="{% static 'edit.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/edit.css' %}" />
   </head>
   <body>
     <div class="edit-page">
       <div class="edit-content">
+        <!-- Back Button inside the div -->
+        <button class="back-btn" onclick="window.history.back()">←</button>
         <h2>Profile name</h2>
         <form method="POST">
           {% csrf_token %}
@@ -26,13 +28,6 @@
           </div>
           <button type="submit" class="save-btn">Save</button>
         </form>
-        {% if messages %}
-        <div class="alert">
-          {% for message in messages %}
-          <p>{{ message }}</p>
-          {% endfor %}
-        </div>
-        {% endif %}
       </div>
     </div>
   </body>

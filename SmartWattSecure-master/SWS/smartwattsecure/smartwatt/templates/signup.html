@@ -35,21 +35,27 @@
               <label for="password">Password:</label>
               <input type="password" id="password" name="password" required />
 
-              <!-- City Dropdown -->
-              <label for="city">City:</label>
-              <select id="city" name="city" required>
-                <option value="Sahiwal" selected>Sahiwal</option>
-                <option value="Lahore">Lahore</option>
-                <option value="Islamabad">Islamabad</option>
-              </select>
+              <div class="dropdown-container">
+                <!-- City Group -->
+                <div class="dropdown-group">
+                  <label for="city">City:</label>
+                  <select id="city" name="city" required>
+                    <option value="Sahiwal" selected>Sahiwal</option>
+                    <option value="Lahore">Lahore</option>
+                    <option value="Islamabad">Islamabad</option>
+                  </select>
+                </div>
 
-              <!-- Region Dropdown -->
-              <label for="region">Region:</label>
-              <select id="region" name="region" required>
-                <option value="Farid Town" selected>Farid Town</option>
-                <option value="People’s Colony">People’s Colony</option>
-                <option value="Jogi Chowk">Jogi Chowk</option>
-              </select>
+                <!-- Region Group -->
+                <div class="dropdown-group">
+                  <label for="region">Region:</label>
+                  <select id="region" name="region" required>
+                    <option value="Farid Town" selected>Farid Town</option>
+                    <option value="People’s Colony">People’s Colony</option>
+                    <option value="Jogi Chowk">Jogi Chowk</option>
+                  </select>
+                </div>
+              </div>
 
               <div class="buttons">
                 <button type="submit">Sign Up</button>

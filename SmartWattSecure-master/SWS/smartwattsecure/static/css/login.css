@@ -122,6 +122,26 @@ input[type="password"]:focus {
     color: #333;
 }
 
+.forgot-password-container {
+    text-align: right; /* Align the link to the right */
+    width: 120%; /* Match the width of the password field */
+    margin-left: 22px; /* Move the link slightly to the right */
+    margin-top: -6px !important; /* Reduce space between the password field and the link */
+}
+
+.forgot-password-container a {
+    font-size: 0.9rem; /* Adjust the font size as needed */
+    color: #DD0733; /* Link color */
+    text-decoration: none;
+    display: inline-block;
+    width: 100%; /* Make the link span the full width of the container */
+    text-align: right; /* Align the text to the right */
+}
+
+.forgot-password-container a:hover {
+    text-decoration: underline; /* Underline on hover */
+}
+
 /* Button styling */
 button {
     position: relative;

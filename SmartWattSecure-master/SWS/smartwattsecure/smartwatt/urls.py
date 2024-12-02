@@ -18,19 +18,17 @@ path('logout/', views.logout_view, name='logout'),
 path('edit/username/', views.edit_username, name='edit_username'),
 path('edit/email/', views.edit_email, name='edit_email'),
 path('edit/password/', views.edit_password, name='edit_password'),
-<<<<<<< HEAD
-path('get_anomalies/', views.get_anomalies, name='get_anomalies'),
 path('get_notifications/', views.get_notifications, name='get_notifications'),
-=======
 path('today_anomaly/', views.get_today_anomalies, name='today_anomaly'),
 path('get_notifications/', views.get_notifications, name='get_notifications'),
 path('get_anomalies_data/weekly/', views.get_weekly_anomalies, name='get_weekly_anomalies'),
 path('get_anomalies_data/monthly/',views.get_monthly_anomalies, name='get_monthly_anomalies'),
 path('get_anomalies_data/yearly/', views.get_yearly_anomalies, name='get_yearly_anomalies'),
 path('check/', views.check_and_create_anomaly, name='check'),
+path('forgot-pass/', views.forgot_password_view, name='forgot-password'),  # Correct URL path for Forget Password pageath('forget-pass/', views.forgot_password_view, name='forget-pass'),
 path('sendotp/', views.sendotp, name='sendotp'),
 path('verifyotp/', views.verifyotp, name='verifyotp'),
-path('resetpass/', views.resetpass, name='resetpass'),
->>>>>>> 1083d61651b2e95a5235028e57632e001fb00b66
+path('resend-otp/', views.resend_otp, name='resend-otp'),  # Add the resend-otp URL
+path('resetpass/', views.resetpass, name='resetpass')
 
 ]

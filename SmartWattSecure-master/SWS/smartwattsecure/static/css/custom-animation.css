@@ -783,7 +783,7 @@
   .tpfadeLeft {
 	-webkit-animation-name: tpfadeLeft;
 	animation-name: tpfadeLeft;
-	width: 55%;
+	width: 50%;
   }
 
   @-webkit-keyframes tpfadeRight {

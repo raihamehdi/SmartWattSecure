@@ -124,6 +124,34 @@ input[type="password"]:focus {
     color: #333;
 }
 
+/* Flexbox for the parent container */
+.dropdown-container {
+    display: flex; /* Enable flex layout */
+    gap: 20px; /* Add space between City and Region groups */
+    align-items: center; /* Aligns groups vertically */
+  }
+  
+  /* Group City and Dropdown, Region and Dropdown */
+  .dropdown-group {
+    display: flex; /* Inline layout for label and dropdown */
+    gap: 5px; /* Small space between label and dropdown */
+    align-items: center; /* Align items vertically if needed */
+  }
+
+/* For the city and region labels */
+label {
+    font-size: 16px;  /* Increase font size */
+  }
+  
+  /* For the city and region dropdowns */
+  select {
+    font-size: 14px;  /* Increase font size for text inside the dropdown */
+    height: 30px;  /* Increase height for better visibility */
+    width: 100px;  /* Adjust width as necessary */
+    border-radius: 5px;  /* Optional: Rounded corners for a smoother look */
+  }
+  
+
 /* Button styling */
 button {
     position: relative;
