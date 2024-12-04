@@ -52,11 +52,44 @@ def signup(request):
 
     return render(request, 'signup.html')
 
-def adminview(request):
-    return render(request, 'admin.html')
 
+@login_required
 def adminview(request):
-    return render(request, 'admin.html')
+    if not request.user.is_staff:
+        return redirect('index')
+
+    today = datetime.today().date()
+
+    first_day_of_current_month = today.replace(day=1)
+
+    first_day_of_current_month = datetime.combine(first_day_of_current_month, datetime.min.time())
+    today_datetime = datetime.combine(today, datetime.min.time()) 
+    first_day_of_current_month = make_aware(first_day_of_current_month)
+    today_datetime = make_aware(today_datetime)
+
+    cities = CustomUser.objects.values_list('city', flat=True).distinct()
+    city_regions = {}
+    users = CustomUser.objects.filter(is_staff=False)
+    user_data = []
+
+    for user in users:
+        energy_data = EnergyData.objects.filter(
+            user=user,
+            timestamp__gte=first_day_of_current_month,
+            timestamp__lte=today_datetime
+        )
+        total_units = energy_data.aggregate(total_units=Sum('total_units_consumed'))['total_units'] or 0
+        user_data.append({
+            'user': user,
+            'total_units': round(total_units, 2),
+        })
+
+    for city in cities:
+        city_regions[city] = CustomUser.REGION_CHOICES.get(city, [])
+
+    messages = ContactMessage.objects.all()
+    return render(request, 'admin.html', {'cities': cities, 'city_regions': city_regions, "user_data": user_data, "messages": messages})
+
 
 ##-----LOGIN VIEW-----##
 def login(request):
@@ -64,17 +97,16 @@ def login(request):
         email = request.POST.get('email')
         password = request.POST.get('password')
         user = authenticate(request, username=email, password=password)
-        
         if user is not None:
+            if user.is_restricted: 
+                return JsonResponse({'success': False, 'error_message': 'Your account is restricted. Please contact support.'})
             auth_login(request, user)
-            # Check the role and redirect accordingly
             if user.role == 'User':
-                return redirect('dashboard')  # Redirect to the user dashboard
+                return JsonResponse({'success': True, 'redirect_url': '/dashboard'})
             elif user.role == 'Admin':
-                return redirect('adminview')  # Redirect to admin.html (set the correct view name)
+                return JsonResponse({'success': True, 'redirect_url': '/adminview'})
         else:
-            messages.error(request, 'Invalid email or password')  # Improve the error message
-            
+            return JsonResponse({'success': False, 'error_message': 'Invalid email or password'})
     return render(request, 'registration/login.html')
 
 # User Updation
@@ -150,8 +182,8 @@ def energy_data_api(request):
     arduino_data = data()
     if arduino_data:
         voltage, current, power, total_units_consumed, lag_1, rolling_avg_60, lag_1440, rolling_avg_1440 = arduino_data
-        now = timezone.now()
-        now_local = localtime(now)
+        now_utc = now()
+        now_local = localtime(now_utc)
         hour = now_local.hour
         day_of_week = now_local.weekday()
         month = now_local.month
@@ -164,11 +196,12 @@ def energy_data_api(request):
             else "high" if predictions[0] == 1 
             else "suspicious"
         )
-
+        nowz = pytz_timezone("Asia/Karachi")
+        todayTime= datetime.now(nowz).timestamp()
         # Save the data to the database
         EnergyData.objects.create(
             user=request.user,
-            timestamp=now_local,
+            timestamp=todayTime,
             voltage=voltage,
             current=current,
             power=power,
@@ -179,10 +212,11 @@ def energy_data_api(request):
         return JsonResponse({'error': 'Failed to fetch data from Arduino'}, status=500)
 
     # Retrieve data since midnight
-    start_of_day = datetime.combine(now_local.date(), time.min)  # Midnight
+    start_of_day_local = datetime.combine(now_local.date(), time.min)  # Midnight in local timezone
+    start_of_day_utc = make_aware(start_of_day_local).astimezone(pytz_timezone('UTC'))  # Convert to UTC
     user_data = EnergyData.objects.filter(
         user=request.user,
-        timestamp__gte=start_of_day
+        timestamp__gte=start_of_day_utc
     ).order_by('-timestamp')
 
     # Calculate total units consumed since 12 AM
@@ -191,8 +225,8 @@ def energy_data_api(request):
     # Prepare the latest data for the response
     latest_data = user_data.first()
     if latest_data:
-        local_timestamp = localtime(latest_data.timestamp)
-        formatted_timestamp = local_timestamp.strftime('%I:%M %p')
+        # local_timestamp = localtime(latest_data.timestamp)
+        formatted_timestamp = datetime.now(nowz)
         response_data = {
             'timestamp': formatted_timestamp,
             'voltage': latest_data.voltage,
@@ -369,16 +403,11 @@ def check_and_create_anomaly(request):
 def get_today_anomalies(request):
     user = request.user
 
-    # Define the timezone explicitly using pytz_timezone
     karachi_tz = pytz_timezone("Asia/Karachi")
 
-    # Define the start and end of today in Asia/Karachi timezone
     today_start = make_aware(datetime.combine(now().astimezone(karachi_tz), datetime.min.time()), karachi_tz)
     today_end = make_aware(datetime.combine(now().astimezone(karachi_tz), datetime.max.time()), karachi_tz)
 
-    print(f"Today Start (Asia/Karachi): {today_start}, Today End (Asia/Karachi): {today_end}")  # Debugging log
-
-    # Fetch anomalies for the user within the time range
     anomalies_count = Anomaly.objects.filter(
         user=user,
         start_time__range=(today_start, today_end)
@@ -387,28 +416,25 @@ def get_today_anomalies(request):
     return JsonResponse({"today_anomalies": anomalies_count})
 
 
-
-
 def get_anomalies_data(request, timeframe):
     if not request.user.is_authenticated:
         return JsonResponse({'error': 'User not authenticated'}, status=403)
 
-    today = timezone.localdate()
-    now = timezone.now()
+    nowz = pytz_timezone("Asia/Karachi")
+    todayTime= datetime.now(nowz).timestamp()
 
     if timeframe == 'weekly':
-        start_date = today - timedelta(days=6)
-        time_labels = [start_date + timedelta(days=i) for i in range(7)]  # 7 days
-        label_format = "%Y-%m-%d"  # Date labels (e.g., '2024-11-23')
-    elif timeframe == 'monthly':
-        start_date = today.replace(day=1)  # Start of the current month
-        days_in_month = (today - start_date).days + 1
+        start_date = todayTime - timedelta(days=6)
+        time_labels = [start_date + timedelta(days=i) for i in range(7)] 
+        label_format = "%Y-%m-%d"  
+        start_date = todayTime.replace(day=1)
+        days_in_month = (todayTime - start_date).days + 1
         time_labels = [start_date + timedelta(days=i) for i in range(days_in_month)]
         label_format = "%d"
     elif timeframe == 'yearly':
-        start_date = today.replace(month=1, day=1)  # Start from the first day of the year
-        time_labels = [start_date.replace(month=i) for i in range(1, 13)]  # Months in the year
-        label_format = "%b"  # Month labels (e.g., 'Jan', 'Feb')
+        start_date = todayTime.replace(month=1, day=1)  
+        time_labels = [start_date.replace(month=i) for i in range(1, 13)] 
+        label_format = "%b"  
     else:
         return JsonResponse({'error': 'Invalid timeframe'}, status=400)
 
@@ -451,12 +477,7 @@ def get_yearly_anomalies(request):
 
 
 ##-----NOTIFICATIONS VIEW-----##
-from django.http import JsonResponse
-from django.db.models.signals import post_save
-from django.dispatch import receiver
-from .models import Notification, Anomaly
 
-# View to fetch notifications
 def get_notifications(request):
     if request.user.is_authenticated:
         notifications = Notification.objects.filter(user=request.user).order_by('-timestamp')
@@ -481,9 +502,6 @@ def create_notification_for_anomaly(sender, instance, created, **kwargs):
     if created:
         message = f"Power anomaly detected at {instance.start_time.strftime('%H:%M')}."
         Notification.objects.create(user=instance.user, message=message)
-
-
-
 
 def sendotp(request):
     if request.method == 'POST':
@@ -520,9 +538,7 @@ def verifyotp(request):
             request.session['reset_code'] = saved_otp
             request.session['reset_email'] = email
             return render(request, 'resetpass.html')
-        # else:
-        #     error_message = "You have entered incorrect OTP."
-        #     return render(request, 'error.html', {'error_message': error_message})
+
 
     return render(request, 'forgetpass.html')
 
@@ -545,11 +561,132 @@ def resetpass(request):
 
     else:
         return render(request, 'resetpass.html')
-    
-    
+
+def inquiry_view(request):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        message = request.POST.get('message')
+        user_type = 'user' if request.user.is_authenticated else 'visitor'
+        ContactMessage.objects.create(name=name, email=email, message=message, user_type=user_type)
+        return JsonResponse({'message': 'Message sent successfully!'})    
+    return HttpResponse(status=405) 
 
 
-#changes are started here
+def city_regions_view(request):
+    if request.method == "POST":
+        city = request.POST.get("city")
+        if city:
+            # Get the regions for the selected city
+            regions = CustomUser.REGION_CHOICES.get(city, [])
+            data = []
+
+            tz = pytz_timezone.timezone('Asia/Karachi')
+            now = datetime.now(tz)
+
+            # Get the start and end of the current month
+            start_of_month = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+            end_of_month = (start_of_month.replace(month=start_of_month.month % 12 + 1) - timedelta(days=1))
+
+            # Get the total units consumed for each region for the current month
+            for region_code, region_name in regions:
+                total_units = EnergyData.objects.filter(
+                    user__region=region_code,
+                    timestamp__gte=start_of_month,
+                    timestamp__lte=end_of_month
+                ).aggregate(total_units=Sum("total_units_consumed"))
+                data.append({
+                    "region": region_name,
+                    "total_units": total_units["total_units"] or 0,
+                })
+
+
+            return JsonResponse({"regions": data})
+
+        return JsonResponse({"error": "City not provided."}, status=400)
+
+    # If it's a GET request, you can either handle it as a default case or just return a simple response.
+    return JsonResponse({"error": "Invalid request method. Please use POST."}, status=405)
+
+def delete_user_ajax(request, user_id):
+    if request.method == "POST":  # Ensure it's an AJAX POST request
+        user = get_object_or_404(CustomUser, id=user_id)
+        user.delete()
+        return JsonResponse({'status': 'success', 'message': 'User deleted successfully'})
+    return JsonResponse({'status': 'error', 'message': 'Failed to delete user'})
+
+def admin_login(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            email = data.get("email")
+            password = data.get("password")
+            user = authenticate(request, username=email, password=password)
+            if user is not None and user.is_staff:
+                auth_login(request, user)
+                return JsonResponse({"status": "success", "redirect_url": "/adminpanel/"})
+            return JsonResponse({"status": "error", "message": "Invalid email or password!"})
+        except Exception as e:
+            return JsonResponse({"status": "error", "message": str(e)})
+    return render(request, "admin-login.html")
+
+@csrf_exempt
+def toggle_user_restriction(request, user_id):
+    if request.method == "POST":
+        try:
+            user = get_object_or_404(CustomUser, id=user_id)
+            user.is_restricted = not user.is_restricted  # Toggle restriction status
+            user.save()
+            status = "restricted" if user.is_restricted else "unrestricted"
+            return JsonResponse({
+                "success": True,
+                "message": f"User {user.username} {status} successfully.",
+                "new_status": status
+            })
+        except Exception as e:
+            return JsonResponse({"success": False, "message": f"An error occurred: {str(e)}"})
+    return JsonResponse({"success": False, "message": "Invalid request method."})
+    
+
+@csrf_exempt
+def restrict_user(request, user_id):
+    if request.method == "POST":
+        try:
+            user = get_object_or_404(CustomUser, id=user_id)
+            print(user)
+            user.is_restricted = True 
+            user.save()
+            return JsonResponse({"success": True, "message": f"User {user.username} restricted successfully."})
+        except Exception as e:
+            return JsonResponse({"success": False, "message": f"An error occurred: {str(e)}"})
+    return JsonResponse({"success": False, "message": "Invalid request method."})
+
+def resend_otp(request):
+    if request.method == 'POST':
+        email = request.session.get('reset_email')  # Get email from session
+        
+        if not email:
+            return JsonResponse({"success": False, "error": "No email found in session."})
+        
+        # Generate a new OTP
+        otp = str(random.randint(1000, 9999))  # Generate a new 4-digit OTP
+        
+        # Send the OTP to the email
+        send_mail(
+            'Your OTP Code',
+            f'Your OTP code is: {otp}',
+            settings.DEFAULT_FROM_EMAIL,
+            [email],
+        )
+        
+        # Store new OTP in session
+        request.session['reset_code'] = otp
+        
+        # Respond with success, no need for messages
+        return JsonResponse({"success": True})
+    
+    return JsonResponse({"success": False, "error": "Invalid request method."})
+
 
 def inquiry_view(request):
     if request.method == 'POST':
@@ -607,6 +744,13 @@ def admin_login(request):
             return JsonResponse({"status": "error", "message": str(e)})
     return render(request, "admin-login.html")
 
+def logout_admin(request):
+    if request.method == "POST":
+        logout(request)
+        return render(request, "admin-login.html")  # Use URL name for better flexibility
+    else:
+        return JsonResponse({"status": "error", "message": "Invalid request method."}, status=400)
+
 @csrf_exempt
 def restrict_user(request, user_id):
     if request.method == "POST":
@@ -620,30 +764,21 @@ def restrict_user(request, user_id):
             return JsonResponse({"success": False, "message": f"An error occurred: {str(e)}"})
     return JsonResponse({"success": False, "message": "Invalid request method."})
 
-def resend_otp(request):
-    if request.method == 'POST':
-        email = request.session.get('reset_email')  # Get email from session
-        
-        if not email:
-            return JsonResponse({"success": False, "error": "No email found in session."})
-        
-        # Generate a new OTP
-        otp = str(random.randint(1000, 9999))  # Generate a new 4-digit OTP
-        
-        # Send the OTP to the email
-        send_mail(
-            'Your OTP Code',
-            f'Your OTP code is: {otp}',
-            settings.DEFAULT_FROM_EMAIL,
-            [email],
-        )
-        
-        # Store new OTP in session
-        request.session['reset_code'] = otp
-        
-        # Respond with success, no need for messages
-        return JsonResponse({"success": True})
-    
-    return JsonResponse({"success": False, "error": "Invalid request method."})
 
+@csrf_exempt
+def mark_notification_read(request, notification_id):
+    if request.method == "POST":
+        try:
+            notification = Notification.objects.get(id=notification_id, user=request.user)
+            notification.is_read = True
+            notification.save()
+            return JsonResponse({"success": True})
+        except Notification.DoesNotExist:
+            return JsonResponse({"error": "Notification not found"}, status=404)
+    return JsonResponse({"error": "Invalid request method"}, status=400)
 
+def unread_notification_count(request):
+    if request.user.is_authenticated:
+        unread_count = Notification.objects.filter(user=request.user, is_read=False).count()
+        return JsonResponse({"unread_count": unread_count})
+    return JsonResponse({"error": "User not authenticated"}, status=403)

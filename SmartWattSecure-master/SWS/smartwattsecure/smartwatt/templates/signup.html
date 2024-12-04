@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sign Up</title>
     <link rel="stylesheet" href="{% static 'css/signup.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/responsive.css' %}" />
   </head>
   <body>
     <div class="modal-container">
@@ -35,26 +36,35 @@
               <label for="password">Password:</label>
               <input type="password" id="password" name="password" required />
 
-              <div class="dropdown-container">
+              <div class="container">
+                <div class="row">
+                  <div class="col-12"> 
                 <!-- City Group -->
                 <div class="dropdown-group">
                   <label for="city">City:</label>
+                </div>
+                <div class="col-12"> 
                   <select id="city" name="city" required>
                     <option value="Sahiwal" selected>Sahiwal</option>
                     <option value="Lahore">Lahore</option>
                     <option value="Islamabad">Islamabad</option>
                   </select>
                 </div>
-
+              </div>
+              <div class="col-12">
                 <!-- Region Group -->
                 <div class="dropdown-group">
                   <label for="region">Region:</label>
+                </div>
+                  <div class="col-12"> 
                   <select id="region" name="region" required>
                     <option value="Farid Town" selected>Farid Town</option>
                     <option value="People’s Colony">People’s Colony</option>
                     <option value="Jogi Chowk">Jogi Chowk</option>
                   </select>
                 </div>
+              </div>
+            </div>
               </div>
 
               <div class="buttons">

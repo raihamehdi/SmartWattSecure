@@ -35,6 +35,7 @@ class CustomUser(AbstractUser):
     role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='User')  # Default role is 'User'
     city = models.CharField(max_length=15, choices=CITY_CHOICES, default='Sahiwal')  # Default city
     region = models.CharField(max_length=50, default='Farid Town')  # Default region
+    is_restricted = models.BooleanField(default=False) 
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']  # username is still required for other users

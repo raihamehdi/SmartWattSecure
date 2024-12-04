@@ -148,6 +148,19 @@ html {
 }
 
 
+.unread-notification {
+  background-color: #ffcccc; /* Light red background */
+  cursor: pointer;
+}
+
+.notification-item {
+  padding: 10px;
+  margin: 5px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+
 /* Card Body Styling for Notifications */
 .card-body {
   padding: 0; /* Remove padding to make it align with the content */

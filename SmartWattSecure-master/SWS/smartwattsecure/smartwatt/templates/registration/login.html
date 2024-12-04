@@ -5,7 +5,13 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Login</title>
+    <link
+      rel="shortcut icon"
+      type="image/x-icon"
+      href="{% static 'img/logo/favicon.png' %}"
+    />
     <link rel="stylesheet" href="{% static 'css/login.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/responsive.css' %}" />
   </head>
   <body>
     <div class="modal-container">
@@ -54,5 +60,69 @@
       </div>
     </div>
     <script src="{% static 'js/script.js' %}"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+      document
+        .querySelector("form")
+        .addEventListener("submit", function (event) {
+          event.preventDefault(); // Prevent default form submission
+
+          var formData = new FormData(this); // Get form data
+          var csrfToken = document.querySelector(
+            "[name=csrfmiddlewaretoken]"
+          ).value;
+
+          fetch("{% url 'login' %}", {
+            method: "POST",
+            headers: {
+              "X-CSRFToken": csrfToken, // Include the CSRF token in the header
+            },
+            body: formData,
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              if (data.success) {
+                // Use SweetAlert for success message and redirect
+                Swal.fire({
+                  icon: "success",
+                  title: "Login Successful!",
+                  text: "Redirecting to your dashboard...",
+                  timer: 2000, // Auto close after 2 seconds
+                  showConfirmButton: false, // Hide the confirm button
+                }).then(() => {
+                  window.location.href = data.redirect_url; // Redirect based on response
+                });
+              } else {
+                // Check if the account is restricted
+                if (
+                  data.error_message ===
+                  "Your account is restricted. Please contact support."
+                ) {
+                  Swal.fire({
+                    icon: "error",
+                    title: "Account Restricted",
+                    text: data.error_message,
+                  });
+                } else {
+                  // Use SweetAlert for general error message
+                  Swal.fire({
+                    icon: "error",
+                    title: "Login Failed",
+                    text: data.error_message,
+                  });
+                }
+              }
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+              Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Something went wrong. Please try again later.",
+              });
+            });
+        });
+    </script>
   </body>
 </html>

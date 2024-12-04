@@ -1,11 +1,20 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{% block title %}My Site{% endblock title %}</title>
+    <title>{% block title %}Dashboard - Smart Watt Secure{% endblock title %}</title>
+    <link
+    rel="shortcut icon"
+    type="image/x-icon"
+    href="{% static 'img/logo/favicon.png' %}"
+  />
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/responsive.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/font-awesome-pro.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/main.css' %}" />
   </head>
   <body>
     <header>
@@ -13,13 +22,13 @@
         <div class="header-container">
           <!-- Logo Section -->
           <div class="header-column logo-section">
-            <a href="{% url 'dashboard' %}">
+            <a href="{% url 'index' %}">
               <img src="{% static 'img/logo/favicon.png' %}" alt="Logo" />
             </a>
           </div>
 
           <!-- Navigation Section -->
-          <div class="header-column nav-section">
+          <div class="header-column nav-section dashboard-nav">
             <nav class="tp-header-main-menu">
               <ul class="d-flex justify-content-center align-items-center">
                 <li>
@@ -60,7 +69,7 @@
 
           <!-- Icons Section (Notifications and Profile) -->
           <div class="header-column icons-section">
-            <a href="#notifications" class="icon-link">
+            <a href="/analytics" class="icon-link">
               <!-- Inline SVG for notification icon -->
               <svg
                 height="40px"
@@ -122,6 +131,19 @@
                 />
               </svg>
             </a>
+            <div class="tp-header-bar d-xl-none">
+              <button class="tp-menu-bar" onclick="toggleMenu()">
+                <i class="fa-sharp fa-regular fa-bars-staggered"></i>
+              </button>
+            </div>
+            <div id="menu" class="mobile-submenu">
+              <ul>
+                <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+                <li><a href="{% url 'analytics' %}">Analytics</a></li>
+                <li><a href="{% url 'contact' %}">Contact</a></li>
+                <li><a href="{% url 'help' %}">Help</a></li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
@@ -220,7 +242,14 @@
         }, 3000); // Hide the success message after 3 seconds
       }
     </script>
+    <script>
+      // Function to toggle the menu
+function toggleMenu() {
+  const menu = document.getElementById('menu');
+  menu.classList.toggle('show'); // Toggles the 'show' class to show/hide the menu
+}
 
+    </script>
     <main>{% block content %} {% endblock content %}</main>
   </body>
 </html>

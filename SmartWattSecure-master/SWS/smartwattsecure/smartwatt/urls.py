@@ -1,5 +1,5 @@
-from django.contrib import admin
 from django.urls import path
+from django.contrib.auth.views import LogoutView
 from . import views
 urlpatterns = [
     
@@ -29,6 +29,15 @@ path('forgot-pass/', views.forgot_password_view, name='forgot-password'),  # Cor
 path('sendotp/', views.sendotp, name='sendotp'),
 path('verifyotp/', views.verifyotp, name='verifyotp'),
 path('resend-otp/', views.resend_otp, name='resend-otp'),  # Add the resend-otp URL
-path('resetpass/', views.resetpass, name='resetpass')
-
+path('resetpass/', views.resetpass, name='resetpass'),
+path('inquiry_view/',views.inquiry_view,name="inquiry_view"),
+path('city-regions/', views.city_regions_view, name='city_regions_view'),
+path('logoutt/', views.logout_admin, name='logoutt'),
+path('delete_user/<int:user_id>/', views.delete_user_ajax, name='delete_user_ajax'),
+path('admin-login/', views.admin_login, name='admin-login'),
+path('restrict-user/<int:user_id>/', views.restrict_user, name='restrict_user'),
+path('toggle-user-restriction/<int:user_id>/', views.toggle_user_restriction, name='toggle_user_restriction'),
+path("mark_notification_read/<int:notification_id>/", views.mark_notification_read, name="mark_notification_read"),
+path("unread_notifications_count/", views.unread_notification_count, name="unread_notifications_count"),
 ]
+

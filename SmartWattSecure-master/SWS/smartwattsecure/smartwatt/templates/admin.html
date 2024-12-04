@@ -1,1 +1,484 @@
-<h1>Admin</h1>
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, 
+                  initial-scale=1.0"
+    />
+
+    <title>Smart Watt Secure</title>
+    <link
+      rel="shortcut icon"
+      type="image/x-icon"
+      href="{% static 'img/logo/favicon.png' %}"
+    />
+    <link rel="stylesheet" href="{% static 'css/admin.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/admin-responsive.css' %}" />
+    
+  </head>
+
+  <body>
+    <!-- for header part -->
+    <header>
+      <div class="logosec">
+        <img
+          src="https://media.geeksforgeeks.org/wp-content/uploads/20221210182541/Untitled-design-(30).png"
+          class="icn menuicn"
+          id="menuicn"
+          alt="menu-icon"
+        />
+        
+        <div class="logo">Smart Watt Secure</div>
+        
+      </div>
+    </header>
+
+    <div class="main-container">
+      <div class="navcontainer">
+        <nav class="nav">
+          <div class="nav-upper-options">
+            <div
+              class="nav-option option1 selected"
+              onclick="showContainer('users')"
+            >
+              <img
+                src="https://media.geeksforgeeks.org/wp-content/uploads/20221210182148/Untitled-design-(29).png"
+                class="nav-img"
+                alt="dashboard"
+              />
+              <h3>Users</h3>
+            </div>
+
+            <div class="nav-option option2" onclick="showContainer('queries')">
+              <img
+                src="https://media.geeksforgeeks.org/wp-content/uploads/20221210183323/10.png"
+                class="nav-img"
+                alt="blog"
+              />
+              <h3>Queries</h3>
+            </div>
+
+            <div class="nav-option logout" id="logout">
+              <img
+                src="https://media.geeksforgeeks.org/wp-content/uploads/20221210183321/7.png"
+                class="nav-img"
+                alt="logout"
+              />
+              <h3>Logout</h3>
+            </div>
+            <form
+              id="logout-form"
+              action="{% url 'logoutt' %}"
+              method="post"
+              style="display: none"
+            >
+              {% csrf_token %}
+            </form>
+          </div>
+        </nav>
+      </div>
+      <div class="main">
+        {% comment %}
+        <div class="searchbar2">
+          <input type="text" name="" id="" placeholder="Search" />
+          <div class="searchbtn">
+            <img
+              src="https://media.geeksforgeeks.org/wp-content/uploads/20221210180758/Untitled-design-(28).png"
+              class="icn srchicn"
+              alt="search-button"
+            />
+          </div>
+        </div>
+        {% endcomment %}
+        <div id="user-container">
+          <div class="form-container">
+            <div class="form-row">
+              
+              <select id="city-select" class="form-select">
+                <option value="">-- Select City --</option>
+                {% for city in cities %}
+                <option value="{{ city }}">{{ city }}</option>
+                {% endfor %}
+              </select>
+              
+            </div>
+          </div>
+
+          <div id="regions-container"></div>
+
+          <div class="box-container">
+            <div class="box box1">
+              <div class="text">
+                <h2 class="topic-heading" id="region1-name">Region 1</h2>
+                <h2 class="topic">Monthly Total Units</h2>
+                <p id="region1-total-units">0</p>
+                <!-- Add a paragraph to display total units -->
+              </div>
+            </div>
+
+            <div class="box box2">
+              <div class="text">
+                <h2 class="topic-heading" id="region2-name">Region 2</h2>
+                <h2 class="topic">Monthly Total Units</h2>
+                <p id="region2-total-units">0</p>
+                <!-- Add a paragraph to display total units -->
+              </div>
+            </div>
+
+            <div class="box box3">
+              <div class="text">
+                <h2 class="topic-heading" id="region3-name">Region 3</h2>
+                <h2 class="topic">Monthly Total Units</h2>
+                <p id="region3-total-units">0</p>
+                <!-- Add a paragraph to display total units -->
+              </div>
+            </div>
+          </div>
+
+          <div class="report-container">
+            <div class="report-header">
+              <h1 class="recent-Articles">Users</h1>
+            </div>
+
+            <div class="report-body">
+              <table class="user-report-table">
+                <thead>
+                  <tr>
+                    <!-- Column titles corresponding to model fields -->
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>City</th>
+                    <th>Region</th>
+                    <th>Units Used</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for item in user_data %}
+                  <tr>
+                    <!-- Display user data dynamically -->
+                
+                    <td>{{ item.user.username }}</td>
+                    <td>{{ item.user.email }}</td>
+                    <td>{{ item.user.city }}</td>
+                    <td>{{ item.user.region }}</td>
+                    <td>{{ item.total_units }}</td>
+
+                    <!-- Action buttons for Restrict and Delete -->
+                    <td class="actions">
+                      <button
+                        id="action-button-{{ item.user.id }}"
+                        class="restrict-btn"
+                        onclick="toggleUserRestriction({{ item.user.id }}, '{{ item.user.is_restricted|yesno:"restricted,unrestricted" }}')"
+                      >
+                        {{ item.user.is_restricted|yesno:"Unrestrict,Restrict" }}
+                      </button>
+                      <button
+                        class="delete-btn"
+                        onclick="deleteUser({{ item.user.id }})"
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div id="query-container" style="display: none" class="table-container">
+          <div class="table-header">Messages</div>
+          <div class="table-scroll-wrapper">
+            <table class="message-table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Message</th>
+                  <th>User Type</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for message in messages %}
+                <tr>
+                  <td>{{ message.name }}</td>
+                  <td>{{ message.email }}</td>
+                  <td>{{ message.message }}</td>
+                  <td>{{ message.get_user_type_display }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                  <td colspan="3" class="no-messages">
+                    No messages to display.
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="{% static 'js/admin.js' %}"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+      function deleteUser(userId) {
+        window.location.href = "/delete_user/" + userId;
+      }
+    </script>
+    <script>
+      $(document).ready(function () {
+        $("#city-select").change(function () {
+          var selectedCity = $(this).val();
+          if (selectedCity) {
+            $.ajax({
+              type: "POST",
+              url: "{% url 'city_regions_view' %}",
+              data: {
+                city: selectedCity,
+                csrfmiddlewaretoken: "{{ csrf_token }}",
+              },
+              success: function (response) {
+                // Update region names and total units in the boxes
+                var regions = response.regions;
+                if (regions.length >= 1) {
+                  $("#region1-name").text(regions[0].region);
+                  $("#region1-total-units").text(parseFloat(regions[0].total_units).toFixed(2));
+                } else {
+                  $("#region1-name").text("Region 1");
+                  $("#region1-total-units").text("0.00");
+                }
+                
+                if (regions.length >= 2) {
+                  $("#region2-name").text(regions[1].region);
+                  $("#region2-total-units").text(parseFloat(regions[1].total_units).toFixed(2));
+                } else {
+                  $("#region2-name").text("Region 2");
+                  $("#region2-total-units").text("0.00");
+                }
+                
+                if (regions.length >= 3) {
+                  $("#region3-name").text(regions[2].region);
+                  $("#region3-total-units").text(parseFloat(regions[2].total_units).toFixed(2));
+                } else {
+                  $("#region3-name").text("Region 3");
+                  $("#region3-total-units").text("0.00");
+                }
+              },
+              error: function () {
+                alert("An error occurred. Please try again.");
+              },
+            });
+          } else {
+            // If no city is selected, reset the boxes
+            $("#region1-name").text("Region 1");
+            $("#region1-total-units").text("0");
+
+            $("#region2-name").text("Region 2");
+            $("#region2-total-units").text("0");
+
+            $("#region3-name").text("Region 3");
+            $("#region3-total-units").text("0");
+          }
+        });
+      });
+    </script>
+    <script>
+      document
+        .querySelector(".option1")
+        .addEventListener("click", () => showContainer("users"));
+      document
+        .querySelector(".option2")
+        .addEventListener("click", () => showContainer("queries"));
+    </script>
+    <script>
+      // Function to handle the content switch and styling of active sidebar items
+      function showContainer(containerType) {
+        console.log("yess!!");
+        // Hide both containers initially
+        document.getElementById("user-container").style.display = "none";
+        document.getElementById("query-container").style.display = "none";
+
+        // Remove 'selected' class from all nav items to reset them
+        const navOptions = document.querySelectorAll(".nav-option");
+        navOptions.forEach((option) => {
+          option.classList.remove("selected");
+        });
+        console.log(containerType);
+
+        // Show the corresponding container based on the clicked option
+        if (containerType == "users") {
+          console.log("users is clicked");
+          document.getElementById("user-container").style.display = "block";
+          document.querySelector(".option1").classList.add("selected"); // Add 'selected' class to Users
+        } else if (containerType === "queries") {
+          document.getElementById("query-container").style.display = "block";
+          document.querySelector(".option2").classList.add("selected"); // Add 'selected' class to Queries
+        }
+      }
+    </script>
+    <script>
+      document.getElementById("logout").addEventListener("click", function () {
+        console.log("clicked!!");
+        document.getElementById("logout-form").submit();
+      });
+    </script>
+    <script>
+      function deleteUser(userId) {
+        Swal.fire({
+          title: "Are you sure?",
+          text: "You won't be able to revert this!",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Yes, delete it!",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            fetch(`/delete_user/${userId}/`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": getCookie("csrftoken"), // CSRF token for security
+              },
+              body: JSON.stringify({}), // You can send additional data if needed
+            })
+              .then((response) => response.json())
+              .then((data) => {
+                if (data.status === "success") {
+                  Swal.fire("Deleted!", data.message, "success").then(() => {
+                    location.reload(); // Reload the page after successful deletion (or you can remove the deleted row from the DOM)
+                  });
+                } else {
+                  Swal.fire("Error!", data.message, "error");
+                }
+              })
+              .catch((error) => {
+                console.error("Error:", error);
+                Swal.fire("Oops...", "Something went wrong!", "error");
+              });
+          }
+        });
+      }
+
+      function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== "") {
+          const cookies = document.cookie.split(";");
+          for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === name + "=") {
+              cookieValue = decodeURIComponent(
+                cookie.substring(name.length + 1)
+              );
+              break;
+            }
+          }
+        }
+        return cookieValue;
+      }
+    </script>
+    <script>
+      function toggleUserRestriction(userId, currentStatus) {
+        console.log("User ID:", userId, "Current Status:", currentStatus);
+    
+        const action = currentStatus === "restricted" ? "unrestrict" : "restrict";
+        const confirmText = action === "restrict" 
+          ? "Do you want to restrict this user?" 
+          : "Do you want to unrestrict this user?";
+        const confirmButtonText = action === "restrict" ? "Yes, restrict!" : "Yes, unrestrict!";
+        const successMessage = action === "restrict" ? "User restricted successfully!" : "User unrestricted successfully!";
+        
+        // SweetAlert2 confirmation dialog
+        Swal.fire({
+          title: "Are you sure?",
+          text: confirmText,
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: confirmButtonText,
+          cancelButtonText: "Cancel",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            // AJAX request to toggle restriction
+            fetch(`/toggle-user-restriction/${userId}/`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": getCookie("csrftoken"),
+              },
+              body: JSON.stringify({ user_id: userId }),
+            })
+              .then((response) => {
+                if (!response.ok) {
+                  throw new Error("Network response was not ok");
+                }
+                return response.json();
+              })
+              .then((data) => {
+                if (data.success) {
+                  const newStatus = data.new_status === "restricted" ? "Unrestrict" : "Restrict";
+                  const actionButton = document.getElementById(`action-button-${userId}`);
+                  if (actionButton) {
+                    actionButton.textContent = newStatus;
+                    actionButton.setAttribute(
+                      "onclick",
+                      `toggleUserRestriction(${userId}, "${data.new_status}")`
+                    );
+                  }
+                  Swal.fire({
+                    title: data.new_status === "restricted" ? "Restricted!" : "Unrestricted!",
+                    text: data.message,
+                    icon: "success",
+                    confirmButtonText: "OK",
+                  });
+                } else {
+                  Swal.fire({
+                    title: "Error",
+                    text: data.message,
+                    icon: "error",
+                    confirmButtonText: "OK",
+                  });
+                }
+              })
+              .catch((error) => {
+                console.error("Error:", error);
+                Swal.fire({
+                  title: "Error",
+                  text: "Your account has been restricted. Please contact support.",
+                  icon: "error",
+                  confirmButtonText: "OK",
+                });
+              });
+          }
+        });
+      }
+    
+      // Helper function to get CSRF token from cookies
+      function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== "") {
+          const cookies = document.cookie.split(";");
+          for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.startsWith(name + "=")) {
+              cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+              break;
+            }
+          }
+        }
+        return cookieValue;
+      }
+    </script>
+    
+  </body>
+</html>
