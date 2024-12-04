@@ -724,9 +724,9 @@
                     <span class="tp-contact-2-subtitle">Contact us</span>
                     <h4 class="tp-contact-2-title">Get a call back</h4>
                   </div>
-                  <form id="contact-form">
+                  <form id="contact-form" >
                   <div class="tp-contact-2-input-box">
-                    
+                    {% csrf_token %}
                     <input type="text" name="name" placeholder="Your Name*" />
                     <input type="email" name="email" placeholder="Your Email*" />
                     <textarea name="message" placeholder="Messege*"></textarea>

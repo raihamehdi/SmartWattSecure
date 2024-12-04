@@ -420,19 +420,20 @@ def get_anomalies_data(request, timeframe):
     if not request.user.is_authenticated:
         return JsonResponse({'error': 'User not authenticated'}, status=403)
 
-    nowz = pytz_timezone("Asia/Karachi")
-    todayTime= datetime.now(nowz).timestamp()
+    today = timezone.localdate()
+    now = timezone.now()
 
     if timeframe == 'weekly':
-        start_date = todayTime - timedelta(days=6)
+        start_date = today - timedelta(days=6)
         time_labels = [start_date + timedelta(days=i) for i in range(7)] 
         label_format = "%Y-%m-%d"  
-        start_date = todayTime.replace(day=1)
-        days_in_month = (todayTime - start_date).days + 1
+    elif timeframe == 'monthly':
+        start_date = today.replace(day=1)  # Start of the current month
+        days_in_month = (today - start_date).days + 1
         time_labels = [start_date + timedelta(days=i) for i in range(days_in_month)]
         label_format = "%d"
     elif timeframe == 'yearly':
-        start_date = todayTime.replace(month=1, day=1)  
+        start_date = today.replace(month=1, day=1)  
         time_labels = [start_date.replace(month=i) for i in range(1, 13)] 
         label_format = "%b"  
     else:
