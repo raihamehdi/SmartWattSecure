@@ -497,11 +497,16 @@ def get_notifications(request):
 
     return JsonResponse({'error': 'User not authenticated'}, status=403)
 
-# Signal to create a notification when an anomaly is detected
 @receiver(post_save, sender=Anomaly)
 def create_notification_for_anomaly(sender, instance, created, **kwargs):
     if created:
-        message = f"Power anomaly detected at {instance.start_time.strftime('%H:%M')}."
+        # Convert anomaly's start_time to the desired timezone
+        nowz = pytz_timezone("Asia/Karachi")
+        localized_start_time = instance.start_time.astimezone(nowz)
+        formatted_time = localized_start_time.strftime('%Y-%m-%d %H:%M:%S')
+
+        # Create a notification with the formatted time
+        message = f"Power anomaly detected at {formatted_time}."
         Notification.objects.create(user=instance.user, message=message)
 
 def sendotp(request):
