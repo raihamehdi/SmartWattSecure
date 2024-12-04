@@ -50,10 +50,22 @@
                     </div>
                     <div class="col-12">
                       <select id="city" name="city" required>
-                        <option value="Sahiwal" selected>Sahiwal</option>
+                        <option value="Sahiwal">Sahiwal</option>
                         <option value="Lahore">Lahore</option>
                         <option value="Islamabad">Islamabad</option>
-                      </select>
+                        <option value="Karachi">Karachi</option>
+                        <option value="Rawalpindi">Rawalpindi</option>
+                        <option value="Faisalabad">Faisalabad</option>
+                        <option value="Multan">Multan</option>
+                        <option value="Peshawar">Peshawar</option>
+                        <option value="Quetta">Quetta</option>
+                        <option value="Gujranwala">Gujranwala</option>
+                        <option value="Sialkot">Sialkot</option>
+                        <option value="Mardan">Mardan</option>
+                        <option value="Bahawalpur">Bahawalpur</option>
+                        <option value="Murree">Murree</option>
+                        <option value="Abbottabad">Abbottabad</option>
+                    </select>
                     </div>
                   </div>
                   <div class="col-12">
@@ -91,21 +103,81 @@
       // City-to-region mapping
       const regions = {
         Sahiwal: [
-          { value: "Farid Town", text: "Farid Town" },
-          { value: "People’s Colony", text: "People’s Colony" },
-          { value: "Jogi Chowk", text: "Jogi Chowk" },
+            { value: "Farid Town", text: "Farid Town" },
+            { value: "People’s Colony", text: "People’s Colony" },
+            { value: "Jogi Chowk", text: "Jogi Chowk" },
         ],
         Lahore: [
-          { value: "Gulberg", text: "Gulberg" },
-          { value: "Johar Town", text: "Johar Town" },
-          { value: "DHA", text: "DHA" },
+            { value: "Gulberg", text: "Gulberg" },
+            { value: "Johar Town", text: "Johar Town" },
+            { value: "DHA", text: "DHA" },
         ],
         Islamabad: [
-          { value: "F-7", text: "F-7" },
-          { value: "G-10", text: "G-10" },
-          { value: "Blue Area", text: "Blue Area" },
+            { value: "F-7", text: "F-7" },
+            { value: "G-10", text: "G-10" },
+            { value: "Blue Area", text: "Blue Area" },
         ],
-      };
+        Karachi: [
+            { value: "Korangi", text: "Korangi" },
+            { value: "Clifton", text: "Clifton" },
+            { value: "Saddar", text: "Saddar" },
+        ],
+        Rawalpindi: [
+            { value: "Murree Road", text: "Murree Road" },
+            { value: "Satellite Town", text: "Satellite Town" },
+            { value: "Committee Chowk", text: "Committee Chowk" },
+        ],
+        Faisalabad: [
+            { value: "Satyana Road", text: "Satyana Road" },
+            { value: "Jaranwala Road", text: "Jaranwala Road" },
+            { value: "Kohinoor City", text: "Kohinoor City" },
+        ],
+        Multan: [
+            { value: "Cantt", text: "Cantt" },
+            { value: "Bosan Road", text: "Bosan Road" },
+            { value: "City Centre", text: "City Centre" },
+        ],
+        Peshawar: [
+            { value: "University Road", text: "University Road" },
+            { value: "Hayatabad", text: "Hayatabad" },
+            { value: "Fazal Town", text: "Fazal Town" },
+        ],
+        Quetta: [
+            { value: "Jinnah Road", text: "Jinnah Road" },
+            { value: "Kohlu", text: "Kohlu" },
+            { value: "Saryab", text: "Saryab" },
+        ],
+        Gujranwala: [
+            { value: "Wazirabad Road", text: "Wazirabad Road" },
+            { value: "Model Town", text: "Model Town" },
+            { value: "Gulshan-e-Iqbal", text: "Gulshan-e-Iqbal" },
+        ],
+        Sialkot: [
+            { value: "Daska Road", text: "Daska Road" },
+            { value: "Saddar", text: "Saddar" },
+            { value: "Sambrial", text: "Sambrial" },
+        ],
+        Mardan: [
+            { value: "Main Bazaar", text: "Main Bazaar" },
+            { value: "Shahbaz Garh", text: "Shahbaz Garh" },
+            { value: "Mardan Cantt", text: "Mardan Cantt" },
+        ],
+        Bahawalpur: [
+            { value: "Darbar Road", text: "Darbar Road" },
+            { value: "Layyah Road", text: "Layyah Road" },
+            { value: "Bahawal Stadium", text: "Bahawal Stadium" },
+        ],
+        Murree: [
+            { value: "Mall Road", text: "Mall Road" },
+            { value: "Kashmir Point", text: "Kashmir Point" },
+            { value: "Lower Topa", text: "Lower Topa" },
+        ],
+        Abbottabad: [
+            { value: "Mansehra Road", text: "Mansehra Road" },
+            { value: "Havelian", text: "Havelian" },
+            { value: "Abbottabad City", text: "Abbottabad City" },
+        ],
+    };
 
       // Function to update the region dropdown
       function updateRegionOptions(city) {

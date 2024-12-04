@@ -1,6 +1,8 @@
 from django.urls import path
 from django.contrib.auth.views import LogoutView
 from . import views
+
+handler404 = 'smartwatt.views.custom_404'
 urlpatterns = [
     
 path('signup/', views.signup, name='signup'),
