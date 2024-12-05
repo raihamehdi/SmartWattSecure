@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-_0snu4lev!(bj))$t)yn2c+37=9*a-ntmx_$9b4n$u32iw_2&k
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [ ]  # Or your allowed hosts here
+ALLOWED_HOSTS = []  # Or your allowed hosts here
 
 
 
@@ -52,6 +52,9 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
+    'smartwatt.middleware.RestrictionMiddleware',
+    'smartwatt.middleware.SeparateSessionMiddleware',
+    
 ]
 
 ROOT_URLCONF = 'smartwattsecure.urls'

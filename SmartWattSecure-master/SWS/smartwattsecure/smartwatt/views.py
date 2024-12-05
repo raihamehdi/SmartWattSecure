@@ -49,7 +49,7 @@ def signup(request):
     return render(request, 'signup.html')
 
 ##----- ADMIN PANEL DATA FETCH VIEW-----##
-@login_required
+@login_required(login_url='/admin-login/')
 def adminview(request):
     if not request.user.is_staff:
         return redirect('index')
@@ -67,12 +67,12 @@ def adminview(request):
     city_regions = {}
     users = CustomUser.objects.filter(is_staff=False)
     user_data = []
-
+    end_of_today = today_datetime.replace(hour=23, minute=59, second=59, microsecond=999999)
     for user in users:
         energy_data = EnergyData.objects.filter(
             user=user,
             timestamp__gte=first_day_of_current_month,
-            timestamp__lte=today_datetime
+            timestamp__lte=end_of_today
         )
         total_units = energy_data.aggregate(total_units=Sum('total_units_consumed'))['total_units'] or 0
         user_data.append({
@@ -668,7 +668,4 @@ def delete_user_ajax(request, user_id):
         user.delete()
         return JsonResponse({'status': 'success', 'message': 'User deleted successfully'})
     return JsonResponse({'status': 'error', 'message': 'Failed to delete user'})
-
-def custom_404(request, exception):
-    return render(request, '404.html', status=404)
 
