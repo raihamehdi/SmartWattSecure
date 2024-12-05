@@ -52,6 +52,9 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
+    'smartwatt.middleware.RestrictionMiddleware',
+    'smartwatt.middleware.SeparateSessionMiddleware',
+    
 ]
 
 ROOT_URLCONF = 'smartwattsecure.urls'
