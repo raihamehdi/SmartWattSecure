@@ -669,4 +669,6 @@ def delete_user_ajax(request, user_id):
         return JsonResponse({'status': 'success', 'message': 'User deleted successfully'})
     return JsonResponse({'status': 'error', 'message': 'Failed to delete user'})
 
+def custom_404(request, exception):
+    return render(request, '404.html', status=404)
 

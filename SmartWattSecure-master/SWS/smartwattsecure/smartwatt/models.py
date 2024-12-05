@@ -10,10 +10,23 @@ class CustomUser(AbstractUser):
         ('User', 'User'),
     ]
     CITY_CHOICES = [
-        ('Sahiwal', 'Sahiwal'),
-        ('Lahore', 'Lahore'),
-        ('Islamabad', 'Islamabad'),
+    ('Sahiwal', 'Sahiwal'),
+    ('Lahore', 'Lahore'),
+    ('Islamabad', 'Islamabad'),
+    ('Karachi', 'Karachi'),
+    ('Rawalpindi', 'Rawalpindi'),
+    ('Faisalabad', 'Faisalabad'),
+    ('Multan', 'Multan'),
+    ('Peshawar', 'Peshawar'),
+    ('Quetta', 'Quetta'),
+    ('Gujranwala', 'Gujranwala'),
+    ('Sialkot', 'Sialkot'),
+    ('Mardan', 'Mardan'),
+    ('Bahawalpur', 'Bahawalpur'),
+    ('Murree', 'Murree'),
+    ('Abbottabad', 'Abbottabad'),
     ]
+
     REGION_CHOICES = {
         'Sahiwal': [
             ('Farid Town', 'Farid Town'),
@@ -30,7 +43,68 @@ class CustomUser(AbstractUser):
             ('G-10', 'G-10'),
             ('Blue Area', 'Blue Area'),
         ],
+        'Karachi': [
+            ('Korangi', 'Korangi'),
+            ('Clifton', 'Clifton'),
+            ('Saddar', 'Saddar'),
+        ],
+        'Rawalpindi': [
+            ('Murree Road', 'Murree Road'),
+            ('Satellite Town', 'Satellite Town'),
+            ('Committee Chowk', 'Committee Chowk'),
+        ],
+        'Faisalabad': [
+            ('Satyana Road', 'Satyana Road'),
+            ('Jaranwala Road', 'Jaranwala Road'),
+            ('Kohinoor City', 'Kohinoor City'),
+        ],
+        'Multan': [
+            ('Cantt', 'Cantt'),
+            ('Bosan Road', 'Bosan Road'),
+            ('City Centre', 'City Centre'),
+        ],
+        'Peshawar': [
+            ('University Road', 'University Road'),
+            ('Hayatabad', 'Hayatabad'),
+            ('Fazal Town', 'Fazal Town'),
+        ],
+        'Quetta': [
+            ('Jinnah Road', 'Jinnah Road'),
+            ('Kohlu', 'Kohlu'),
+            ('Saryab', 'Saryab'),
+        ],
+        'Gujranwala': [
+            ('Wazirabad Road', 'Wazirabad Road'),
+            ('Model Town', 'Model Town'),
+            ('Gulshan-e-Iqbal', 'Gulshan-e-Iqbal'),
+        ],
+        'Sialkot': [
+            ('Daska Road', 'Daska Road'),
+            ('Saddar', 'Saddar'),
+            ('Sambrial', 'Sambrial'),
+        ],
+        'Mardan': [
+            ('Main Bazaar', 'Main Bazaar'),
+            ('Shahbaz Garh', 'Shahbaz Garh'),
+            ('Mardan Cantt', 'Mardan Cantt'),
+        ],
+        'Bahawalpur': [
+            ('Darbar Road', 'Darbar Road'),
+            ('Layyah Road', 'Layyah Road'),
+            ('Bahawal Stadium', 'Bahawal Stadium'),
+        ],
+        'Murree': [
+            ('Mall Road', 'Mall Road'),
+            ('Kashmir Point', 'Kashmir Point'),
+            ('Lower Topa', 'Lower Topa'),
+        ],
+        'Abbottabad': [
+            ('Mansehra Road', 'Mansehra Road'),
+            ('Havelian', 'Havelian'),
+            ('Abbottabad City', 'Abbottabad City'),
+        ],
     }
+
 
     role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='User')  # Default role is 'User'
     city = models.CharField(max_length=15, choices=CITY_CHOICES, default='Sahiwal')  # Default city
